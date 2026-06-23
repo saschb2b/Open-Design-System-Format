@@ -10,9 +10,9 @@ const designMdUrl = "https://github.com/google-labs-code/design.md";
 const viewer = (id) => `${base}tools/viewer.html?bundle=${base}examples/${id}`;
 
 const examples = [
-  { id: "claude", name: "Claude", by: "Anthropic", color: "var(--coral)", blurb: "A warm, editorial brand voice: cream canvas, coral accent, slab-serif display. A fixed identity.", meta: "9 components · landing page" },
-  { id: "primer", name: "Primer", by: "GitHub", color: "var(--green)", blurb: "Functional color roles, full light/dark theming, and the signature green primary action.", meta: "45 components · repo page" },
-  { id: "geist", name: "Geist", by: "Vercel", color: "var(--blue)", blurb: "High-contrast and monochrome-first on numbered scales, fully theme-able across light and dark.", meta: "70 components · dashboard" },
+  { id: "claude", name: "Claude", by: "Anthropic", blurb: "A warm, editorial brand voice: cream canvas, coral accent, slab-serif display. A fixed identity.", meta: "9 components · landing page" },
+  { id: "primer", name: "Primer", by: "GitHub", blurb: "Functional color roles, full light/dark theming, and the signature green primary action.", meta: "45 components · repo page" },
+  { id: "geist", name: "Geist", by: "Vercel", blurb: "High-contrast and monochrome-first on numbered scales, fully theme-able across light and dark.", meta: "70 components · dashboard" },
 ];
 
 const pillars = [
@@ -218,8 +218,7 @@ styles/
           do/don'ts, then flip light/dark.</p>
         <div class="ex-grid">
           {examples.map((e) => (
-            <a class="ex" href={viewer(e.id)} style={`--accent:${e.color}`}>
-              <span class="ex__stripe" aria-hidden="true"></span>
+            <a class="ex" href={viewer(e.id)}>
               <div class="ex__row">
                 <h3>{e.name}</h3>
                 <span class="ex__by">{e.by}</span>
@@ -427,16 +426,16 @@ styles/
     .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; } }
     .ex { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface);
-      border: 1px solid var(--line); border-radius: var(--r-lg); padding: 0 24px 22px; overflow: hidden; transition: border-color .15s, transform .08s, box-shadow .15s; }
+      border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px 24px 22px; overflow: hidden; transition: border-color .15s, transform .08s, box-shadow .15s; }
     .ex:hover { border-color: var(--ink-2); transform: translateY(-2px); box-shadow: var(--shadow); }
-    .ex__stripe { height: 4px; background: var(--accent); margin: 0 -24px 22px; }
     .ex__row { display: flex; align-items: baseline; gap: 10px; }
     .ex h3 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0; }
     .ex__by { color: var(--muted); font-size: 13px; margin-left: auto; }
     .ex p { color: var(--ink-2); font-size: 15px; margin: 10px 0 18px; flex: 1; }
     .ex__foot { display: flex; align-items: center; justify-content: space-between; }
     .ex__meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
-    .ex__go { font-size: 14px; font-weight: 500; color: var(--accent); }
+    .ex__go { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .ex:hover .ex__go { text-decoration: underline; text-underline-offset: 3px; }
 
     /* CTA band */
     .cta-band { padding: 80px 0; text-align: center; border-top: 1px solid var(--line); }
