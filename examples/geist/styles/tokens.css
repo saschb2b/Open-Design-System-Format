@@ -1,0 +1,122 @@
+/* Geist (Vercel) design tokens — the CSS projection of the foundation concepts.
+ *
+ * Geist is a high-contrast, theme-able system. Color is a set of numbered scales
+ * (--ds-{scale}-{step}, step 100→1000) where 100 is the subtlest fill and 1000 is text;
+ * 700 is each scale's solid accent. The gray scale is the monochrome backbone; accent scales
+ * (blue/red/amber/green/teal/purple/pink) carry status and emphasis. Components reference these
+ * tokens, so the whole UI re-skins light↔dark by swapping the scale values.
+ *
+ * Values read from the live vercel.com/geist DOM (@vercel/geist), 2026-06-23, in both modes.
+ * This bundle ships Geist's own variable names (--ds-gray-1000, …) so generated code matches.
+ */
+
+:root, [data-theme="light"] {
+  --ds-gray-100: hsla(0,0%,95%,1);   --ds-gray-200: hsla(0,0%,92%,1);   --ds-gray-300: hsla(0,0%,90%,1);
+  --ds-gray-400: hsla(0,0%,92%,1);   --ds-gray-500: hsla(0,0%,79%,1);   --ds-gray-600: hsla(0,0%,66%,1);
+  --ds-gray-700: hsla(0,0%,56%,1);   --ds-gray-800: hsla(0,0%,49%,1);   --ds-gray-900: hsla(0,0%,30%,1);
+  --ds-gray-1000: hsla(0,0%,9%,1);
+  --ds-blue-100: hsla(212,100%,97%,1); --ds-blue-200: hsla(210,100%,96%,1); --ds-blue-300: hsla(210,100%,94%,1);
+  --ds-blue-400: hsla(209,100%,90%,1); --ds-blue-500: hsla(209,100%,80%,1); --ds-blue-600: hsla(208,100%,66%,1);
+  --ds-blue-700: hsla(212,100%,48%,1); --ds-blue-800: hsla(212,100%,41%,1); --ds-blue-900: hsla(211,100%,42%,1);
+  --ds-blue-1000: hsla(211,100%,15%,1);
+  --ds-red-100: hsla(0,100%,97%,1);  --ds-red-200: hsla(0,100%,96%,1);  --ds-red-300: hsla(0,100%,95%,1);
+  --ds-red-400: hsla(0,90%,92%,1);   --ds-red-500: hsla(0,82%,85%,1);   --ds-red-600: hsla(359,90%,71%,1);
+  --ds-red-700: hsla(358,75%,59%,1); --ds-red-800: hsla(358,70%,52%,1); --ds-red-900: hsla(358,66%,48%,1);
+  --ds-red-1000: hsla(355,49%,15%,1);
+  --ds-amber-100: hsla(39,100%,95%,1); --ds-amber-200: hsla(44,100%,92%,1); --ds-amber-300: hsla(43,96%,90%,1);
+  --ds-amber-400: hsla(42,100%,78%,1); --ds-amber-500: hsla(38,100%,71%,1); --ds-amber-600: hsla(36,90%,62%,1);
+  --ds-amber-700: hsla(39,100%,57%,1); --ds-amber-800: hsla(35,100%,52%,1); --ds-amber-900: hsla(30,100%,32%,1);
+  --ds-amber-1000: hsla(20,79%,17%,1);
+  --ds-green-100: hsla(120,60%,96%,1); --ds-green-200: hsla(120,60%,95%,1); --ds-green-300: hsla(120,60%,91%,1);
+  --ds-green-400: hsla(122,60%,86%,1); --ds-green-500: hsla(124,60%,75%,1); --ds-green-600: hsla(125,60%,64%,1);
+  --ds-green-700: hsla(131,41%,46%,1); --ds-green-800: hsla(132,43%,39%,1); --ds-green-900: hsla(133,50%,32%,1);
+  --ds-green-1000: hsla(128,29%,15%,1);
+  --ds-teal-100: hsla(169,70%,96%,1); --ds-teal-200: hsla(167,70%,94%,1); --ds-teal-300: hsla(168,70%,90%,1);
+  --ds-teal-400: hsla(170,70%,85%,1); --ds-teal-500: hsla(170,70%,72%,1); --ds-teal-600: hsla(170,70%,57%,1);
+  --ds-teal-700: hsla(173,80%,36%,1); --ds-teal-800: hsla(173,83%,30%,1); --ds-teal-900: hsla(174,91%,25%,1);
+  --ds-teal-1000: hsla(171,80%,13%,1);
+  --ds-purple-100: hsla(276,100%,97%,1); --ds-purple-200: hsla(277,87%,97%,1); --ds-purple-300: hsla(274,78%,95%,1);
+  --ds-purple-400: hsla(276,71%,92%,1); --ds-purple-500: hsla(274,70%,82%,1); --ds-purple-600: hsla(273,72%,73%,1);
+  --ds-purple-700: hsla(272,51%,54%,1); --ds-purple-800: hsla(272,47%,45%,1); --ds-purple-900: hsla(274,71%,43%,1);
+  --ds-purple-1000: hsla(276,100%,15%,1);
+  --ds-pink-100: hsla(330,100%,96%,1); --ds-pink-200: hsla(340,90%,96%,1); --ds-pink-300: hsla(340,82%,94%,1);
+  --ds-pink-400: hsla(341,76%,91%,1); --ds-pink-500: hsla(340,75%,84%,1); --ds-pink-600: hsla(341,75%,73%,1);
+  --ds-pink-700: hsla(336,80%,58%,1); --ds-pink-800: hsla(336,74%,51%,1); --ds-pink-900: hsla(336,65%,45%,1);
+  --ds-pink-1000: hsla(333,74%,15%,1);
+  --ds-background-100: hsla(0,0%,100%,1); --ds-background-200: hsla(0,0%,98%,1);
+  --ds-gray-alpha-100: #0000000d; --ds-gray-alpha-200: #00000014; --ds-gray-alpha-400: #00000029; --ds-gray-alpha-600: #00000057;
+  --ds-focus-color: hsla(212,100%,48%,1);
+}
+
+[data-theme="dark"] {
+  --ds-gray-100: hsla(0,0%,10%,1);   --ds-gray-200: hsla(0,0%,12%,1);   --ds-gray-300: hsla(0,0%,16%,1);
+  --ds-gray-400: hsla(0,0%,18%,1);   --ds-gray-500: hsla(0,0%,27%,1);   --ds-gray-600: hsla(0,0%,53%,1);
+  --ds-gray-700: hsla(0,0%,56%,1);   --ds-gray-800: hsla(0,0%,49%,1);   --ds-gray-900: hsla(0,0%,63%,1);
+  --ds-gray-1000: hsla(0,0%,93%,1);
+  --ds-blue-100: hsla(216,50%,12%,1); --ds-blue-200: hsla(214,59%,15%,1); --ds-blue-300: hsla(213,71%,20%,1);
+  --ds-blue-400: hsla(212,78%,23%,1); --ds-blue-500: hsla(211,86%,27%,1); --ds-blue-600: hsla(206,100%,50%,1);
+  --ds-blue-700: hsla(212,100%,48%,1); --ds-blue-800: hsla(212,100%,41%,1); --ds-blue-900: hsla(210,100%,66%,1);
+  --ds-blue-1000: hsla(206,100%,96%,1);
+  --ds-red-100: hsla(357,37%,12%,1); --ds-red-200: hsla(357,46%,16%,1); --ds-red-300: hsla(356,54%,22%,1);
+  --ds-red-400: hsla(357,55%,26%,1); --ds-red-500: hsla(357,60%,32%,1); --ds-red-600: hsla(358,75%,59%,1);
+  --ds-red-700: hsla(358,75%,59%,1); --ds-red-800: hsla(358,69%,52%,1); --ds-red-900: hsla(358,100%,69%,1);
+  --ds-red-1000: hsla(353,90%,96%,1);
+  --ds-amber-100: hsla(35,100%,8%,1); --ds-amber-200: hsla(32,100%,10%,1); --ds-amber-300: hsla(33,100%,15%,1);
+  --ds-amber-400: hsla(35,100%,17%,1); --ds-amber-500: hsla(35,91%,22%,1); --ds-amber-600: hsla(39,85%,49%,1);
+  --ds-amber-700: hsla(39,100%,57%,1); --ds-amber-800: hsla(35,100%,52%,1); --ds-amber-900: hsla(39,90%,50%,1);
+  --ds-amber-1000: hsla(40,94%,93%,1);
+  --ds-green-100: hsla(136,50%,9%,1); --ds-green-200: hsla(137,50%,12%,1); --ds-green-300: hsla(136,50%,14%,1);
+  --ds-green-400: hsla(135,70%,16%,1); --ds-green-500: hsla(135,70%,23%,1); --ds-green-600: hsla(135,70%,34%,1);
+  --ds-green-700: hsla(131,41%,46%,1); --ds-green-800: hsla(132,43%,39%,1); --ds-green-900: hsla(131,43%,57%,1);
+  --ds-green-1000: hsla(136,73%,94%,1);
+  --ds-teal-100: hsla(169,78%,7%,1); --ds-teal-200: hsla(170,74%,9%,1); --ds-teal-300: hsla(171,75%,13%,1);
+  --ds-teal-400: hsla(171,85%,13%,1); --ds-teal-500: hsla(172,85%,20%,1); --ds-teal-600: hsla(172,85%,32%,1);
+  --ds-teal-700: hsla(173,80%,36%,1); --ds-teal-800: hsla(173,83%,30%,1); --ds-teal-900: hsla(174,90%,41%,1);
+  --ds-teal-1000: hsla(166,71%,93%,1);
+  --ds-purple-100: hsla(283,30%,12%,1); --ds-purple-200: hsla(281,38%,16%,1); --ds-purple-300: hsla(279,44%,23%,1);
+  --ds-purple-400: hsla(277,46%,28%,1); --ds-purple-500: hsla(274,49%,35%,1); --ds-purple-600: hsla(272,51%,54%,1);
+  --ds-purple-700: hsla(272,51%,54%,1); --ds-purple-800: hsla(272,47%,45%,1); --ds-purple-900: hsla(275,80%,71%,1);
+  --ds-purple-1000: hsla(281,73%,96%,1);
+  --ds-pink-100: hsla(335,32%,12%,1); --ds-pink-200: hsla(335,43%,16%,1); --ds-pink-300: hsla(335,47%,21%,1);
+  --ds-pink-400: hsla(335,51%,22%,1); --ds-pink-500: hsla(335,57%,27%,1); --ds-pink-600: hsla(336,75%,40%,1);
+  --ds-pink-700: hsla(336,80%,58%,1); --ds-pink-800: hsla(336,74%,51%,1); --ds-pink-900: hsla(341,90%,67%,1);
+  --ds-pink-1000: hsla(333,90%,96%,1);
+  --ds-background-100: hsla(0,0%,4%,1); --ds-background-200: hsla(0,0%,0%,1);
+  --ds-gray-alpha-100: #ffffff0f; --ds-gray-alpha-200: #ffffff17; --ds-gray-alpha-400: #ffffff24; --ds-gray-alpha-600: #ffffff82;
+  --ds-focus-color: hsla(210,100%,66%,1);
+}
+
+:root {
+  /* semantic aliases */
+  --geist-foreground: var(--ds-gray-1000);
+  --geist-background: var(--ds-background-100);
+
+  /* typography */
+  --font-geist-sans: Geist, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --ds-text-sm: 13px; --ds-text-base: 14px; --ds-text-lg: 16px;
+  --ds-heading-20: 20px; --ds-heading-24: 24px; --ds-heading-32: 32px; --ds-heading-40: 40px; --ds-heading-48: 48px;
+
+  /* shape — the Geist 6px standard */
+  --ds-radius-small: 4px; --ds-radius-medium: 6px; --ds-radius-large: 8px; --ds-radius-full: 9999px;
+
+  /* spacing (4px base) */
+  --ds-space-1: 4px; --ds-space-2: 8px; --ds-space-3: 12px; --ds-space-4: 16px; --ds-space-6: 24px; --ds-space-8: 32px;
+
+  /* elevation — borders and shadows built on the alpha tokens, so they adapt per theme */
+  --ds-shadow-border: 0 0 0 1px var(--ds-gray-alpha-400);
+  --ds-shadow-small: 0 1px 2px var(--ds-gray-alpha-200);
+  --ds-shadow-medium: 0 4px 8px -2px var(--ds-gray-alpha-200), 0 2px 4px -1px var(--ds-gray-alpha-100);
+  --ds-shadow-menu: 0 0 0 1px var(--ds-gray-alpha-400), 0 4px 8px -4px var(--ds-gray-alpha-200), 0 16px 24px -8px var(--ds-gray-alpha-200);
+}
+
+/* Base so examples render in Geist defaults. */
+body {
+  margin: 0;
+  background: var(--ds-background-100);
+  color: var(--ds-gray-1000);
+  font-family: var(--font-geist-sans);
+  font-size: var(--ds-text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}

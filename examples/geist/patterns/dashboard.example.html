@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Dashboard</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body { padding: 0; }
+    .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 24px; box-shadow: inset 0 -1px 0 var(--ds-gray-alpha-400); }
+    .topbar .mark { width: 22px; height: 22px; }
+    .topbar .grow { flex: 1; }
+    .navbar { padding: 0 24px; box-shadow: inset 0 -1px 0 var(--ds-gray-alpha-400); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+    @media (max-width: 860px){ .wrap { grid-template-columns: 1fr; } }
+    .usage { display: flex; flex-direction: column; gap: 16px; }
+    figure { margin: 0; display: flex; align-items: center; gap: 12px; }
+    figcaption { font-size: 13px; color: var(--ds-gray-900); }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <svg class="mark" viewBox="0 0 24 24" fill="currentColor" aria-label="Vercel"><path d="M12 2 22 20H2z"/></svg>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#">acme</a><span class="sep" aria-hidden="true">/</span><span class="current">design-system</span></nav>
+    <span class="grow"></span>
+    <div class="input-affix" style="height:32px; width:200px"><span class="icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3 3"/></svg></span><input type="search" placeholder="Search…" aria-label="Search"></div>
+    <div class="theme-switcher" role="radiogroup" aria-label="Theme">
+      <button type="button" aria-label="Light" aria-pressed="true"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg></button>
+      <button type="button" aria-label="Dark" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 2a6 6 0 1 0 4.5 9.9A5 5 0 0 1 9.5 2Z"/></svg></button>
+    </div>
+    <span class="avatar"><svg viewBox="0 0 16 16" fill="currentColor" style="color:var(--ds-gray-700)" aria-hidden="true"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-2.5 0-5 1.25-5 3.25V14h10v-1.25c0-2-2.5-3.25-5-3.25Z"/></svg></span>
+  </header>
+
+  <!-- Tabs -->
+  <div class="navbar">
+    <nav class="tabs" aria-label="Project">
+      <button class="tab tab--active" aria-current="page">Deployments</button>
+      <button class="tab">Analytics</button>
+      <button class="tab">Logs</button>
+      <button class="tab">Settings</button>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <!-- Main: deployments table -->
+    <main>
+      <div class="row" style="justify-content:space-between; margin-bottom:16px">
+        <h1 class="h2">Deployments</h1>
+        <button class="btn btn-primary btn-sm">New deployment</button>
+      </div>
+      <div class="card">
+        <table class="table">
+          <thead><tr><th>Deployment</th><th>Status</th><th>Environment</th><th>Branch</th><th>Age</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">7a1b9c3</td><td><span class="status-dot status-dot--green">Ready</span></td><td><span class="badge">Production</span></td><td class="mono">main</td><td class="muted">2h</td></tr>
+            <tr><td class="mono">3f8e2d1</td><td><span class="status-dot status-dot--amber">Building</span></td><td><span class="badge badge--blue">Preview</span></td><td class="mono">feat/dark</td><td class="muted">5m</td></tr>
+            <tr><td class="mono">9c4a7b2</td><td><span class="status-dot status-dot--red">Error</span></td><td><span class="badge badge--blue">Preview</span></td><td class="mono">fix/ci</td><td class="muted">1d</td></tr>
+            <tr><td class="mono">b2d6f0a</td><td><span class="status-dot status-dot--green">Ready</span></td><td><span class="badge badge--blue">Preview</span></td><td class="mono">docs</td><td class="muted">2d</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Aside: usage -->
+    <aside class="usage">
+      <div class="card"><div class="card-body">
+        <h3 class="h3" style="font-size:14px; color:var(--ds-gray-900); font-weight:500; margin-bottom:12px">Performance</h3>
+        <figure><span class="gauge" role="meter" aria-label="Performance" aria-valuenow="92" style="--g:92%; position:relative"><span>92</span></span><figcaption>Avg. score across<br>production deploys</figcaption></figure>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <h3 class="h3" style="font-size:14px; color:var(--ds-gray-900); font-weight:500; margin-bottom:12px">Bandwidth</h3>
+        <div class="progress"><div class="progress-bar progress-bar--blue" style="width:68%"></div></div>
+        <p class="text-sm muted" style="margin:8px 0 0">68 GB of 100 GB used</p>
+      </div><div class="card-footer">Resets July 1</div></div>
+    </aside>
+  </div>
+</body>
+</html>

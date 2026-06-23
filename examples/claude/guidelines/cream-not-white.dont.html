@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · Don't — pure white canvas</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <!-- DON'T: override the warm cream canvas with pure white + cool gray text.
+       Same layout, but the brand evaporates — it now reads like any other AI tool. -->
+  <style>
+    body { background: #ffffff; padding: 48px; }
+    .display-lg { color: #0f172a; }       /* cool slate, not warm ink */
+    .body-md { color: #64748b; }          /* cool gray, not warm body */
+    .feature-card { background: #f8fafc; } /* cool card, not warm cream */
+  </style>
+</head>
+<body>
+  <h2 class="display-lg">Built to do real work</h2>
+  <p class="body-md" style="margin:12px 0 28px;">Compare this cool, generic surface with the warm cream of the real system.</p>
+  <div class="grid grid-3">
+    <div class="feature-card"><h3 class="title-md" style="color:#0f172a">Extended thinking</h3><p class="body-md">Reasons step by step.</p></div>
+    <div class="feature-card"><h3 class="title-md" style="color:#0f172a">Long context</h3><p class="body-md">Reads whole codebases.</p></div>
+    <div class="feature-card"><h3 class="title-md" style="color:#0f172a">Agentic tools</h3><p class="body-md">Finishes multi-step tasks.</p></div>
+  </div>
+</body>
+</html>

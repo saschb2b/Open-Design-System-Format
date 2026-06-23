@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Drawer</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 0; } .scrim { justify-content: flex-end; padding: 0; height: 420px; } </style>
+</head>
+<body>
+  <div class="scrim">
+    <aside class="drawer" role="dialog" aria-label="Deployment details">
+      <div class="row" style="justify-content:space-between">
+        <h3 class="h3" style="font-size:16px">Deployment</h3>
+        <button class="btn btn-ghost btn-icon btn-sm" type="button" aria-label="Close">✕</button>
+      </div>
+      <div style="height:16px"></div>
+      <span class="status-dot status-dot--green">Ready</span>
+      <dl class="description" style="margin-top:16px">
+        <dt>Branch</dt><dd class="mono">main</dd>
+        <dt>Commit</dt><dd class="mono">a1b2c3d — tokenize color roles</dd>
+        <dt>Duration</dt><dd>42s</dd>
+      </dl>
+      <button class="btn" type="button" style="width:100%">Visit deployment</button>
+    </aside>
+  </div>
+</body>
+</html>

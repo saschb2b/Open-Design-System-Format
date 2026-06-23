@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Page layout</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } </style>
+</head>
+<body>
+  <div class="PageLayout">
+    <main class="PageLayout-content">
+      <div class="Box">
+        <div class="Box-header">README.md</div>
+        <div class="Box-body" style="color:var(--fgColor-muted)">The main content column holds the primary content of the page.</div>
+      </div>
+    </main>
+    <aside class="PageLayout-pane">
+      <h3 class="h3" style="margin-bottom:8px">About</h3>
+      <p style="margin:0 0 12px; color:var(--fgColor-muted)">A functional, theme-able component library.</p>
+      <div class="d-flex gap-2 flex-items-center color-fg-muted" style="font-size:14px">
+        <span class="branch-name">main</span> · 248 commits
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

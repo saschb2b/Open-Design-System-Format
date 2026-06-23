@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Dialog</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 0; } </style>
+</head>
+<body>
+  <!-- The backdrop is rendered inline (not fixed) so it's visible in the preview frame. -->
+  <div class="Dialog-backdrop">
+    <div class="Dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title">
+      <div class="Dialog-header">
+        <span class="Dialog-title" id="dlg-title">Delete branch</span>
+        <button class="btn btn-icon btn-invisible" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"/></svg>
+        </button>
+      </div>
+      <div class="Dialog-body">
+        Are you sure you want to delete <span class="branch-name">feature/dark-mode</span>? This can't be undone.
+      </div>
+      <div class="Dialog-footer">
+        <button class="btn" type="button">Cancel</button>
+        <button class="btn btn-danger" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

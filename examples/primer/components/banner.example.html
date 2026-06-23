@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Banner</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; display: flex; flex-direction: column; gap: 12px; max-width: 640px; } </style>
+</head>
+<body>
+  <div class="flash" role="status">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM7 6.75A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 .75.75v3.5h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5H7V7.5h-.25A.75.75 0 0 1 7 6.75ZM8 4.75A.75.75 0 1 1 8 3.25a.75.75 0 0 1 0 1.5Z"/></svg>
+    <span>A new release, <strong>v2.0.0</strong>, is available.</span>
+  </div>
+  <div class="flash flash-success" role="status">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l2.47 2.47 5.97-5.97a.75.75 0 0 1 1.06 0Z"/></svg>
+    <span>All checks have passed.</span>
+  </div>
+  <div class="flash flash-warn" role="status">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8.22 1.75a.75.75 0 0 0-.66.39L1.2 13.39A.75.75 0 0 0 1.86 14.5h12.28a.75.75 0 0 0 .66-1.11L8.88 2.14a.75.75 0 0 0-.66-.39ZM8 6a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 6Zm0 6a.9.9 0 1 0 0-1.8.9.9 0 0 0 0 1.8Z"/></svg>
+    <span>This branch is 3 commits behind the base.</span>
+  </div>
+  <div class="flash flash-error" role="alert">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM8 5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 8 5Zm0 6a.9.9 0 1 0 0-1.8.9.9 0 0 0 0 1.8Z"/></svg>
+    <span>3 of 8 checks failed.</span>
+  </div>
+</body>
+</html>

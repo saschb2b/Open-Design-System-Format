@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Multi select</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body { padding: 24px; max-width: 340px; min-height: 240px; }
+    .ms { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px 8px; border: 1px solid var(--ds-gray-alpha-400); border-radius: var(--ds-radius-medium); }
+    .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 8px; font-size: 13px; background: var(--ds-gray-100); border-radius: var(--ds-radius-small); box-shadow: var(--ds-shadow-border); }
+    .chip button { border: none; background: none; cursor: pointer; color: var(--ds-gray-700); display: inline-flex; padding: 0; }
+    .ms input { border: none; outline: none; background: none; font: inherit; flex: 1; min-width: 60px; }
+  </style>
+</head>
+<body>
+  <div class="ms" role="combobox" aria-expanded="true">
+    <span class="chip">production <button type="button" aria-label="Remove production">✕</button></span>
+    <span class="chip">preview <button type="button" aria-label="Remove preview">✕</button></span>
+    <input type="text" placeholder="Add environment…" aria-label="Add environment">
+  </div>
+  <div class="menu" role="listbox" style="margin-top:4px">
+    <div class="menu-item" role="option">development</div>
+    <div class="menu-item" role="option">all</div>
+  </div>
+</body>
+</html>

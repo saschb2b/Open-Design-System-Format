@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ODSF Viewer</title>
+<!--
+  ODSF Viewer — a single-file reference consumer for Open Design System Format bundles.
+  Zero dependencies, no build. Browse any ODSF bundle visually in the browser.
+
+  Load a bundle two ways:
+    1. Served over HTTP:  tools/viewer.html?bundle=../examples/claude
+       (serve the repo root first, e.g.  npx serve  or  python -m http.server)
+    2. From local disk:   "Open folder…" and pick a bundle directory (works over file://).
+
+  It crawls the bundle's own index.md files (OKF progressive disclosure), then opens on an
+  Explore landing: the system's identity, a click-to-copy swatch teaser, and one card per domain.
+  Each concept renders by type (color swatches, type specimens, spacing / shape / elevation /
+  motion scales) with an "On this page" table of contents and the live *.example.html in a
+  Preview / Code preview frame. Light and dark themes; the choice is remembered.
+-->
+<style>
+  :root {
+    --bg: #ffffff; --bg-subtle: #f6f8fa; --bg-inset: #eef1f4;
+    --border: #d1d9e0; --border-muted: #e6eaee;
+    --fg: #1f2328; --fg-muted: #59636e; --fg-subtle: #818b98;
+    --accent: #0969da; --accent-subtle: #ddf4ff; --accent-muted: #b6e3ff;
+    --success: #1a7f37; --danger: #cf222e; --attention: #9a6700;
+    --radius: 6px; --radius-lg: 12px;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --shadow: 0 1px 3px rgba(31,35,40,0.06), 0 1px 0 rgba(31,35,40,0.03);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1117; --bg-subtle: #161b22; --bg-inset: #21262d;
+    --border: #30363d; --border-muted: #21262d;
+    --fg: #e6edf3; --fg-muted: #9198a1; --fg-subtle: #6e7681;
+    --accent: #4493f8; --accent-subtle: #121d2f; --accent-muted: #1f6feb;
+    --success: #3fb950; --danger: #f85149; --attention: #d29922;
+    --shadow: 0 0 0 1px rgba(1,4,9,0.2), 0 6px 16px rgba(1,4,9,0.4);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { display: grid; grid-template-rows: auto 1fr; font-family: var(--sans); color: var(--fg); background: var(--bg); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Top bar ---- */
+  .topbar { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
+  .brand { display: flex; align-items: baseline; gap: 8px; font-weight: 600; letter-spacing: -.01em; }
+  .brand__mark { color: var(--accent); font-size: 13px; }
+  .brand__sub { color: var(--fg-subtle); font-weight: 400; font-size: 13px; }
+  .topbar .spacer { flex: 1; }
+  .loader { display: flex; align-items: center; gap: 8px; }
+  .loader input[type=text] { width: 230px; height: 32px; padding: 0 10px; font: inherit; font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); }
+  .loader input[type=text]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); background: var(--bg); }
+  .btn { height: 32px; padding: 0 12px; font: inherit; font-size: 13px; font-weight: 500; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-subtle); color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; }
+  .btn:hover { background: var(--bg-inset); }
+  .btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn--primary:hover { background: #0860c8; }
+  .icon-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-subtle); color: var(--fg-muted); cursor: pointer; }
+  .icon-btn:hover { background: var(--bg-inset); color: var(--fg); }
+  .icon-btn svg { width: 16px; height: 16px; }
+
+  /* ---- App layout ---- */
+  .app { display: grid; grid-template-columns: 248px 1fr; min-height: 0; }
+  .side { overflow: auto; border-right: 1px solid var(--border); background: var(--bg); padding: 16px 12px 40px; }
+  .side__head { padding: 4px 8px 12px; }
+  .side__name { font-weight: 600; font-size: 15px; }
+  .side__ver { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); margin-top: 2px; }
+  .side__filter { width: 100%; height: 32px; padding: 0 10px; margin-bottom: 10px; font: inherit; font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); }
+  .side__filter:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); background: var(--bg); }
+
+  .nav-item { display: block; padding: 6px 10px; border-radius: var(--radius); color: var(--fg); font-size: 14px; cursor: pointer; }
+  .nav-item:hover { background: var(--bg-subtle); text-decoration: none; }
+  .nav-item.active { background: var(--accent-subtle); color: var(--fg); font-weight: 600; }
+  [data-path], [data-home], [data-copy] { cursor: pointer; }
+  [data-path]:focus-visible, [data-home]:focus-visible, .nav-group__title:focus-visible, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: var(--radius); }
+  .nav-home { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .nav-home svg { width: 16px; height: 16px; color: var(--fg-muted); }
+  .nav-group { margin-top: 6px; }
+  .nav-group__title { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 8px; background: none; border: 0; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-muted); }
+  .nav-group__title .caret { transition: transform .15s; color: var(--fg-subtle); }
+  .nav-group.collapsed .caret { transform: rotate(-90deg); }
+  .nav-group.collapsed .nav-group__items { display: none; }
+  .nav-group__items { display: flex; flex-direction: column; gap: 1px; }
+
+  /* ---- Content shell ---- */
+  .content { overflow: auto; }
+  .home-wrap { max-width: 960px; margin: 0 auto; padding: 32px 40px 96px; }
+  .concept { max-width: 1360px; margin: 0 auto; padding: 32px 40px 96px; display: grid; grid-template-columns: minmax(0, 1fr) 192px; gap: 44px; align-items: start; }
+  .concept__main { min-width: 0; }
+  /* Prose stays at a readable measure; visualizations and previews use the full width. */
+  .concept__main .chead, .concept__main .md { max-width: 760px; }
+  .toc { position: sticky; top: 24px; align-self: start; }
+  .toc__title { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 8px; }
+  .toc a { display: block; padding: 4px 10px; color: var(--fg-muted); border-left: 2px solid var(--border-muted); font-size: 13px; }
+  .toc a:hover { color: var(--fg); text-decoration: none; }
+  .toc a.active { color: var(--accent); border-left-color: var(--accent); }
+  .toc a.lvl3 { padding-left: 22px; }
+  @media (max-width: 1080px) { .concept { grid-template-columns: 1fr; } .toc { display: none; } }
+  @media (max-width: 720px) { .app { grid-template-columns: 1fr; } .side { display: none; } }
+
+  /* ---- Explore landing ---- */
+  .hero { padding: 12px 0 8px; }
+  .hero h1 { font-size: 34px; font-weight: 600; letter-spacing: -.02em; margin: 0 0 8px; }
+  .hero p { font-size: 18px; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+  .hero__meta { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .swatch-strip { display: flex; gap: 0; margin: 24px 0 4px; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  .swatch-strip__cell { flex: 1; height: 72px; min-width: 0; position: relative; }
+  .swatch-strip__cell span { position: absolute; left: 6px; bottom: 5px; font-family: var(--mono); font-size: 9px; opacity: 0; transition: opacity .12s; }
+  .swatch-strip__cell:hover span { opacity: .9; }
+
+  .section-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  @media (max-width: 720px) { .section-cards { grid-template-columns: 1fr; } }
+  .section-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 18px 12px; background: var(--bg); transition: border-color .12s, box-shadow .12s; }
+  .section-card:hover { border-color: var(--accent-muted); box-shadow: var(--shadow); }
+  .section-card__head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .section-card__head svg { width: 18px; height: 18px; color: var(--accent); }
+  .section-card__head h3 { font-size: 16px; font-weight: 600; margin: 0; }
+  .section-card__count { margin-left: auto; font-size: 12px; color: var(--fg-subtle); background: var(--bg-subtle); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); padding: 1px 8px; }
+  .section-card__desc { color: var(--fg-muted); font-size: 13.5px; margin: 0 0 10px; }
+  .section-card__list { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+  .section-card__list a { font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border-muted); border-radius: var(--radius); padding: 2px 8px; }
+  .section-card__list a:hover { background: var(--accent-subtle); border-color: var(--accent-muted); text-decoration: none; }
+
+  /* ---- Concept page ---- */
+  .breadcrumb { font-size: 13px; color: var(--fg-subtle); margin-bottom: 14px; }
+  .breadcrumb a { color: var(--fg-muted); }
+  .breadcrumb .sep { margin: 0 6px; }
+  .chead h1 { font-size: 28px; font-weight: 600; letter-spacing: -.01em; margin: 0 0 6px; }
+  .chead .desc { font-size: 17px; color: var(--fg-muted); margin: 0 0 14px; }
+  .labels { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
+  .label { font-size: 12px; padding: 1px 8px; border-radius: var(--radius-lg); border: 1px solid var(--border); color: var(--fg-muted); background: var(--bg-subtle); }
+  .label.type { color: var(--accent); border-color: var(--accent-muted); background: var(--accent-subtle); font-weight: 500; }
+  .label.s-stable { color: var(--success); } .label.s-experimental { color: var(--attention); } .label.s-deprecated { color: var(--danger); }
+
+  /* ---- Visualizations ---- */
+  .viz { margin: 0 0 32px; scroll-margin-top: 16px; }
+  .viz h2 { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-muted); margin: 0 0 12px; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .swatch:hover { border-color: var(--accent-muted); }
+  .swatch .chip { height: 56px; border-bottom: 1px solid var(--border-muted); }
+  .swatch .meta { padding: 8px 10px; }
+  .swatch .name { font-size: 13px; font-weight: 500; }
+  .swatch .val { font-family: var(--mono); font-size: 11.5px; color: var(--fg-subtle); }
+
+  .specimens { display: flex; flex-direction: column; gap: 10px; }
+  .specimen { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .specimen .label-row { font-family: var(--mono); font-size: 11.5px; color: var(--fg-subtle); margin-bottom: 8px; }
+  .specimen .sample { color: var(--fg); }
+
+  .scale { display: flex; flex-direction: column; gap: 8px; }
+  .scale .row { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 14px; }
+  .scale .k { font-family: var(--mono); font-size: 12.5px; color: var(--fg-muted); }
+  .scale .track { background: var(--bg-subtle); border-radius: var(--radius); }
+  .scale .bar { height: 14px; background: var(--accent); border-radius: var(--radius); }
+  .boxes { display: flex; gap: 18px; flex-wrap: wrap; }
+  .box { width: 100px; }
+  .box .demo { height: 64px; background: var(--bg-subtle); border: 1px solid var(--border); }
+  .box .k { font-family: var(--mono); font-size: 12px; color: var(--fg-muted); margin-top: 6px; }
+  .box .v { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); }
+
+  table.kv { width: 100%; border-collapse: collapse; }
+  table.kv th, table.kv td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-muted); font-size: 13.5px; vertical-align: top; }
+  table.kv th { color: var(--fg-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; border-bottom-color: var(--border); }
+  table.kv td.token { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; border: 1px solid var(--border); }
+
+  /* ---- Live example preview ---- */
+  .preview { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 0 0 16px; scroll-margin-top: 16px; }
+  .preview__head { display: flex; align-items: center; gap: 8px; padding: 7px 12px 7px 14px; border-bottom: 1px solid var(--border-muted); background: var(--bg-subtle); }
+  .preview__kind { font-size: 12px; font-weight: 600; }
+  .preview__kind.do { color: var(--success); } .preview__kind.dont { color: var(--danger); }
+  .preview__tabs { display: flex; gap: 4px; }
+  .preview__tab { font: inherit; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: var(--radius); border: 1px solid transparent; background: none; color: var(--fg-muted); cursor: pointer; }
+  .preview__tab.is-active { background: var(--bg); border-color: var(--border); color: var(--fg); }
+  .preview__path { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--fg-subtle); }
+  .preview iframe { width: 100%; border: 0; display: block; background: #fff; }
+  .preview iframe[hidden] { display: none; }
+  .preview__code { margin: 0; padding: 14px; overflow: auto; max-height: 440px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.55; color: var(--fg); }
+  .preview__code[hidden] { display: none; }
+
+  /* ---- Markdown body ---- */
+  .md { line-height: 1.65; color: var(--fg); }
+  .md h1 { font-size: 20px; margin: 32px 0 10px; scroll-margin-top: 16px; }
+  .md h2 { font-size: 17px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border-muted); scroll-margin-top: 16px; }
+  .md h3 { font-size: 15px; margin: 20px 0 6px; scroll-margin-top: 16px; }
+  .md p { margin: 10px 0; }
+  .md ul, .md ol { margin: 10px 0; padding-left: 22px; }
+  .md li { margin: 4px 0; }
+  .md code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-subtle); padding: 1px 5px; border-radius: 4px; }
+  .md pre { background: var(--bg-subtle); border: 1px solid var(--border-muted); border-radius: var(--radius); padding: 14px; overflow: auto; }
+  .md pre code { background: none; padding: 0; }
+  .md table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  .md th, .md td { border: 1px solid var(--border-muted); padding: 7px 10px; text-align: left; font-size: 13.5px; }
+  .md th { background: var(--bg-subtle); }
+  .md blockquote { border-left: 3px solid var(--border); margin: 12px 0; padding: 2px 14px; color: var(--fg-muted); }
+
+  .empty { color: var(--fg-muted); padding: 48px 0; max-width: 60ch; }
+  .empty code { font-family: var(--mono); background: var(--bg-subtle); padding: 2px 6px; border-radius: 5px; color: var(--fg); }
+  .empty .err { color: var(--danger); }
+
+  /* ---- Toast ---- */
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--fg); color: var(--bg); font-size: 13px; padding: 7px 14px; border-radius: var(--radius); opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; z-index: 50; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand__mark">◆</span> ODSF <span class="brand__sub">viewer</span></div>
+  <div class="spacer"></div>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"></button>
+  <div class="loader">
+    <input type="text" id="bundleUrl" placeholder="bundle path (e.g. ../examples/claude)">
+    <button class="btn btn--primary" id="loadBtn">Load</button>
+    <label class="btn">Open folder…<input type="file" id="folderInput" webkitdirectory directory multiple hidden></label>
+  </div>
+</header>
+<div class="app">
+  <nav class="side">
+    <div class="side__head"><div class="side__name" id="bundleName">No bundle</div><div class="side__ver" id="ver"></div></div>
+    <input class="side__filter" id="filter" placeholder="Filter concepts…" autocomplete="off">
+    <div id="nav"></div>
+  </nav>
+  <main class="content"><div id="view"></div></main>
+</div>
+
+<script>
+"use strict";
+
+// ---------- tiny helpers ----------
+const $ = (s, r=document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const unquote = (s) => s.replace(/^['"]|['"]$/g, "").trim();
+const isColor = (v) => typeof v === "string" && /^(#|rgb|hsl|oklch|lab|lch|color\()/i.test(v.trim());
+const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/["\\]/g, "\\$&");
+
+function resolvePath(baseDir, rel) {
+  if (rel.startsWith("/")) return rel.replace(/^\/+/, "");
+  const out = [];
+  for (const p of (baseDir + rel).split("/")) {
+    if (p === "" || p === ".") continue;
+    if (p === "..") out.pop(); else out.push(p);
+  }
+  return out.join("/");
+}
+const dirOf = (p) => p.replace(/[^/]*$/, "");
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+// ---------- minimal YAML (the frontmatter subset ODSF uses) ----------
+function parseYAML(src) {
+  const root = {};
+  const stack = [{ indent: -2, container: root, key: null, parentRef: null }];
+  for (const raw of src.split(/\r?\n/)) {
+    if (!raw.trim() || raw.trim().startsWith("#")) continue;
+    const indent = raw.length - raw.trimStart().length;
+    const line = raw.trim();
+    while (stack.length > 1 && stack[stack.length - 1].indent >= indent) stack.pop();
+    const top = stack[stack.length - 1];
+    if (line.startsWith("- ")) {
+      let arr = top.parentRef ? top.parentRef[top.key] : null;
+      if (!Array.isArray(arr)) { arr = []; if (top.parentRef) top.parentRef[top.key] = arr; top.container = arr; }
+      arr.push(unquote(line.slice(2).trim()));
+      continue;
+    }
+    const ci = line.indexOf(":");
+    if (ci === -1) continue;
+    const key = line.slice(0, ci).trim();
+    const rest = line.slice(ci + 1).trim();
+    if (rest === "") {
+      const obj = {}; top.container[key] = obj;
+      stack.push({ indent, container: obj, key, parentRef: top.container });
+    } else if (rest.startsWith("[")) {
+      top.container[key] = rest.replace(/^\[|\]$/g, "").split(",").map(s => unquote(s.trim())).filter(Boolean);
+    } else {
+      top.container[key] = unquote(rest);
+    }
+  }
+  return root;
+}
+function splitFrontmatter(text) {
+  const t = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+  const m = t.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!m) return { fm: {}, body: t };
+  return { fm: parseYAML(m[1]), body: m[2] };
+}
+
+// ---------- minimal markdown ----------
+function inline(s) {
+  s = esc(s);
+  s = s.replace(/`([^`]+)`/g, (_, c) => "<code>" + c + "</code>");
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, h) => '<a href="' + h + '" data-link="' + esc(h) + '">' + t + "</a>");
+  return s;
+}
+function mdToHtml(md) {
+  const lines = md.split(/\r?\n/);
+  let out = "", i = 0;
+  while (i < lines.length) {
+    let line = lines[i];
+    if (/^```/.test(line)) {
+      let code = ""; i++;
+      while (i < lines.length && !/^```/.test(lines[i])) code += lines[i++] + "\n";
+      i++; out += "<pre><code>" + esc(code.replace(/\n$/, "")) + "</code></pre>"; continue;
+    }
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+      const cells = (r) => r.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+      const head = cells(line); i += 2;
+      let rows = "";
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) {
+        rows += "<tr>" + cells(lines[i++]).map(c => "<td>" + inline(c) + "</td>").join("") + "</tr>";
+      }
+      out += "<table><thead><tr>" + head.map(c => "<th>" + inline(c) + "</th>").join("") + "</tr></thead><tbody>" + rows + "</tbody></table>"; continue;
+    }
+    const h = line.match(/^(#{1,6})\s+(.*)$/);
+    if (h) { const lv = Math.min(h[1].length + 1, 6); out += "<h" + lv + ">" + inline(h[2]) + "</h" + lv + ">"; i++; continue; }
+    // a line that continues the current list item (wrapped prose), not a new block
+    const isCont = (l) => l && l.trim() && !/^\s*(\d+\.\s|[-*]\s|#{1,6}\s|```|\|)/.test(l);
+    if (/^\s*[-*]\s+/.test(line)) {
+      let items = "";
+      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+        let text = lines[i++].replace(/^\s*[-*]\s+/, "");
+        while (i < lines.length && isCont(lines[i])) text += " " + lines[i++].trim();
+        items += "<li>" + inline(text) + "</li>";
+      }
+      out += "<ul>" + items + "</ul>"; continue;
+    }
+    if (/^\s*\d+\.\s+/.test(line)) {
+      let items = "";
+      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+        let text = lines[i++].replace(/^\s*\d+\.\s+/, "");
+        while (i < lines.length && isCont(lines[i])) text += " " + lines[i++].trim();
+        items += "<li>" + inline(text) + "</li>";
+      }
+      out += "<ol>" + items + "</ol>"; continue;
+    }
+    if (/^\s*>\s?/.test(line)) { out += "<blockquote>" + inline(line.replace(/^\s*>\s?/, "")) + "</blockquote>"; i++; continue; }
+    if (!line.trim()) { i++; continue; }
+    let para = "";
+    while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|```|\s*[-*]\s|\s*\d+\.\s|\s*\|)/.test(lines[i])) para += (para ? " " : "") + lines[i++];
+    out += "<p>" + inline(para) + "</p>";
+  }
+  return out;
+}
+
+// ---------- bundle source ----------
+let source = null, TOKENS = {}, CONCEPTS = [], META = {}, spyHandler = null;
+
+function fetchSource(base) {
+  base = base.replace(/\/+$/, "");
+  const cache = new Map();
+  async function read(path) {
+    if (cache.has(path)) return cache.get(path);
+    let txt = null;
+    try { const r = await fetch(base + "/" + path); txt = r.ok ? await r.text() : null; } catch { txt = null; }
+    cache.set(path, txt); return txt;
+  }
+  async function listMd() {
+    const concepts = new Set(), seen = new Set(["index.md"]), queue = ["index.md"];
+    while (queue.length) {
+      const idx = queue.shift(), dir = dirOf(idx), txt = await read(idx);
+      if (!txt) continue;
+      for (const m of txt.matchAll(/\]\(([^)\s#]+)\)/g)) {
+        const href = m[1];
+        if (/^[a-z]+:/i.test(href)) continue;
+        if (href.endsWith("/")) { const ni = resolvePath(dir, href) + "/index.md"; if (!seen.has(ni)) { seen.add(ni); queue.push(ni); } }
+        else if (href.endsWith(".md")) {
+          const p = resolvePath(dir, href), b = p.split("/").pop();
+          if (b === "index.md" || b === "log.md") { if (!seen.has(p)) { seen.add(p); queue.push(p); } }
+          else concepts.add(p);
+        }
+      }
+    }
+    return [...concepts];
+  }
+  return { read, listMd, label: base };
+}
+
+function folderSource(fileList) {
+  const map = new Map();
+  let rootPrefix = "";
+  for (const f of fileList) {
+    const rp = f.webkitRelativePath || f.name;
+    const parts = rp.split("/");
+    rootPrefix = parts[0];
+    map.set(parts.slice(1).join("/"), f);
+  }
+  async function read(path) { const f = map.get(path); return f ? await f.text() : null; }
+  async function listMd() {
+    return [...map.keys()].filter(p => p.endsWith(".md") && !["index.md", "log.md"].includes(p.split("/").pop()));
+  }
+  return { read, listMd, label: rootPrefix.replace(/\/$/, "") + " (local)" };
+}
+
+// ---------- load + index a bundle ----------
+async function loadBundle(src) {
+  source = src; TOKENS = {}; CONCEPTS = []; META = {};
+  $("#view").innerHTML = '<div class="home-wrap"><div class="empty">Loading…</div></div>';
+  const rootIdx = await source.read("index.md");
+  const meta = rootIdx ? splitFrontmatter(rootIdx).fm : {};
+  const titleM = rootIdx && rootIdx.match(/^#\s+(.+)$/m);
+
+  const paths = await source.listMd();
+  if (!paths.length) { renderEmpty(rootIdx === null); return; }
+  for (const p of paths) {
+    const txt = await source.read(p);
+    if (txt == null) continue;
+    const { fm, body } = splitFrontmatter(txt);
+    CONCEPTS.push({ path: p, fm, body });
+    flattenTokens(fm.tokens, "", TOKENS);
+  }
+  CONCEPTS.sort((a, b) => a.path.localeCompare(b.path));
+  const ds = CONCEPTS.find(c => /design system/i.test(c.fm.type || ""));
+  META = {
+    name: (ds && ds.fm.title) || (titleM ? titleM[1] : (source.label || "Bundle")),
+    description: (ds && ds.fm.description) || "",
+    odsf: meta.odsf_version, okf: meta.okf_version,
+  };
+  $("#bundleName").textContent = META.name;
+  $("#ver").textContent = [META.odsf && "odsf " + META.odsf, META.okf && "okf " + META.okf].filter(Boolean).join(" · ");
+  buildSidebar();
+  renderHome();
+}
+function flattenTokens(node, prefix, into) {
+  if (!node || typeof node !== "object") return;
+  for (const [k, v] of Object.entries(node)) {
+    const key = prefix ? prefix + "." + k : k;
+    if (v && typeof v === "object" && !Array.isArray(v)) flattenTokens(v, key, into);
+    else into[key] = v;
+  }
+}
+function resolveRef(v) {
+  if (typeof v !== "string") return v;
+  return v.replace(/\{([a-zA-Z0-9_.-]+)\}/g, (m, p) => (p in TOKENS ? TOKENS[p] : m));
+}
+
+// ---------- groups ----------
+const GROUPS = {
+  "":           { label: "Overview",   desc: "The system at a glance." },
+  foundations:  { label: "Foundations", desc: "Tokens and the design language." },
+  components:   { label: "Components",  desc: "Reusable UI elements, each with a runnable example." },
+  patterns:     { label: "Patterns",    desc: "Compositions that solve a recurring need." },
+  behaviors:    { label: "Behaviors",   desc: "Interaction and state rules." },
+  guidelines:   { label: "Guidelines",  desc: "Do / don't principles with counter-examples." },
+  references:   { label: "References",  desc: "External sources mirrored into the bundle." },
+};
+const ICONS = {
+  "": '<path d="M3 9l7-6 7 6v8a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1z"/>',
+  foundations: '<path d="M10 3l7 4-7 4-7-4 7-4zM3 11l7 4 7-4"/>',
+  components: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/>',
+  patterns: '<rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 8v9"/>',
+  behaviors: '<path d="M5 3l11 6-4.5 1.2L9 16z"/>',
+  guidelines: '<circle cx="10" cy="10" r="7"/><path d="M7 10l2 2 4-4.5"/>',
+  references: '<path d="M8.5 11.5a3 3 0 0 0 4.2 0l2-2a3 3 0 0 0-4.2-4.2l-1 1M11.5 8.5a3 3 0 0 0-4.2 0l-2 2a3 3 0 0 0 4.2 4.2l1-1"/>',
+};
+const GROUP_ORDER = ["", "foundations", "components", "patterns", "behaviors", "guidelines", "references"];
+const groupOf = (path) => path.includes("/") ? path.split("/")[0] : "";
+function groupedConcepts() {
+  const groups = {};
+  for (const c of CONCEPTS) (groups[groupOf(c.path)] ||= []).push(c);
+  for (const g in groups) groups[g].sort((a, b) => (a.fm.title || a.path).localeCompare(b.fm.title || b.path));
+  return groups;
+}
+function orderedGroups(groups) { return [...new Set([...GROUP_ORDER, ...Object.keys(groups)])].filter(g => groups[g]); }
+const icon = (g) => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[g] || ICONS[""]) + '</svg>';
+
+// ---------- sidebar ----------
+function buildSidebar() {
+  const groups = groupedConcepts();
+  let html = '<a class="nav-item nav-home" data-home="1" tabindex="0">' + icon("") + ' Explore</a>';
+  for (const g of orderedGroups(groups)) {
+    html += '<div class="nav-group" data-group="' + esc(g) + '">' +
+      '<button class="nav-group__title"><span class="caret">▾</span>' + esc(GROUPS[g] ? GROUPS[g].label : g || "Overview") + '</button>' +
+      '<div class="nav-group__items">';
+    for (const c of groups[g]) html += '<a class="nav-item" data-path="' + esc(c.path) + '" tabindex="0">' + esc(c.fm.title || c.path) + '</a>';
+    html += '</div></div>';
+  }
+  $("#nav").innerHTML = html;
+}
+function setActive(sel) {
+  $("#nav").querySelectorAll(".nav-item").forEach(a => a.classList.remove("active"));
+  if (sel) { const el = $("#nav").querySelector(sel); if (el) el.classList.add("active"); }
+}
+
+// ---------- explore landing ----------
+function renderHome() {
+  if (spyHandler) { $(".content").removeEventListener("scroll", spyHandler); spyHandler = null; }
+  setActive(".nav-home");
+  const groups = groupedConcepts();
+  let html = '<div class="hero"><h1>' + esc(META.name) + "</h1>";
+  if (META.description) html += "<p>" + esc(META.description) + "</p>";
+  html += '<div class="hero__meta">' +
+    (META.odsf ? '<span class="label type">ODSF ' + esc(META.odsf) + "</span>" : "") +
+    '<span class="label">' + CONCEPTS.length + " concepts</span>" +
+    '<span class="label">' + Object.keys(TOKENS).length + " tokens</span></div></div>";
+
+  const colorConcept = CONCEPTS.find(c => /color/i.test(c.fm.type || ""));
+  const colors = colorConcept && colorConcept.fm.tokens && colorConcept.fm.tokens.colors;
+  if (colors) {
+    html += '<div class="swatch-strip">';
+    for (const [k, v0] of Object.entries(colors).slice(0, 14)) {
+      const v = resolveRef(v0), ink = isLight(v) ? "#1f2328" : "#ffffff";
+      html += '<div class="swatch-strip__cell" data-copy="' + esc(v) + '" title="' + esc(k + " · " + v + " — click to copy") + '" style="background:' + esc(v) + '"><span style="color:' + ink + '">' + esc(v) + "</span></div>";
+    }
+    html += "</div>";
+  }
+
+  html += '<div class="section-cards">';
+  for (const g of orderedGroups(groups)) {
+    const meta = GROUPS[g] || { label: g, desc: "" };
+    html += '<div class="section-card"><div class="section-card__head">' + icon(g) +
+      "<h3>" + esc(meta.label) + '</h3><span class="section-card__count">' + groups[g].length + "</span></div>" +
+      '<p class="section-card__desc">' + esc(meta.desc) + '</p><div class="section-card__list">';
+    for (const c of groups[g]) html += '<a data-path="' + esc(c.path) + '" tabindex="0">' + esc(c.fm.title || c.path) + "</a>";
+    html += "</div></div>";
+  }
+  html += "</div>";
+  $("#view").innerHTML = '<div class="home-wrap">' + html + "</div>";
+  $(".content").scrollTop = 0;
+}
+function isLight(hex) {
+  const m = (hex || "").match(/^#([0-9a-f]{6})$/i);
+  if (!m) return true;
+  const n = parseInt(m[1], 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150;
+}
+
+// ---------- concept page ----------
+async function selectConcept(path) {
+  const c = CONCEPTS.find(x => x.path === path); if (!c) return;
+  setActive('.nav-item[data-path="' + cssEsc(path) + '"]');
+  const fm = c.fm, type = fm.type || "Concept", g = groupOf(path);
+  const groupLabel = GROUPS[g] ? GROUPS[g].label : (g || "Overview");
+
+  let head = '<div class="breadcrumb"><a data-home="1" tabindex="0">Explore</a><span class="sep">/</span>' + esc(groupLabel) +
+    '<span class="sep">/</span>' + esc(fm.title || path) + "</div>";
+  head += '<div class="chead"><h1>' + esc(fm.title || path) + "</h1>";
+  if (fm.description) head += '<p class="desc">' + esc(fm.description) + "</p>";
+  head += '<div class="labels"><span class="label type">' + esc(type) + "</span>";
+  if (fm.status) head += '<span class="label s-' + esc(fm.status) + '">' + esc(fm.status) + "</span>";
+  for (const t of (fm.tags || [])) head += '<span class="label">#' + esc(t) + "</span>";
+  if (fm.applies_to) head += '<span class="label">' + esc([].concat(fm.applies_to).join(", ")) + "</span>";
+  head += "</div></div>";
+  head += renderTokenViz(type, fm.tokens);
+
+  const view = $("#view");
+  view.innerHTML = '<div class="concept"><div class="concept__main">' + head +
+    '<div id="examples"></div><div class="md">' + mdToHtml(c.body) + '</div></div>' +
+    '<aside class="toc" id="toc"></aside></div>';
+  $(".content").scrollTop = 0;
+
+  view.querySelectorAll(".md a[data-link]").forEach(a => {
+    const href = a.getAttribute("data-link");
+    if (/^[a-z]+:/i.test(href)) { a.target = "_blank"; a.rel = "noopener"; return; }
+    if (href.endsWith(".md")) {
+      const target = resolvePath(dirOf(path), href.split("#")[0]);
+      if (CONCEPTS.some(x => x.path === target)) a.setAttribute("data-path", target);
+    }
+  });
+
+  const assets = new Set((fm.examples || []).map(h => resolvePath(dirOf(path), h)));
+  for (const m of c.body.matchAll(/\]\(([^)\s#]+\.html)\)/g)) {
+    if (!/^[a-z]+:/i.test(m[1])) assets.add(resolvePath(dirOf(path), m[1]));
+  }
+  await renderExamples([...assets]);
+  buildToc();
+}
+
+// "On this page" table of contents + scroll-spy
+function buildToc() {
+  const main = $(".concept__main"), toc = $("#toc"); if (!main || !toc) return;
+  const items = [], used = new Set();
+  main.querySelectorAll(".viz > h2, #examples, .md h2, .md h3").forEach(n => {
+    if (n.id === "examples") { if (n.children.length) items.push({ id: "examples", text: "Preview", lvl: 2 }); return; }
+    let id = slug(n.textContent) || ("s" + items.length); const base = id;
+    for (let k = 2; used.has(id); k++) id = base + "-" + k;
+    used.add(id); n.id = id;
+    items.push({ id, text: n.textContent, lvl: n.tagName === "H3" ? 3 : 2 });
+  });
+  if (items.length < 2) { toc.innerHTML = ""; return; }
+  toc.innerHTML = '<div class="toc__title">On this page</div>' +
+    items.map(it => '<a class="' + (it.lvl === 3 ? "lvl3" : "") + '" data-anchor="' + esc(it.id) + '" href="#' + esc(it.id) + '" tabindex="0">' + esc(it.text) + "</a>").join("");
+  const root = $(".content");
+  if (spyHandler) root.removeEventListener("scroll", spyHandler);
+  const ids = items.map(it => it.id);
+  const linkOf = (id) => toc.querySelector('a[data-anchor="' + cssEsc(id) + '"]');
+  spyHandler = () => {
+    const lineY = root.getBoundingClientRect().top + 96;   // a band just under the top bar
+    let current = ids[0];
+    for (const id of ids) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= lineY) current = id; }
+    if (root.scrollTop + root.clientHeight >= root.scrollHeight - 4) current = ids[ids.length - 1];  // pin last at bottom
+    for (const id of ids) { const l = linkOf(id); if (l) l.classList.toggle("active", id === current); }
+  };
+  root.addEventListener("scroll", spyHandler, { passive: true });
+  spyHandler();
+}
+
+function renderTokenViz(type, tokens) {
+  if (!tokens) return "";
+  const t = String(type).toLowerCase();
+  const pick = (g) => tokens[g] && typeof tokens[g] === "object" ? tokens[g] : null;
+  if (t.includes("color")) return colorViz(pick("colors") || flattenColors(tokens));
+  if (t.includes("typograph")) return typeViz(pick("typography") || tokens);
+  if (t.includes("spacing")) return scaleViz("Spacing", pick("spacing") || tokens);
+  if (t.includes("shape")) return boxViz("Radius", pick("radius") || tokens, "radius");
+  if (t.includes("elevation")) return boxViz("Elevation", pick("elevation") || tokens, "shadow");
+  if (t.includes("motion")) return kvViz("Motion", pick("motion") || tokens);
+  return tokenTable(tokens);
+}
+function flattenColors(tokens) { const o = {}; flattenTokens(tokens, "", o); return o; }
+function colorViz(colors) {
+  if (!colors) return "";
+  let s = '<div class="viz"><h2>Swatches</h2><div class="swatches">';
+  for (const [k, v0] of Object.entries(colors)) {
+    const v = resolveRef(v0);
+    s += '<div class="swatch" data-copy="' + esc(v) + '" title="Click to copy ' + esc(v) + '"><div class="chip" style="background:' + esc(v) + '"></div>' +
+         '<div class="meta"><div class="name">' + esc(k) + '</div><div class="val">' + esc(v) + "</div></div></div>";
+  }
+  return s + "</div></div>";
+}
+function typeViz(typ) {
+  const base = typ.fontFamily ? resolveRef(typ.fontFamily) : "inherit";
+  let s = '<div class="viz"><h2>Specimens</h2><div class="specimens">';
+  for (const [role, props] of Object.entries(typ)) {
+    if (typeof props !== "object" || Array.isArray(props)) continue;
+    const fs = props.fontSize || "16px", fw = props.fontWeight || 400, lh = props.lineHeight || 1.4;
+    const fam = props.fontFamily ? resolveRef(props.fontFamily) : base;
+    s += '<div class="specimen"><div class="label-row">' + esc(role) + " · " + esc(fs) + " / " + esc(String(fw)) + " / " + esc(String(lh)) + "</div>" +
+         '<div class="sample" style="font-family:' + esc(fam) + ";font-size:" + esc(fs) + ";font-weight:" + esc(String(fw)) + ";line-height:" + esc(String(lh)) + (props.letterSpacing ? ";letter-spacing:" + esc(props.letterSpacing) : "") + '">The quick brown fox jumps over the lazy dog</div></div>';
+  }
+  return s + "</div></div>";
+}
+function scaleViz(name, scale) {
+  let s = '<div class="viz"><h2>' + esc(name) + '</h2><div class="scale">';
+  for (const [k, v0] of Object.entries(scale)) {
+    if (typeof v0 === "object") continue;
+    const v = resolveRef(v0);
+    s += '<div class="row"><div class="k">' + esc(k) + " · " + esc(v) + '</div><div class="track"><div class="bar" style="width:' + esc(v) + '"></div></div></div>';
+  }
+  return s + "</div></div>";
+}
+function boxViz(name, set, kind) {
+  let s = '<div class="viz"><h2>' + esc(name) + '</h2><div class="boxes">';
+  for (const [k, v0] of Object.entries(set)) {
+    if (typeof v0 === "object") continue;
+    const v = resolveRef(v0);
+    const style = kind === "radius" ? "border-radius:" + esc(v) : "box-shadow:" + esc(v) + ";background:#fff;border-color:var(--border-muted)";
+    s += '<div class="box"><div class="demo" style="' + style + '"></div><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + "</div></div>";
+  }
+  return s + "</div></div>";
+}
+function kvViz(name, set) {
+  let s = '<div class="viz"><h2>' + esc(name) + '</h2><table class="kv"><tbody>';
+  for (const [k, v0] of Object.entries(set)) { if (typeof v0 === "object") continue; s += "<tr><td class=token>" + esc(k) + "</td><td class=token>" + esc(resolveRef(v0)) + "</td></tr>"; }
+  return s + "</tbody></table></div>";
+}
+function tokenTable(tokens) {
+  const flat = {}; flattenTokens(tokens, "", flat);
+  const keys = Object.keys(flat); if (!keys.length) return "";
+  let s = '<div class="viz"><h2>Tokens</h2><table class="kv"><thead><tr><th>Token</th><th>Value</th><th>Resolves to</th></tr></thead><tbody>';
+  for (const k of keys) {
+    const raw = flat[k], res = resolveRef(raw);
+    const dot = isColor(res) ? '<span class="dot" data-copy="' + esc(res) + '" title="Click to copy ' + esc(res) + '" style="background:' + esc(res) + '"></span>' : "";
+    s += "<tr><td class=token>" + esc(k) + "</td><td class=token>" + esc(raw) + "</td><td class=token>" + dot + esc(res === raw ? "" : res) + "</td></tr>";
+  }
+  return s + "</tbody></table></div>";
+}
+
+// ---------- live example previews (Preview / Code tabs) ----------
+async function inlineCss(html, baseDir) {
+  const links = [...html.matchAll(/<link\b[^>]*>/gi)].filter(m => /rel\s*=\s*["']?stylesheet/i.test(m[0]));
+  for (const m of links) {
+    const hrefM = m[0].match(/href\s*=\s*["']([^"']+)["']/i);
+    if (!hrefM) continue;
+    if (/^[a-z]+:/i.test(hrefM[1])) continue;
+    const css = await source.read(resolvePath(baseDir, hrefM[1]));
+    html = html.replace(m[0], css != null ? "<style>" + css + "</style>" : "");
+  }
+  return html;
+}
+async function renderExamples(paths) {
+  const host = $("#examples"); host.innerHTML = "";
+  for (const p of paths) {
+    const raw = await source.read(p);
+    if (raw == null) continue;
+    const kind = /\.dont\./.test(p) ? "dont" : /\.do\./.test(p) ? "do" : "example";
+    const kindLabel = kind === "dont" ? "Don't" : kind === "do" ? "Do" : "";
+    const wrap = document.createElement("div"); wrap.className = "preview";
+    wrap.innerHTML =
+      '<div class="preview__head">' +
+        (kindLabel ? '<span class="preview__kind ' + kind + '">' + kindLabel + "</span>" : "") +
+        '<div class="preview__tabs"><button class="preview__tab is-active" data-tab="preview">Preview</button><button class="preview__tab" data-tab="code">Code</button></div>' +
+        '<span class="preview__path">' + esc(p) + "</span>" +
+      "</div>" +
+      '<div class="preview__body"><iframe sandbox="allow-same-origin" title="' + esc(p) + '"></iframe>' +
+      '<pre class="preview__code" hidden><code>' + esc(raw) + "</code></pre></div>";
+    host.appendChild(wrap);
+    const iframe = wrap.querySelector("iframe"), code = wrap.querySelector(".preview__code");
+    wrap.querySelectorAll(".preview__tab").forEach(btn => btn.onclick = () => {
+      wrap.querySelectorAll(".preview__tab").forEach(b => b.classList.toggle("is-active", b === btn));
+      const showCode = btn.dataset.tab === "code";
+      iframe.hidden = showCode; code.hidden = !showCode;
+    });
+    const doc = await inlineCss(raw, dirOf(p));
+    iframe.addEventListener("load", () => {
+      try { iframe.style.height = (iframe.contentDocument.documentElement.scrollHeight + 2) + "px"; } catch { iframe.style.height = "260px"; }
+    });
+    iframe.srcdoc = doc;
+  }
+}
+
+// ---------- filter ----------
+function applyFilter(q) {
+  q = q.trim().toLowerCase();
+  $("#nav").querySelectorAll(".nav-group").forEach(grp => {
+    let any = false;
+    grp.querySelectorAll(".nav-item").forEach(a => {
+      const c = CONCEPTS.find(x => x.path === a.dataset.path);
+      const hay = (a.textContent + " " + (c ? (c.fm.description || "") + " " + (c.fm.type || "") + " " + a.dataset.path : "")).toLowerCase();
+      const show = !q || hay.includes(q);
+      a.style.display = show ? "" : "none";
+      if (show) any = true;
+    });
+    grp.style.display = any ? "" : "none";
+  });
+}
+
+// ---------- copy + toast ----------
+let toastTimer;
+function toast(msg) {
+  let el = $("#toast");
+  if (!el) { el = document.createElement("div"); el.id = "toast"; el.className = "toast"; document.body.appendChild(el); }
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 1200);
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); }
+  catch {
+    const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch {} ta.remove();
+  }
+  toast("Copied " + t);
+}
+
+// ---------- theme ----------
+const ICON_MOON = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.6 1.3a6.7 6.7 0 1 0 5.1 9.9A5.4 5.4 0 0 1 9.6 1.3z"/></svg>';
+const ICON_SUN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3.2"/><path d="M8 .8v1.8M8 13.4v1.8M.8 8h1.8M13.4 8h1.8M2.7 2.7l1.3 1.3M12 12l1.3 1.3M13.3 2.7L12 4M4 12l-1.3 1.3" stroke-linecap="round"/></svg>';
+function setTheme(t, persist) {
+  document.documentElement.dataset.theme = t;
+  if (persist) { try { localStorage.setItem("odsf-theme", t); } catch {} }
+  $("#themeBtn").innerHTML = t === "dark" ? ICON_SUN : ICON_MOON;
+}
+
+// ---------- empty / error ----------
+function renderEmpty(rootMissing) {
+  $("#nav").innerHTML = ""; $("#bundleName").textContent = "No bundle"; $("#ver").textContent = "";
+  const fileProto = location.protocol === "file:";
+  $("#view").innerHTML = '<div class="home-wrap"><div class="empty">' +
+    (rootMissing ? '<p class="err">Could not read this bundle&rsquo;s <code>index.md</code>.</p>' : "<p>No concepts found in this bundle.</p>") +
+    (fileProto
+      ? '<p>You opened the viewer over <code>file://</code>, where fetching files is blocked. Use <b>Open folder…</b> to pick a bundle directory, or serve the repo over HTTP.</p>'
+      : '<p>Check the bundle path, or use <b>Open folder…</b>. To serve the repo: <code>npx serve</code> or <code>python -m http.server</code>.</p>') +
+    '</div></div>';
+}
+
+// ---------- wire up ----------
+document.addEventListener("click", (e) => {
+  const copy = e.target.closest("[data-copy]");
+  if (copy) { copyText(copy.getAttribute("data-copy")); return; }
+  const anchor = e.target.closest(".toc a[data-anchor]");
+  if (anchor) { e.preventDefault(); const t = document.getElementById(anchor.getAttribute("data-anchor")); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+  const home = e.target.closest("[data-home]");
+  if (home) { e.preventDefault(); renderHome(); return; }
+  const gt = e.target.closest(".nav-group__title");
+  if (gt) { gt.parentElement.classList.toggle("collapsed"); return; }
+  const item = e.target.closest("[data-path]");
+  if (item) { e.preventDefault(); selectConcept(item.getAttribute("data-path")); }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const el = e.target.closest("[data-path],[data-home],[data-copy],.toc a[data-anchor]");
+  if (el) { e.preventDefault(); el.click(); }
+});
+$("#themeBtn").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark", true);
+$("#loadBtn").onclick = () => { const u = $("#bundleUrl").value.trim(); if (u) loadBundle(fetchSource(u)); };
+$("#bundleUrl").addEventListener("keydown", e => { if (e.key === "Enter") $("#loadBtn").click(); });
+$("#folderInput").onchange = (e) => { if (e.target.files.length) loadBundle(folderSource([...e.target.files])); };
+$("#filter").addEventListener("input", e => applyFilter(e.target.value));
+
+(function init() {
+  let saved = null; try { saved = localStorage.getItem("odsf-theme"); } catch {}
+  setTheme(saved || "light", false);  // calm light by default; only an explicit toggle persists
+  const param = new URLSearchParams(location.search).get("bundle");
+  const def = param || "../examples/claude";
+  $("#bundleUrl").value = def;
+  if (location.protocol === "file:" && !param) { renderEmpty(false); return; }
+  loadBundle(fetchSource(def));
+})();
+</script>
+</body>
+</html>

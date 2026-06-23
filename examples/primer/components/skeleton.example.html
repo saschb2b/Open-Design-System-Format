@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Skeleton</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .Box { max-width: 480px; } .sk-row { display: flex; align-items: center; gap: 12px; } .sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; } </style>
+</head>
+<body>
+  <div class="Box" aria-busy="true" aria-label="Loading">
+    <div class="Box-row sk-row">
+      <span class="SkeletonAvatar"></span>
+      <span class="sk-lines">
+        <span class="Skeleton Skeleton--text" style="width: 40%"></span>
+        <span class="Skeleton Skeleton--text" style="width: 70%"></span>
+      </span>
+    </div>
+    <div class="Box-row sk-row">
+      <span class="SkeletonAvatar"></span>
+      <span class="sk-lines">
+        <span class="Skeleton Skeleton--text" style="width: 35%"></span>
+        <span class="Skeleton Skeleton--text" style="width: 60%"></span>
+      </span>
+    </div>
+  </div>
+</body>
+</html>

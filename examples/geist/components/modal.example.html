@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Modal</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 0; } </style>
+</head>
+<body>
+  <div class="scrim">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+      <div class="modal-body">
+        <h3 id="m-title">Invite member</h3>
+        <p>Enter an email address to invite a teammate to <strong>acme</strong>.</p>
+        <div style="height:14px"></div>
+        <input class="input" type="email" placeholder="name@company.com" aria-label="Email" style="width:100%">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-sm" type="button">Cancel</button>
+        <button class="btn btn-primary btn-sm" type="button">Send invite</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

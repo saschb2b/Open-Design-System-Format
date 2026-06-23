@@ -1,0 +1,114 @@
+/* Claude (Anthropic marketing) design tokens — the CSS projection of the foundation concepts.
+ *
+ * Token path  →  CSS custom property:  segments joined by "-", prefixed "--".
+ *   colors.canvas                 -> --colors-canvas
+ *   typography.display-xl.fontSize -> --typography-display-xl-fontSize
+ *
+ * Verified against the live claude.com DOM (2026-06-23): canvas #faf9f5 and ink #141413 match
+ * exactly; display is a custom serif (Copernicus / "anthropicSerif", Georgia serif fallback);
+ * body is a custom humanist sans ("anthropicSans" ≈ Styrene B / Inter). See references/.
+ *
+ * Inter (body) and JetBrains Mono (code) are pulled from Google Fonts so the examples render
+ * faithfully; the display serif intentionally falls back to Georgia — claude.com's own fallback —
+ * since Copernicus/Tiempos are licensed. Offline, everything degrades to system fonts.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* colors — brand & accent */
+  --colors-primary: #cc785c;            /* the signature Anthropic coral */
+  --colors-primary-active: #a9583e;     /* press / darker */
+  --colors-primary-disabled: #e6dfd8;
+  --colors-accent-teal: #5db8a6;
+  --colors-accent-amber: #e8a55a;
+
+  /* colors — surface */
+  --colors-canvas: #faf9f5;             /* warm cream page floor (verified) */
+  --colors-surface-soft: #f5f0e8;
+  --colors-surface-card: #efe9de;       /* feature cards, one step darker than canvas */
+  --colors-surface-cream-strong: #e8e0d2;
+  --colors-surface-dark: #181715;       /* code mockups, model cards, footer */
+  --colors-surface-dark-elevated: #252320;
+  --colors-surface-dark-soft: #1f1e1b;
+  --colors-hairline: #e6dfd8;           /* 1px border on cream surfaces */
+  --colors-hairline-soft: #ebe6df;
+
+  /* colors — text */
+  --colors-ink: #141413;                /* headlines & primary text (verified) */
+  --colors-body-strong: #252523;
+  --colors-body: #3d3d3a;
+  --colors-muted: #6c6a64;
+  --colors-muted-soft: #8e8b82;
+  --colors-on-primary: #ffffff;
+  --colors-on-dark: #faf9f5;            /* cream-tinted white on dark surfaces */
+  --colors-on-dark-soft: #a09d96;
+
+  /* colors — semantic */
+  --colors-success: #5db872;
+  --colors-warning: #d4a017;
+  --colors-error: #c64545;
+
+  /* typography — families */
+  --typography-fontFamily-display: "Tiempos Headline", Georgia, "Times New Roman", serif;
+  --typography-fontFamily-sans: "Styrene B", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --typography-fontFamily-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* typography — display (Copernicus serif, regular weight, negative tracking) */
+  --typography-display-xl-fontSize: 64px;  --typography-display-xl-fontWeight: 400; --typography-display-xl-lineHeight: 1.05; --typography-display-xl-letterSpacing: -1.5px;
+  --typography-display-lg-fontSize: 48px;  --typography-display-lg-fontWeight: 400; --typography-display-lg-lineHeight: 1.1;  --typography-display-lg-letterSpacing: -1px;
+  --typography-display-md-fontSize: 36px;  --typography-display-md-fontWeight: 400; --typography-display-md-lineHeight: 1.15; --typography-display-md-letterSpacing: -0.5px;
+  --typography-display-sm-fontSize: 28px;  --typography-display-sm-fontWeight: 400; --typography-display-sm-lineHeight: 1.2;  --typography-display-sm-letterSpacing: -0.3px;
+
+  /* typography — titles & body (Styrene B / Inter sans) */
+  --typography-title-lg-fontSize: 22px; --typography-title-lg-fontWeight: 500; --typography-title-lg-lineHeight: 1.3;
+  --typography-title-md-fontSize: 18px; --typography-title-md-fontWeight: 500; --typography-title-md-lineHeight: 1.4;
+  --typography-title-sm-fontSize: 16px; --typography-title-sm-fontWeight: 500; --typography-title-sm-lineHeight: 1.4;
+  --typography-body-md-fontSize: 16px;  --typography-body-md-fontWeight: 400;  --typography-body-md-lineHeight: 1.55;
+  --typography-body-sm-fontSize: 14px;  --typography-body-sm-fontWeight: 400;  --typography-body-sm-lineHeight: 1.55;
+  --typography-caption-fontSize: 13px;  --typography-caption-fontWeight: 500;  --typography-caption-lineHeight: 1.4;
+  --typography-caption-uppercase-fontSize: 12px; --typography-caption-uppercase-fontWeight: 500; --typography-caption-uppercase-letterSpacing: 1.5px;
+  --typography-code-fontSize: 14px;     --typography-code-fontWeight: 400;     --typography-code-lineHeight: 1.6;
+  --typography-button-fontSize: 14px;   --typography-button-fontWeight: 500;   --typography-button-lineHeight: 1;
+  --typography-nav-link-fontSize: 14px; --typography-nav-link-fontWeight: 500; --typography-nav-link-lineHeight: 1.4;
+
+  /* spacing — 4px base, 96px section rhythm */
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 96px;
+
+  /* radius — hierarchical (buttons 8, cards 12, hero 16, pills) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
+
+  /* elevation — color-block first, shadow rare */
+  --elevation-flat: none;
+  --elevation-soft: 0 1px 3px rgba(20, 20, 19, 0.08);
+
+  /* motion — press only (animation otherwise out of scope; see motion.md) */
+  --motion-fast: 120ms;
+  --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* layout */
+  --layout-container: 1200px;
+}
+
+/* A base so examples render on the cream canvas with the right ink and body type. */
+body {
+  margin: 0;
+  background: var(--colors-canvas);
+  color: var(--colors-body);
+  font-family: var(--typography-fontFamily-sans);
+  font-size: var(--typography-body-md-fontSize);
+  line-height: var(--typography-body-md-lineHeight);
+  -webkit-font-smoothing: antialiased;
+}

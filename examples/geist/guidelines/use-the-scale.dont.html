@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Don't — hard-coded colors</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    .stage { padding: 24px; display: flex; gap: 16px; flex-wrap: wrap; background: var(--ds-background-100); }
+    .c { width: 240px; border-radius: 8px; padding: 16px; }
+    .ok { background: var(--ds-background-100); color: var(--ds-gray-1000); box-shadow: var(--ds-shadow-border); }
+    .bad { background: #ffffff; color: #111111; box-shadow: 0 0 0 1px #00000029; }
+    .tag { font-size: 12px; color: var(--ds-gray-700); margin: 0 0 8px; }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="stage">
+    <div class="c ok"><p class="tag">Scale tokens</p><strong>Adapts</strong> — reads <code class="code">--ds-background-100</code>, so dark mode just works.</div>
+    <div class="c bad"><p class="tag" style="color:#777">Hard-coded hex</p><strong>Stuck in light</strong> — a white card on a near-black page. The failure to avoid.</div>
+  </div>
+</body>
+</html>

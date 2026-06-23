@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Radio</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; } legend { font-weight: 600; margin-bottom: 4px; padding: 0; } </style>
+</head>
+<body>
+  <fieldset>
+    <legend>Who can see this repository?</legend>
+    <div class="FormControl-check">
+      <input type="radio" id="vis-public" name="vis" checked>
+      <label for="vis-public">Public<span class="caption">Anyone on the internet can see it.</span></label>
+    </div>
+    <div class="FormControl-check">
+      <input type="radio" id="vis-internal" name="vis">
+      <label for="vis-internal">Internal<span class="caption">Visible to all organization members.</span></label>
+    </div>
+    <div class="FormControl-check">
+      <input type="radio" id="vis-private" name="vis">
+      <label for="vis-private">Private<span class="caption">Only you and collaborators.</span></label>
+    </div>
+  </fieldset>
+</body>
+</html>

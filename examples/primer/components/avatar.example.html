@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Avatar</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; display: flex; gap: 16px; align-items: center; } .avatar--org { border-radius: var(--borderRadius-medium); } .avatar--lg { width: 48px; height: 48px; } </style>
+</head>
+<body>
+  <!-- person — circular -->
+  <span class="avatar avatar--lg" aria-label="Mona">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-2.5 0-5 1.25-5 3.25V14h10v-1.25c0-2-2.5-3.25-5-3.25Z"/></svg>
+  </span>
+  <!-- organization — lightly rounded -->
+  <span class="avatar avatar--lg avatar--org" aria-label="GitHub">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 2.75A.75.75 0 0 1 2.75 2h10.5a.75.75 0 0 1 .75.75V14H2Zm3 2.5h2v2H5Zm4 0h2v2H9ZM5 9h2v2H5Zm4 0h2v2H9Z"/></svg>
+  </span>
+  <!-- default 32px -->
+  <span class="avatar" aria-label="Hubot">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-2.5 0-5 1.25-5 3.25V14h10v-1.25c0-2-2.5-3.25-5-3.25Z"/></svg>
+  </span>
+</body>
+</html>

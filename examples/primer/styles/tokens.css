@@ -1,0 +1,159 @@
+/* Primer (GitHub) design tokens — the CSS projection of the foundation concepts.
+ *
+ * This bundle deliberately ships Primer's OWN published variable names (--fgColor-default,
+ * --button-primary-bgColor-rest, …) rather than ODSF's `--colors-x` projection, so code an
+ * agent generates from this bundle matches real Primer / @primer/primitives code verbatim.
+ * The foundation frontmatter mirrors these under a `colors` group for agent-readability.
+ *
+ * Primer is FUNCTIONAL and THEME-ABLE: components reference a role (fgColor-default), never a
+ * raw value, so the same markup re-themes by swapping the token layer. Light is the default;
+ * `[data-color-mode="dark"]` swaps to dark; `[data-color-mode="auto"]` follows the OS. Values
+ * were read from the live primer.style DOM (@primer/primitives), 2026-06-23. See references/.
+ */
+
+:root, [data-color-mode="light"] {
+  /* foreground (text / icon) roles */
+  --fgColor-default: #1f2328;
+  --fgColor-muted: #59636e;
+  --fgColor-onEmphasis: #ffffff;
+  --fgColor-accent: #0969da;
+  --fgColor-success: #1a7f37;
+  --fgColor-danger: #d1242f;
+  --fgColor-attention: #9a6700;
+  --fgColor-done: #8250df;
+
+  /* background (surface) roles */
+  --bgColor-default: #ffffff;
+  --bgColor-muted: #f6f8fa;
+  --bgColor-inset: #f6f8fa;
+  --bgColor-emphasis: #25292e;
+  --bgColor-accent-emphasis: #0969da;
+  --bgColor-accent-muted: #ddf4ff;
+  --bgColor-success-emphasis: #1f883d;
+  --bgColor-success-muted: #dafbe1;
+  --bgColor-danger-emphasis: #cf222e;
+  --bgColor-danger-muted: #ffebe9;
+  --bgColor-attention-muted: #fff8c5;
+  --bgColor-neutral-muted: #818b981f;
+  --bgColor-neutral-emphasis: #6e7781;
+  --bgColor-done-emphasis: #8250df;
+
+  /* border roles */
+  --borderColor-default: #d1d9e0;
+  --borderColor-muted: #d1d9e0b3;
+  --borderColor-accent-emphasis: #0969da;
+
+  /* component roles */
+  --button-default-bgColor-rest: #f6f8fa;
+  --button-default-borderColor-rest: #d1d9e0;
+  --button-primary-bgColor-rest: #1f883d;   /* GitHub's signature green primary */
+  --button-primary-bgColor-hover: #1c8139;
+  --button-primary-fgColor-rest: #ffffff;
+  --button-danger-fgColor-rest: #d1242f;
+
+  /* elevation */
+  --shadow-resting-small: 0 1px 1px 0 #1f23280a, 0 1px 2px 0 #1f232808;
+  --shadow-resting-medium: 0 1px 1px 0 #25292e1a, 0 3px 6px 0 #25292e1f;
+  --shadow-floating-small: 0 0 0 1px #d1d9e040, 0 6px 12px -3px #25292e0a, 0 6px 18px 0 #25292e1f;
+}
+
+[data-color-mode="dark"] {
+  --fgColor-default: #f0f6fc;
+  --fgColor-muted: #9198a1;
+  --fgColor-onEmphasis: #ffffff;
+  --fgColor-accent: #4493f8;
+  --fgColor-success: #3fb950;
+  --fgColor-danger: #f85149;
+  --fgColor-attention: #d29922;
+  --fgColor-done: #ab7df8;
+
+  --bgColor-default: #0d1117;
+  --bgColor-muted: #151b23;
+  --bgColor-inset: #010409;
+  --bgColor-emphasis: #3d444d;
+  --bgColor-accent-emphasis: #1f6feb;
+  --bgColor-accent-muted: #388bfd1a;
+  --bgColor-success-emphasis: #238636;
+  --bgColor-success-muted: #2ea04326;
+  --bgColor-danger-emphasis: #da3633;
+  --bgColor-danger-muted: #f851491a;
+  --bgColor-attention-muted: #bb800926;
+  --bgColor-neutral-muted: #656c7666;
+  --bgColor-neutral-emphasis: #656c76;
+  --bgColor-done-emphasis: #8957e5;
+
+  --borderColor-default: #3d444d;
+  --borderColor-muted: #3d444db3;
+  --borderColor-accent-emphasis: #1f6feb;
+
+  --button-default-bgColor-rest: #212830;
+  --button-default-borderColor-rest: #3d444d;
+  --button-primary-bgColor-rest: #238636;
+  --button-primary-bgColor-hover: #29903b;
+  --button-primary-fgColor-rest: #ffffff;
+  --button-danger-fgColor-rest: #f85149;
+
+  --shadow-resting-small: 0 1px 1px 0 #0104090a, 0 1px 2px 0 #01040908;
+  --shadow-resting-medium: 0 1px 1px 0 #0104091a, 0 3px 6px 0 #0104091f;
+  --shadow-floating-small: 0 0 0 1px #3d444d, 0 6px 12px -3px #0104090a, 0 6px 18px 0 #0104091f;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-color-mode="auto"] {
+    --fgColor-default: #f0f6fc; --fgColor-muted: #9198a1; --fgColor-accent: #4493f8;
+    --fgColor-success: #3fb950; --fgColor-danger: #f85149;
+    --bgColor-default: #0d1117; --bgColor-muted: #151b23; --bgColor-inset: #010409;
+    --bgColor-emphasis: #3d444d; --bgColor-accent-emphasis: #1f6feb; --bgColor-accent-muted: #388bfd1a;
+    --bgColor-success-emphasis: #238636; --bgColor-success-muted: #2ea04326;
+    --bgColor-danger-emphasis: #da3633; --bgColor-danger-muted: #f851491a; --bgColor-attention-muted: #bb800926;
+    --borderColor-default: #3d444d; --borderColor-muted: #3d444db3; --borderColor-accent-emphasis: #1f6feb;
+    --button-default-bgColor-rest: #212830; --button-default-borderColor-rest: #3d444d;
+    --button-primary-bgColor-rest: #238636; --button-primary-bgColor-hover: #29903b; --button-danger-fgColor-rest: #f85149;
+  }
+}
+
+:root {
+  /* typography */
+  --fontStack-sansSerif: "Mona Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --fontStack-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-body-size-small: 12px;
+  --text-body-size-medium: 14px;   /* the base body size in GitHub's product UI */
+  --text-body-size-large: 16px;
+  --text-title-size-small: 16px;
+  --text-title-size-medium: 20px;
+  --text-title-size-large: 32px;
+  --text-subtitle-size: 20px;
+  --text-display-size: 40px;
+  --base-text-weight-normal: 400;
+  --base-text-weight-medium: 500;
+  --base-text-weight-semibold: 600;
+
+  /* spacing — base-size scale (4px base) */
+  --base-size-4: 4px;   --base-size-8: 8px;   --base-size-12: 12px;
+  --base-size-16: 16px; --base-size-20: 20px; --base-size-24: 24px;
+  --base-size-32: 32px; --base-size-40: 40px; --base-size-48: 48px;
+
+  /* shape */
+  --borderRadius-small: 3px;
+  --borderRadius-medium: 6px;
+  --borderRadius-large: 12px;
+  --borderRadius-full: 9999px;
+  --borderWidth-thin: 1px;
+
+  /* layout */
+  --breakpoint-small: 544px;
+  --breakpoint-medium: 768px;
+  --breakpoint-large: 1012px;
+  --breakpoint-xlarge: 1280px;
+}
+
+/* A base so examples render in Primer's product-UI defaults. */
+body {
+  margin: 0;
+  background: var(--bgColor-default);
+  color: var(--fgColor-default);
+  font-family: var(--fontStack-sansSerif);
+  font-size: var(--text-body-size-medium);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}

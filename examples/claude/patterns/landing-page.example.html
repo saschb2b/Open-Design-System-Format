@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · Landing page</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body { padding: 0; }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .hero__sub { color: var(--colors-body); max-width: 44ch; margin: 20px 0 28px; }
+    .eyebrow { color: var(--colors-muted); margin: 0 0 16px; }
+    .section-head { max-width: 40ch; margin: 0 auto 40px; text-align: center; }
+    @media (max-width: 768px) { .hero { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Band 1 · cream — top navigation -->
+  <nav class="top-nav">
+    <a class="wordmark" href="/" aria-label="Claude home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="4.9" y2="19.1"/></svg>
+      Claude
+    </a>
+    <div class="top-nav__menu"><a href="#">Product</a><a href="#">Solutions</a><a href="#">Use cases</a><a href="#">Pricing</a><a href="#">Research</a><a href="#">Company</a></div>
+    <div class="top-nav__right"><button class="btn btn--text">Sign in</button><button class="btn btn--primary">Try Claude</button></div>
+  </nav>
+
+  <!-- Band 2 · cream — hero, 6/6 split -->
+  <section class="band--cream section">
+    <div class="container hero">
+      <div>
+        <p class="eyebrow body-sm">Claude by Anthropic</p>
+        <h1 class="display-xl">Meet your thinking partner</h1>
+        <p class="hero__sub body-md">Claude helps you write, analyze, and build — thinking through hard problems step by step, with a calm, considered voice.</p>
+        <div class="row"><button class="btn btn--primary">Try Claude</button><button class="btn btn--secondary">Talk to sales</button></div>
+      </div>
+      <div class="code-window">
+        <div class="code-window__bar"><span class="code-window__dot"></span><span class="code-window__dot"></span><span class="code-window__dot"></span><span class="code-window__title">quickstart.py</span></div>
+        <div class="code-block"><pre><span class="tok-key">import</span> anthropic
+
+client = anthropic.<span class="tok-fn">Anthropic</span>()
+message = client.messages.<span class="tok-fn">create</span>(
+    model=<span class="tok-str">"claude-opus-4-8"</span>,
+    max_tokens=<span class="tok-num">1024</span>,
+    messages=[{<span class="tok-str">"role"</span>: <span class="tok-str">"user"</span>, <span class="tok-str">"content"</span>: <span class="tok-str">"Hello, Claude"</span>}],
+)
+<span class="tok-fn">print</span>(message.content)</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 3 · cream — feature cards -->
+  <section class="band--cream section" style="padding-top:0">
+    <div class="container">
+      <div class="section-head"><h2 class="display-lg">Built to do real work</h2></div>
+      <div class="grid grid-3">
+        <div class="feature-card"><svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18"/></svg><h3 class="title-md">Extended thinking</h3><p class="body-md">Claude reasons through problems step by step before it answers.</p></div>
+        <div class="feature-card"><svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg><h3 class="title-md">Long context</h3><p class="body-md">Hand Claude entire codebases and ask across all of it at once.</p></div>
+        <div class="feature-card"><svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 7l5 5-5 5M13 17h6"/></svg><h3 class="title-md">Agentic tools</h3><p class="body-md">Claude uses tools and runs multi-step workflows to finish tasks.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 4 · dark — product mockup -->
+  <section class="band--dark on-dark section">
+    <div class="container hero">
+      <div>
+        <span class="badge badge--coral">For developers</span>
+        <h2 class="display-lg" style="margin-top:16px">Claude Code in your terminal</h2>
+        <p class="hero__sub body-md">Give Claude a task and watch it read your repo, write code, run tests, and open a pull request.</p>
+        <button class="btn btn--primary">Get API key</button>
+      </div>
+      <div class="code-window">
+        <div class="code-window__bar"><span class="code-window__dot"></span><span class="code-window__dot"></span><span class="code-window__dot"></span><span class="code-window__title">~/app — claude</span></div>
+        <div class="code-block"><pre><span class="tok-com"># claude, fix the failing test in auth.py</span>
+
+<span class="tok-fn">→</span> reading auth.py, test_auth.py
+<span class="tok-fn">→</span> the token TTL was compared in ms, not s
+<span class="tok-fn">→</span> patching expiry check + adding a regression test
+<span class="tok-str">✓ 14 passed</span> in 2.3s</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 5 · cream — pricing -->
+  <section class="band--cream section">
+    <div class="container">
+      <div class="section-head"><h2 class="display-lg">Plans for every scale</h2></div>
+      <div class="grid grid-3">
+        <div class="pricing-card"><h3 class="title-lg">Free</h3><div class="pricing-card__price">$0</div><ul class="pricing-card__features"><li>Chat on web and mobile</li><li>Access to Claude Sonnet</li></ul><button class="btn btn--secondary" style="margin-top:auto">Get started</button></div>
+        <div class="pricing-card pricing-card--featured"><h3 class="title-lg">Pro</h3><div class="pricing-card__price">$17</div><ul class="pricing-card__features"><li>Everything in Free</li><li>Access to Claude Opus</li><li>Projects and Claude Code</li></ul><button class="btn btn--primary" style="margin-top:auto">Try Claude Pro</button></div>
+        <div class="pricing-card"><h3 class="title-lg">Team</h3><div class="pricing-card__price">$25</div><ul class="pricing-card__features"><li>Everything in Pro</li><li>Central admin and billing</li></ul><button class="btn btn--secondary" style="margin-top:auto">Contact sales</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 6 · coral — callout -->
+  <section class="band--cream section" style="padding-top:0">
+    <div class="container">
+      <div class="callout-coral">
+        <h2 class="display-md">Start building with Claude today</h2>
+        <p class="body-md" style="color:var(--colors-on-primary); opacity:.92; max-width:46ch;">Get your API key and make your first request in minutes.</p>
+        <button class="btn btn--on-coral">Get API key</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 7 · dark — footer -->
+  <footer class="footer">
+    <div class="container footer__cols">
+      <div>
+        <a class="wordmark" href="/" aria-label="Anthropic home"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="4.9" y2="19.1"/></svg> Anthropic</a>
+        <p class="body-sm" style="margin-top:16px; max-width:30ch;">Building AI you can rely on.</p>
+      </div>
+      <nav><h4>Product</h4><ul><li><a href="#">Claude</a></li><li><a href="#">Claude Code</a></li><li><a href="#">API</a></li></ul></nav>
+      <nav><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">News</a></li></ul></nav>
+      <nav><h4>Resources</h4><ul><li><a href="#">Docs</a></li><li><a href="#">Research</a></li></ul></nav>
+      <nav><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Don't — color as the only signal</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body { padding: 24px; }
+    .row { display: flex; align-items: center; gap: 8px; padding: 8px 0; }
+    .dot { width: 12px; height: 12px; border-radius: 9999px; }
+  </style>
+</head>
+<body>
+  <!-- DON'T: status conveyed ONLY by a colored dot. To a screen reader or a user who can't
+       distinguish the hues, every row is identical. No icon, no word. -->
+  <div class="row"><span class="dot" style="background:var(--fgColor-success)"></span> build #1487</div>
+  <div class="row"><span class="dot" style="background:var(--fgColor-attention)"></span> build #1486</div>
+  <div class="row"><span class="dot" style="background:var(--fgColor-danger)"></span> build #1485</div>
+
+  <!-- Compare with /components/banner.example.html: each status leads with a named icon and text. -->
+</body>
+</html>

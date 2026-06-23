@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · Button</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 40px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; } .dark { background: var(--colors-surface-dark); padding: 24px; border-radius: 12px; display: flex; gap: 16px; } </style>
+</head>
+<body>
+  <!-- The signature coral primary. One per view. -->
+  <button type="button" class="btn btn--primary">Try Claude</button>
+
+  <!-- Secondary: cream fill, hairline border. -->
+  <button type="button" class="btn btn--secondary">Contact sales</button>
+
+  <!-- Inline text button. -->
+  <button type="button" class="btn btn--text">Sign in</button>
+
+  <!-- Circular icon button (needs an aria-label). -->
+  <button type="button" class="btn btn--icon" aria-label="Next">→</button>
+
+  <!-- Disabled primary. -->
+  <button type="button" class="btn btn--primary" disabled>Try Claude</button>
+
+  <!-- Secondary over a dark surface stays dark — never inverts to light. -->
+  <div class="dark">
+    <button type="button" class="btn btn--primary">Get API key</button>
+    <button type="button" class="btn btn--secondary-on-dark">View docs</button>
+  </div>
+</body>
+</html>

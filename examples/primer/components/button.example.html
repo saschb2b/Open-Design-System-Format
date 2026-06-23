@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Button</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    .demo { padding: 24px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: var(--bgColor-default); }
+    .mode-label { width: 100%; margin: 0 0 4px; font-size: 12px; color: var(--fgColor-muted); }
+  </style>
+</head>
+<body>
+  <!-- Same markup, two modes — the functional tokens do all the re-theming. -->
+  <div class="demo" data-color-mode="light">
+    <p class="mode-label">Light</p>
+    <button class="btn btn-primary" type="button">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M7.25 7.25V2.75a.75.75 0 0 1 1.5 0v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5Z"/></svg>
+      New
+    </button>
+    <button class="btn" type="button">Edit</button>
+    <button class="btn btn-danger" type="button">Delete</button>
+    <button class="btn btn-invisible" type="button">Cancel</button>
+    <button class="btn" type="button" disabled>Merge</button>
+  </div>
+
+  <div class="demo" data-color-mode="dark">
+    <p class="mode-label">Dark</p>
+    <button class="btn btn-primary" type="button">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M7.25 7.25V2.75a.75.75 0 0 1 1.5 0v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5Z"/></svg>
+      New
+    </button>
+    <button class="btn" type="button">Edit</button>
+    <button class="btn btn-danger" type="button">Delete</button>
+    <button class="btn btn-invisible" type="button">Cancel</button>
+    <button class="btn" type="button" disabled>Merge</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Autocomplete</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; min-height: 220px; } .form-control { width: 100%; } </style>
+</head>
+<body>
+  <div class="Autocomplete">
+    <input class="form-control" type="text" role="combobox" aria-expanded="true" aria-label="Assignee" value="oct">
+    <div class="Box Autocomplete-results" role="listbox">
+      <ul class="ActionList" style="list-style:none; margin:0">
+        <li class="ActionList-item ActionList-item--selected" role="option" aria-selected="true">octocat</li>
+        <li class="ActionList-item" role="option">octo-org</li>
+        <li class="ActionList-item" role="option">octobot</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

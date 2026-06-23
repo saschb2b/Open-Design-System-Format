@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Skeleton</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .card { max-width: 420px; } .row { display: flex; gap: 12px; align-items: center; } .lines { flex: 1; display: flex; flex-direction: column; gap: 8px; } </style>
+</head>
+<body>
+  <div class="card" aria-busy="true" aria-label="Loading">
+    <div class="card-body">
+      <div class="row">
+        <span class="skeleton" style="width:36px;height:36px;border-radius:9999px"></span>
+        <span class="lines">
+          <span class="skeleton" style="width:40%;height:12px"></span>
+          <span class="skeleton" style="width:70%;height:12px"></span>
+        </span>
+      </div>
+      <div style="height:16px"></div>
+      <span class="skeleton" style="display:block;width:100%;height:80px;border-radius:8px"></span>
+    </div>
+  </div>
+</body>
+</html>

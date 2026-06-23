@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Feedback</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .textarea { min-height: 64px; margin-bottom: 10px; } .end { display: flex; justify-content: flex-end; } </style>
+</head>
+<body>
+  <div class="feedback">
+    <div class="emoji-row">
+      <button type="button" aria-label="Love" aria-pressed="false">😍</button>
+      <button type="button" aria-label="Like" aria-pressed="true">🙂</button>
+      <button type="button" aria-label="Confused" aria-pressed="false">😕</button>
+      <button type="button" aria-label="Dislike" aria-pressed="false">😭</button>
+    </div>
+    <textarea class="textarea" placeholder="Your feedback…" aria-label="Feedback"></textarea>
+    <div class="end"><button class="btn btn-primary btn-sm" type="submit">Send</button></div>
+  </div>
+</body>
+</html>

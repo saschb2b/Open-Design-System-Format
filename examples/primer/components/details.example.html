@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Details</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; max-width: 480px; display: flex; flex-direction: column; gap: 12px; } </style>
+</head>
+<body>
+  <details class="Details" open>
+    <summary>
+      <svg class="Details-caret" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>
+      What changed in v2.0?
+    </summary>
+    <div class="Details-body">Functional color tokens, full dark mode, and 12 new components. See the changelog for details.</div>
+  </details>
+
+  <details class="Details">
+    <summary>
+      <svg class="Details-caret" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>
+      How do I enable dark mode?
+    </summary>
+    <div class="Details-body">Set <code>data-color-mode="dark"</code> on a container, or "auto" to follow the OS.</div>
+  </details>
+</body>
+</html>

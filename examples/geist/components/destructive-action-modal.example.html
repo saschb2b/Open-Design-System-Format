@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Destructive action modal</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 0; } </style>
+</head>
+<body>
+  <div class="scrim">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="d-title">
+      <div class="modal-body">
+        <h3 id="d-title">Delete project</h3>
+        <p>This will permanently delete <strong>design-system</strong>, its deployments, and domains. This action cannot be undone.</p>
+        <div style="height:14px"></div>
+        <label class="label" for="confirm">Type <span class="mono">design-system</span> to confirm</label>
+        <input class="input" id="confirm" type="text" placeholder="design-system" style="width:100%; margin-top:6px">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-sm" type="button">Cancel</button>
+        <button class="btn btn-error btn-sm" type="button" disabled>Delete project</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

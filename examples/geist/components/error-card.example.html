@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Error card</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .card { max-width: 420px; } </style>
+</head>
+<body>
+  <div class="card" role="alert">
+    <div class="empty-state">
+      <span class="icon" style="color:var(--ds-red-700)"><svg width="32" height="32" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5M8 10.7v.1"/></svg></span>
+      <h3>Failed to load deployments</h3>
+      <p>We couldn't reach the build service. Check your connection and try again.</p>
+      <button class="btn btn-primary btn-sm" type="button">Retry</button>
+    </div>
+  </div>
+</body>
+</html>

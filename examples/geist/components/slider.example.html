@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Slider</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 32px 24px; max-width: 320px; } .wrap { display: flex; align-items: center; gap: 12px; } .val { font-family: var(--font-geist-mono); font-size: 13px; width: 48px; text-align: right; } </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="slider" role="slider" aria-label="Memory" aria-valuemin="0" aria-valuemax="100" aria-valuenow="68" style="flex:1">
+      <div class="slider-track"><div class="slider-fill" style="width:68%"></div></div>
+      <div class="slider-thumb" style="left:calc(68% - 8px)"></div>
+    </div>
+    <span class="val">1024MB</span>
+  </div>
+</body>
+</html>

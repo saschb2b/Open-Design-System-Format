@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Gauge</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; display: flex; gap: 24px; align-items: center; } figure { margin: 0; text-align: center; } figcaption { font-size: 13px; color: var(--ds-gray-900); margin-top: 6px; } </style>
+</head>
+<body>
+  <figure>
+    <span class="gauge" role="meter" aria-label="Performance" aria-valuenow="92" style="--g:92%; position:relative"><span>92</span></span>
+    <figcaption>Performance</figcaption>
+  </figure>
+  <figure>
+    <span class="gauge" role="meter" aria-label="Usage" aria-valuenow="68" style="--g:68%; position:relative; background: conic-gradient(var(--ds-amber-700) 68%, var(--ds-gray-200) 0)"><span>68%</span></span>
+    <figcaption>Usage</figcaption>
+  </figure>
+</body>
+</html>

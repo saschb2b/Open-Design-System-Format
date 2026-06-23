@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Don't — hard-coded colors</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    /* The whole stage is in DARK mode. */
+    .stage { padding: 24px; display: flex; gap: 16px; flex-wrap: wrap; background: var(--bgColor-default); }
+    .card { width: 240px; border-radius: 6px; padding: 16px; }
+    /* DO: functional tokens — adapts to the dark stage. */
+    .card--ok { background: var(--bgColor-default); color: var(--fgColor-default); border: 1px solid var(--borderColor-default); }
+    /* DON'T: literal hex — frozen in light, glaringly wrong on dark. */
+    .card--bad { background: #ffffff; color: #1f2328; border: 1px solid #d1d9e0; }
+    .tag { font-size: 12px; margin: 0 0 8px; color: var(--fgColor-muted); }
+  </style>
+</head>
+<body data-color-mode="dark">
+  <div class="stage">
+    <div class="card card--ok">
+      <p class="tag">Functional tokens</p>
+      <strong>Adapts</strong> — the card reads from <code>--bgColor-default</code>, so dark mode just works.
+    </div>
+    <div class="card card--bad">
+      <p class="tag" style="color:#57606a">Hard-coded hex</p>
+      <strong>Stuck in light</strong> — a white card on a near-black page. This is the failure to avoid.
+    </div>
+  </div>
+</body>
+</html>

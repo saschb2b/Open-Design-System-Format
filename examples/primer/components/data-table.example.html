@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Data table</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .Box { max-width: 640px; overflow: hidden; } </style>
+</head>
+<body>
+  <div class="Box">
+    <table class="DataTable">
+      <thead>
+        <tr><th scope="col">Workflow</th><th scope="col">Status</th><th scope="col">Branch</th><th scope="col">Duration</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CI</td><td><span class="Label Label--success">passed</span></td><td><span class="branch-name">main</span></td><td>2m 14s</td></tr>
+        <tr><td>Lint</td><td><span class="Label Label--success">passed</span></td><td><span class="branch-name">main</span></td><td>0m 41s</td></tr>
+        <tr><td>Deploy</td><td><span class="Label Label--danger">failed</span></td><td><span class="branch-name">release/2.0</span></td><td>3m 02s</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

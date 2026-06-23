@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Action list</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .menu { width: 240px; box-shadow: var(--shadow-floating-small); } </style>
+</head>
+<body>
+  <!-- An overlay menu: an ActionList inside a Box with a floating shadow. -->
+  <div class="Box menu">
+    <ul class="ActionList" role="menu" style="list-style:none; margin:0">
+      <li class="ActionList-item ActionList-item--selected" role="menuitem" aria-current="true">Edit</li>
+      <li class="ActionList-item" role="menuitem">Duplicate</li>
+      <li class="ActionList-item" role="menuitem">Move to…</li>
+      <li class="ActionList-divider" role="separator"></li>
+      <li class="ActionList-item ActionList-item--danger" role="menuitem">Delete</li>
+    </ul>
+  </div>
+</body>
+</html>

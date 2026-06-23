@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Tree view</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .TreeView { width: 260px; } </style>
+</head>
+<body>
+  <ul class="TreeView" role="tree" aria-label="Files">
+    <li role="treeitem" aria-expanded="true">
+      <div class="TreeView-item">
+        <svg class="TreeView-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M0 2.75C0 1.784.784 1 1.75 1H5c.55 0 1.07.26 1.4.7l.9 1.2c.05.06.12.1.2.1h6.75c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25Z"/></svg>
+        src
+      </div>
+      <ul class="TreeView-sub" role="group">
+        <li role="treeitem"><div class="TreeView-item TreeView-item--current" aria-selected="true">
+          <svg class="TreeView-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h5.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 12.25 16h-8.5A1.75 1.75 0 0 1 2 14.25Z"/></svg>
+          Button.tsx
+        </div></li>
+        <li role="treeitem"><div class="TreeView-item">
+          <svg class="TreeView-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h5.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 12.25 16h-8.5A1.75 1.75 0 0 1 2 14.25Z"/></svg>
+          Label.tsx
+        </div></li>
+      </ul>
+    </li>
+    <li role="treeitem" aria-expanded="false">
+      <div class="TreeView-item">
+        <svg class="TreeView-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M0 2.75C0 1.784.784 1 1.75 1H5c.55 0 1.07.26 1.4.7l.9 1.2c.05.06.12.1.2.1h6.75c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25Z"/></svg>
+        docs
+      </div>
+    </li>
+    <li role="treeitem"><div class="TreeView-item">
+      <svg class="TreeView-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h5.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 12.25 16h-8.5A1.75 1.75 0 0 1 2 14.25Z"/></svg>
+      README.md
+    </div></li>
+  </ul>
+</body>
+</html>

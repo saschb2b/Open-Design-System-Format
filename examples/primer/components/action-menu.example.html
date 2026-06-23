@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Primer · Action menu</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; min-height: 240px; } </style>
+</head>
+<body>
+  <div class="ActionMenu">
+    <button class="btn" type="button" aria-haspopup="true" aria-expanded="true">
+      Sort
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"/></svg>
+    </button>
+    <div class="Box ActionMenu-overlay">
+      <ul class="ActionList" role="menu" style="list-style:none; margin:0">
+        <li class="ActionList-item ActionList-item--selected" role="menuitem" aria-checked="true">Newest</li>
+        <li class="ActionList-item" role="menuitem">Oldest</li>
+        <li class="ActionList-item" role="menuitem">Most commented</li>
+        <li class="ActionList-item" role="menuitem">Recently updated</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

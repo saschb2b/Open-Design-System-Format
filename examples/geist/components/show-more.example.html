@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Show more</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body { padding: 24px; max-width: 420px; }
+    .clip { position: relative; max-height: 72px; overflow: hidden; color: var(--ds-gray-900); }
+    .clip::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40px; background: linear-gradient(transparent, var(--ds-background-100)); }
+  </style>
+</head>
+<body>
+  <div class="clip">
+    <p style="margin:0">Geist is Vercel's design system. It is high-contrast and theme-able, built from numbered color scales where the gray scale is the monochrome backbone and accent scales carry status. Components reference tokens, so the whole UI re-skins light to dark by swapping the scale values…</p>
+  </div>
+  <button class="btn btn-ghost btn-sm" type="button" aria-expanded="false" style="margin-top:8px">Show more</button>
+</body>
+</html>

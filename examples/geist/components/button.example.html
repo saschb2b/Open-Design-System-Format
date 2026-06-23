@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Button</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> .demo { padding: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--ds-background-100); } .lab { width: 100%; margin: 0 0 2px; font-size: 12px; color: var(--ds-gray-700); } </style>
+</head>
+<body>
+  <!-- Same markup, two themes — the tokens do the re-skinning. -->
+  <div class="demo" data-theme="light">
+    <p class="lab">Light</p>
+    <button class="btn btn-primary" type="button">Deploy</button>
+    <button class="btn" type="button">Cancel</button>
+    <button class="btn btn-ghost" type="button">Skip</button>
+    <button class="btn btn-error" type="button">Delete</button>
+    <button class="btn btn-sm" type="button">Small</button>
+    <button class="btn" type="button" disabled>Disabled</button>
+  </div>
+  <div class="demo" data-theme="dark">
+    <p class="lab">Dark</p>
+    <button class="btn btn-primary" type="button">Deploy</button>
+    <button class="btn" type="button">Cancel</button>
+    <button class="btn btn-ghost" type="button">Skip</button>
+    <button class="btn btn-error" type="button">Delete</button>
+    <button class="btn btn-sm" type="button">Small</button>
+    <button class="btn" type="button" disabled>Disabled</button>
+  </div>
+</body>
+</html>

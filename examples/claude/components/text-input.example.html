@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · Text input</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 48px; display: flex; gap: 24px; flex-wrap: wrap; } .field { width: 280px; } </style>
+</head>
+<body>
+  <div class="field">
+    <label class="field__label" for="email">Work email</label>
+    <input class="input" id="email" type="email" placeholder="you@company.com">
+  </div>
+  <!-- autofocus demonstrates the coral focus border + soft ring -->
+  <div class="field">
+    <label class="field__label" for="name">Full name</label>
+    <input class="input" id="name" type="text" value="Ada Lovelace" autofocus>
+  </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · File tree</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .file-tree { width: 260px; } .folder { } .file-tree-item--current { background: var(--ds-gray-100); } </style>
+</head>
+<body>
+  <ul class="file-tree" role="tree" aria-label="Source">
+    <li role="treeitem" aria-expanded="true">
+      <div class="file-tree-item"><span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1.5 3.5h4l1 1.5h7a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H1.5a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/></svg></span> app</div>
+      <ul role="group">
+        <li role="treeitem"><div class="file-tree-item file-tree-item--current" aria-selected="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 1.5h6l4 4v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z"/></svg></span> page.tsx</div></li>
+        <li role="treeitem"><div class="file-tree-item"><span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 1.5h6l4 4v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z"/></svg></span> layout.tsx</div></li>
+      </ul>
+    </li>
+    <li role="treeitem" aria-expanded="false"><div class="file-tree-item"><span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1.5 3.5h4l1 1.5h7a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H1.5a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/></svg></span> components</div></li>
+    <li role="treeitem"><div class="file-tree-item"><span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 1.5h6l4 4v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z"/></svg></span> package.json</div></li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude · Code-window card</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 48px; } .code-window { max-width: 640px; } .code-block .ln { margin-right: 12px; } </style>
+</head>
+<body>
+  <div class="code-window">
+    <div class="code-window__bar">
+      <span class="code-window__dot"></span><span class="code-window__dot"></span><span class="code-window__dot"></span>
+      <span class="code-window__title">quickstart.py</span>
+    </div>
+    <div class="code-block"><pre><span class="ln">1</span><span class="tok-key">import</span> anthropic
+<span class="ln">2</span>
+<span class="ln">3</span>client = anthropic.<span class="tok-fn">Anthropic</span>()
+<span class="ln">4</span>
+<span class="ln">5</span>message = client.messages.<span class="tok-fn">create</span>(
+<span class="ln">6</span>    model=<span class="tok-str">"claude-opus-4-8"</span>,
+<span class="ln">7</span>    max_tokens=<span class="tok-num">1024</span>,
+<span class="ln">8</span>    messages=[
+<span class="ln">9</span>        {<span class="tok-str">"role"</span>: <span class="tok-str">"user"</span>, <span class="tok-str">"content"</span>: <span class="tok-str">"Explain quantum computing"</span>}
+<span class="ln">10</span>    ],
+<span class="ln">11</span>)
+<span class="ln">12</span><span class="tok-com"># the model thinks, then answers</span>
+<span class="ln">13</span><span class="tok-fn">print</span>(message.content)</pre></div>
+  </div>
+</body>
+</html>

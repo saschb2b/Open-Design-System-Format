@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Context menu</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .target { padding: 24px; border: 1px dashed var(--ds-gray-alpha-400); border-radius: 6px; color: var(--ds-gray-900); text-align: center; margin-bottom: 8px; } </style>
+</head>
+<body>
+  <div class="target">Right-click target (menu shown below)</div>
+  <div class="menu" role="menu">
+    <div class="menu-item" role="menuitem">Open</div>
+    <div class="menu-item" role="menuitem">Rename <span class="kbd">F2</span></div>
+    <div class="menu-item" role="menuitem">Copy path</div>
+    <div class="menu-divider"></div>
+    <div class="menu-item menu-item--danger" role="menuitem">Delete <span class="kbd">⌫</span></div>
+  </div>
+</body>
+</html>

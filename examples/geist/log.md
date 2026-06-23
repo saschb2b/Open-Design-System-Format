@@ -1,0 +1,4 @@
+# Geist design-system update log
+
+## 2026-06-23
+* **Creation**: Initial Geist (Vercel) bundle for ODSF v0.1 — comprehensive, full public coverage. Tokens read directly from the live vercel.com/geist DOM (`@vercel/geist`) in **both light and dark**, shipping Geist's own `--ds-*` variable names. Includes seven foundations (color scales, typography, grid, shape, elevation, materials, icons), **all 70 documented components** with runnable examples across actions, forms, status & feedback, navigation, overlays, data & content, and device/media frames; the dashboard pattern; theming and focus behaviors; two guidelines with counter-examples (use-the-scale, color-not-alone); three references (docs, live verification, brand assets); and `styles/tokens.css` (light + dark + auto) plus `styles/components.css`.

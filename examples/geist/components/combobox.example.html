@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Combobox</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; max-width: 320px; min-height: 240px; } .input { width: 100%; } </style>
+</head>
+<body>
+  <input class="input" type="text" role="combobox" aria-expanded="true" aria-label="Branch" value="feat">
+  <div class="menu" role="listbox" style="margin-top:4px">
+    <div class="menu-item" role="option" aria-selected="true">feat/color-tokens</div>
+    <div class="menu-item" role="option">feat/dark-mode</div>
+    <div class="menu-item" role="option">feature-flags</div>
+  </div>
+</body>
+</html>

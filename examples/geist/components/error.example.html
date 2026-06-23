@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Error</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; max-width: 320px; display: flex; flex-direction: column; gap: 6px; } </style>
+</head>
+<body>
+  <label class="label" for="slug">Slug</label>
+  <input class="input" id="slug" type="text" value="my project" aria-invalid="true" aria-describedby="slug-err" style="border-color: var(--ds-red-700)">
+  <span id="slug-err" class="text-sm" style="color: var(--ds-red-900)">Slugs can only contain lowercase letters, numbers, and hyphens.</span>
+</body>
+</html>

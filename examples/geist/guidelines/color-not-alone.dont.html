@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Don't — color as the only signal</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; } .r { display: flex; align-items: center; gap: 10px; padding: 8px 0; } .d { width: 10px; height: 10px; border-radius: 9999px; } </style>
+</head>
+<body>
+  <!-- DON'T: status by colored dot only. No label — every row reads the same to many users. -->
+  <div class="r"><span class="d" style="background:var(--ds-green-700)"></span> <span class="mono">7a1b9c3</span></div>
+  <div class="r"><span class="d" style="background:var(--ds-amber-700)"></span> <span class="mono">3f8e2d1</span></div>
+  <div class="r"><span class="d" style="background:var(--ds-red-700)"></span> <span class="mono">9c4a7b2</span></div>
+  <!-- Compare with /components/status-dot.example.html: each dot is paired with a word. -->
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geist · Input</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style> body { padding: 24px; display: flex; flex-direction: column; gap: 12px; max-width: 320px; } </style>
+</head>
+<body>
+  <label class="label" for="name">Project name</label>
+  <input class="input" id="name" type="text" placeholder="my-project">
+  <div class="input-affix">
+    <span class="icon">https://</span>
+    <input type="text" value="my-project" aria-label="Subdomain">
+    <span class="icon">.vercel.app</span>
+  </div>
+</body>
+</html>

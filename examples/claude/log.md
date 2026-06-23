@@ -1,0 +1,4 @@
+# Claude design-system update log
+
+## 2026-06-23
+* **Creation**: Initial Claude (Anthropic marketing) bundle for ODSF v0.1. Authored from a design.md brief and cross-checked against the live claude.com DOM (canvas #faf9f5 and ink #141413 verified exactly; serif-display / humanist-sans split confirmed via `anthropicSerif` / `anthropicSans`; live CTA coral sampled at #c6613f vs. the documented #cc785c). Includes foundations (color, typography, spacing, elevation, shape, motion, layout), nine components with runnable examples (button, top-nav, feature-card, code-window-card, pricing-tier-card, callout-card-coral, badge, text-input, footer), the landing-page pattern, surface-rhythm and press-states-only behaviors, three guidelines with counter-examples, two references, and the runnable `styles/tokens.css` + `styles/components.css`.
