@@ -10,13 +10,13 @@ const designMdUrl = "https://github.com/google-labs-code/design.md";
 const viewer = (id) => `${base}tools/viewer.html?bundle=${base}examples/${id}`;
 
 const examples = [
-  { id: "claude", name: "Claude", by: "Anthropic", color: "var(--coral)", blurb: "A warm, editorial brand voice — cream canvas, coral accent, slab-serif display. A fixed identity.", meta: "9 components · landing page" },
+  { id: "claude", name: "Claude", by: "Anthropic", color: "var(--coral)", blurb: "A warm, editorial brand voice: cream canvas, coral accent, slab-serif display. A fixed identity.", meta: "9 components · landing page" },
   { id: "primer", name: "Primer", by: "GitHub", color: "var(--green)", blurb: "Functional color roles, full light/dark theming, and the signature green primary action.", meta: "45 components · repo page" },
   { id: "geist", name: "Geist", by: "Vercel", color: "var(--blue)", blurb: "High-contrast and monochrome-first on numbered scales, fully theme-able across light and dark.", meta: "70 components · dashboard" },
 ];
 
 const pillars = [
-  { t: "Two projections, one truth", d: "Every token lives once and appears twice — as agent-readable frontmatter and as a runnable CSS variable — so describing the system and using it never drift." },
+  { t: "Two projections, one truth", d: "Every token lives once and appears twice: as agent-readable frontmatter and as a runnable CSS variable. The doc and the code stay in sync because they come from the same source." },
   { t: "Show, don't just tell", d: "Each component ships a self-rendering *.example.html. An agent copies a correct, working example far more reliably than it follows a paragraph." },
   { t: "One hard rule, forgiving rest", d: "A bundle is conformant if every concept declares a type and the bundle states its version. Everything else degrades gracefully. Adoption beats enforcement." },
 ];
@@ -27,8 +27,8 @@ const pillars = [
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ODSF — Open Design System Format</title>
-  <meta name="description" content="Bundle a design system — tokens, components, rules, and runnable examples — into one portable package an AI agent can read and adhere to. The Open Knowledge Format's structure meets design.md's tokens." />
+  <title>ODSF · Open Design System Format</title>
+  <meta name="description" content="Bundle a design system (tokens, components, rules, and runnable examples) into one portable package an agent can read and adhere to. The Open Knowledge Format's structure with design.md's tokens." />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -66,16 +66,16 @@ const pillars = [
           <span class="eyebrow">Open Design System Format · v0.1</span>
           <h1>Hand your <em>design system</em> to an agent.</h1>
           <p class="lead">
-            ODSF packages a design system — tokens, components, behaviors, rules, and <strong>runnable
-            examples</strong> — into one portable bundle of markdown, HTML, and CSS that an AI agent
-            can read and actually <em>adhere&nbsp;to</em>. Clone it, diff it, throw it at any agent.
+            ODSF packages a design system (tokens, components, behaviors, rules, and <strong>runnable
+            examples</strong>) into one portable bundle of markdown, HTML, and CSS that an agent
+            can read and actually <em>adhere&nbsp;to</em>. Clone it, diff it, hand it to any agent.
           </p>
           <div class="cta">
             <a class="btn btn--primary" href="#examples">See a bundle live</a>
             <a class="btn" href={spec}>Read the spec ↗</a>
           </div>
-          <p class="microcopy">A profile of <a href={okfUrl}>OKF</a>, embracing
-            <a href={designMdUrl}>design.md</a>'s tokens — plus the working examples agents copy from.</p>
+          <p class="microcopy">A profile of <a href={okfUrl}>OKF</a> that embraces
+            <a href={designMdUrl}>design.md</a>'s tokens, plus the working examples agents copy from.</p>
         </div>
 
         <!-- Bundle preview card -->
@@ -125,7 +125,7 @@ styles/
           <span class="eq-op">=</span>
           <div class="eq-term eq-term--out">
             <span class="eq-name grad">ODSF</span>
-            <span class="eq-desc">bundle design knowledge the OKF way — and ship the working examples too</span>
+            <span class="eq-desc">bundle design knowledge the OKF way, and ship the working examples too</span>
           </div>
         </div>
       </div>
@@ -135,20 +135,20 @@ styles/
     <section class="section" id="what">
       <div class="container">
         <h2 class="section__title">New to the pieces?</h2>
-        <p class="section__sub">ODSF stands on two recent ideas. Here's each, in a sentence.</p>
+        <p class="section__sub">ODSF builds on two recent ideas.</p>
         <div class="cards-2">
           <article class="card">
             <span class="card__kicker">The container</span>
             <h3><a href={okfUrl}>Open Knowledge Format</a></h3>
             <p>Google's open, vendor-neutral spec for the context an AI agent needs. Plain markdown
               files, each a typed <em>concept</em>, with one-rule conformance, cross-links, and
-              progressive disclosure. No SDK, no platform — if you can read a file, you can read OKF.</p>
+              progressive disclosure. No SDK, no platform. If you can read a file, you can read OKF.</p>
           </article>
           <article class="card">
             <span class="card__kicker">The content seed</span>
             <h3><a href={designMdUrl}>design.md</a></h3>
             <p>Google Labs' format for documenting a design system for coding agents: design tokens in
-              YAML frontmatter — colors, type, spacing — with <code>{`{group.name}`}</code> references
+              YAML frontmatter (colors, type, spacing) with <code>{`{group.name}`}</code> references
               and human-readable rationale. It nails <em>what</em> to write down. It stops at one loose
               file: no bigger picture, no runnable examples.</p>
           </article>
@@ -162,9 +162,9 @@ styles/
     <!-- Why -->
     <section class="section section--alt" id="why">
       <div class="container">
-        <h2 class="section__title">Agents write UI well — and <em>your</em> UI badly.</h2>
+        <h2 class="section__title">Agents write UI well, and <em>your</em> UI badly.</h2>
         <p class="section__sub">They don't know your color roles, your spacing scale, your "never
-          convey meaning with color alone" rule — so they invent plausible-but-wrong defaults. The fix
+          convey meaning with color alone" rule, so they invent plausible-but-wrong defaults. The fix
           is to hand them the system as context they can load.</p>
         <div class="cards-3">
           {pillars.map((p) => (
@@ -186,11 +186,11 @@ styles/
           <p class="section__sub">A bundle is a directory you commit next to your product. Open it in a
             browser, diff it in a PR, point an agent at it.</p>
           <ul class="kinds">
-            <li><span class="kind d">.md</span> <b>Concepts</b> — the knowledge, each with a required
+            <li><span class="kind d">.md</span> <b>Concepts:</b> the knowledge, each with a required
               <code>type</code>. This is what makes a bundle conformant.</li>
-            <li><span class="kind h">.html</span> <b>Examples</b> — self-rendering, so an agent sees the
+            <li><span class="kind h">.html</span> <b>Examples:</b> self-rendering, so an agent sees the
               exact markup, classes, and states to reproduce.</li>
-            <li><span class="kind s">.css</span> <b>Tokens</b> — the same values as runnable CSS
+            <li><span class="kind s">.css</span> <b>Tokens:</b> the same values as runnable CSS
               variables, in sync with the frontmatter.</li>
           </ul>
         </div>
@@ -205,7 +205,7 @@ styles/
 <span class="p">---</span>
 
 <span class="h2"># Examples</span>
-- <span class="lnk">button.example.html</span> — every variant, live.</pre>
+- <span class="lnk">button.example.html</span> (every variant, live)</pre>
       </div>
     </section>
 
@@ -214,8 +214,8 @@ styles/
       <div class="container">
         <h2 class="section__title">See a real design system as a bundle.</h2>
         <p class="section__sub">Three well-known systems, each cloned into a conformant ODSF bundle and
-          rendered live in the single-file viewer. Browse the tokens, the components, the do/don'ts —
-          and flip light/dark.</p>
+          rendered live in the single-file viewer. Browse the tokens, the components, and the
+          do/don'ts, then flip light/dark.</p>
         <div class="ex-grid">
           {examples.map((e) => (
             <a class="ex" href={viewer(e.id)} style={`--accent:${e.color}`}>
@@ -254,7 +254,7 @@ styles/
     <div class="container footer__inner">
       <div class="footer__brand">
         <span class="diamond diamond--sm" aria-hidden="true"></span>
-        <span>ODSF — Open Design System Format · v0.1 · MIT</span>
+        <span>ODSF · Open Design System Format · v0.1 · MIT</span>
       </div>
       <nav class="footer__links" aria-label="Footer">
         <a href={spec}>Spec</a>
@@ -340,7 +340,7 @@ styles/
     .hero h1 em { font-style: italic; }
     .lead { font-size: 19px; color: var(--ink-2); max-width: 36ch; margin: 0 0 28px; }
     .lead strong { color: var(--ink); font-weight: 600; }
-    .lead em { font-style: normal; border-bottom: 2px solid color-mix(in srgb, var(--blue) 50%, transparent); }
+    .lead em { font-style: normal; font-weight: 600; color: var(--ink); }
     .cta { display: flex; gap: 12px; flex-wrap: wrap; }
     .microcopy { font-size: 14px; color: var(--muted); margin-top: 18px; }
     .microcopy a { color: var(--ink-2); text-underline-offset: 3px; }
@@ -373,9 +373,7 @@ styles/
     .bundle__foot { display: flex; gap: 6px; padding: 0 16px 14px; }
     .kind { font-family: var(--font-mono); font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 6px;
       border: 1px solid transparent; }
-    .kind.d { color: var(--ink); border-color: var(--line-2); }
-    .kind.h { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); }
-    .kind.s { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, transparent); }
+    .kind.d, .kind.h, .kind.s { color: var(--ink-2); border-color: var(--line-2); }
 
     /* Equation band */
     .band { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface-2); }
@@ -430,7 +428,7 @@ styles/
     @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; } }
     .ex { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface);
       border: 1px solid var(--line); border-radius: var(--r-lg); padding: 0 24px 22px; overflow: hidden; transition: border-color .15s, transform .08s, box-shadow .15s; }
-    .ex:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .ex:hover { border-color: var(--ink-2); transform: translateY(-2px); box-shadow: var(--shadow); }
     .ex__stripe { height: 4px; background: var(--accent); margin: 0 -24px 22px; }
     .ex__row { display: flex; align-items: baseline; gap: 10px; }
     .ex h3 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0; }

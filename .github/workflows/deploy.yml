@@ -47,7 +47,7 @@ jobs:
         working-directory: site
         run: pnpm build
 
-      - name: Assemble — copy the viewer and example bundles beside the page
+      - name: Assemble the site (copy viewer and bundles into dist)
         run: |
           cp -r tools site/dist/tools
           cp -r examples site/dist/examples
