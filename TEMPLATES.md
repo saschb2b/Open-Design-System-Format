@@ -11,7 +11,7 @@ behind rather than guessing, and add domain-specific keys freely.
 
 ## Bundle-root index.md
 
-The one `index.md` that carries frontmatter — solely to declare the versions.
+The one `index.md` that carries frontmatter, solely to declare the versions.
 
 ```markdown
 ---
@@ -265,7 +265,7 @@ timestamp: <YYYY-MM-DDThh:mm:ssZ>
 
 `components/<name>.example.html`. A complete, standalone document that renders in a browser with
 no build step, pulling the system's tokens by linking the bundle stylesheets with **relative**
-paths (so it renders over `file://` too). Keep the markup minimal — only the thing the concept
+paths (so it renders over `file://` too). Keep the markup minimal, only the thing the concept
 teaches.
 
 ```html

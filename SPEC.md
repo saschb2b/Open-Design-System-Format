@@ -1,4 +1,4 @@
-# Open Design System Format (ODSF) — v0.1
+# Open Design System Format (ODSF) v0.1
 
 A specification for packaging a **design system** as a self-contained bundle that an AI
 agent can read, navigate, and apply to a task with no SDK, no platform, and no lock-in.
@@ -11,8 +11,8 @@ versioning holds in ODSF unchanged. ODSF adds three things on top of that contai
 2. **companion HTML/CSS assets** so a concept ships a concrete, self-rendering example an agent can copy from, and
 3. a **design-oriented type vocabulary and body conventions** so foundations, components, patterns, behaviors, and guidelines are first-class.
 
-The goal is a bundle you can hand to an agent — "build this screen, adhere to this design
-system" — and have it produce work that looks and behaves like the system intends, because
+The goal is a bundle you can hand to an agent ("build this screen, adhere to this design
+system"), and have it produce work that looks and behaves like the system intends, because
 the system is right there in a form the agent can consume.
 
 Normative keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY, REQUIRED) carry their RFC 2119
@@ -32,8 +32,8 @@ A bundle is a **conformant ODSF bundle** when both hold:
    string, e.g. `"0.1"`).
 
 That is the whole hard requirement: *be a valid OKF bundle, and say you are an ODSF one.*
-Everything else in this document — the token model, the asset conventions, the type
-vocabulary, the body sections — is **recommended** structure that a producer SHOULD follow
+Everything else in this document (the token model, the asset conventions, the type
+vocabulary, the body sections) is **recommended** structure that a producer SHOULD follow
 and a consumer SHOULD exploit but MUST tolerate the absence of.
 
 The consumer contract is OKF's, extended. A consumer **MUST NOT** reject a bundle because of:
@@ -142,13 +142,13 @@ conventions a design-aware consumer reads; an OKF-only consumer ignores them har
 
 ## 4. The token model
 
-A **design token** is a named, reusable design decision — a color, a font size, a spacing
+A **design token** is a named, reusable design decision: a color, a font size, a spacing
 step, a radius, a shadow, a duration. ODSF carries tokens in **two projections of one source
 of truth**, so both an agent and the code it writes can consume them:
 
-1. **Frontmatter `tokens`** — the human- and agent-readable definition, on the foundation
+1. **Frontmatter `tokens`**, the human- and agent-readable definition, on the foundation
    concept that owns them (and, by reference, on the components that use them).
-2. **`styles/tokens.css`** — the same tokens as CSS custom properties, ready to drop into real
+2. **`styles/tokens.css`**, the same tokens as CSS custom properties, ready to drop into real
    code or to be linked by the bundle's own example HTML.
 
 A bundle SHOULD keep the two in sync; the foundation concept's frontmatter is the canonical
@@ -203,7 +203,7 @@ tokens:
 ```
 
 A consumer SHOULD resolve `{group.name}` against the bundle's foundation tokens. An unresolved
-reference (the target token does not exist) is **tolerated**, like a broken link — the
+reference (the target token does not exist) is **tolerated**, like a broken link: the
 consumer keeps the literal `{…}` string rather than failing.
 
 ### The CSS projection
@@ -217,8 +217,8 @@ spacing.md              →  --spacing-md
 typography.body.fontSize →  --typography-body-fontSize
 ```
 
-`styles/tokens.css` SHOULD define these under `:root` so any example HTML — and any code the
-agent writes — consumes the identical values:
+`styles/tokens.css` SHOULD define these under `:root` so any example HTML (and any code the
+agent writes) consumes the identical values:
 
 ```css
 :root {
@@ -244,7 +244,7 @@ lets the CSS projection and example HTML stay one-to-one with the tokens.
 
 ## 5. Concept type vocabulary
 
-As in OKF, `type` is **descriptive and open** — there is no registry and a consumer MUST
+As in OKF, `type` is **descriptive and open**: there is no registry and a consumer MUST
 tolerate unknown values. The following are the **conventional** ODSF types a consumer SHOULD
 recognize and route on. Pick the most specific that fits; invent one when none does.
 
@@ -308,7 +308,7 @@ An `*.example.html` file SHOULD be a **complete, standalone HTML document** that
 correctly when opened directly in a browser, with **no build step**. It SHOULD pull the
 design system's tokens by linking the bundle's stylesheet rather than hard-coding values. Note
 that an asset links its stylesheets with **relative** paths (`../styles/tokens.css`), not the
-bundle-absolute form recommended for concept cross-links (§8) — a relative path resolves both
+bundle-absolute form recommended for concept cross-links (§8). A relative path resolves both
 when the file is opened directly over `file://` and when the bundle is served, so the example
 renders on a double-click:
 
@@ -329,7 +329,7 @@ renders on a double-click:
 
 Because the example links `tokens.css` (§4), it stays truthful to the system automatically:
 change a token, and every example re-renders with the new value. An agent handed this file
-learns the exact class names, structure, and attributes to emit — knowledge that prose alone
+learns the exact class names, structure, and attributes to emit, knowledge that prose alone
 conveys poorly. Keep examples **minimal**: the markup for the one thing the concept teaches,
 not a page of chrome around it.
 
@@ -386,14 +386,14 @@ ODSF relationships a producer SHOULD wire and label in prose:
 - any concept → the `Guideline` and `Accessibility` concepts that constrain it.
 
 The result is a graph an agent can walk from a task ("build a sign-up form") to the patterns,
-components, tokens, behaviors, and rules it needs — the same progressive-disclosure traversal
+components, tokens, behaviors, and rules it needs, the same progressive-disclosure traversal
 OKF defines, specialized to design.
 
 ---
 
 ## 9. index.md and log.md
 
-Identical to OKF. An `index.md` MAY appear in any directory and carries no frontmatter — except
+Identical to OKF. An `index.md` MAY appear in any directory and carries no frontmatter, except
 the **bundle-root `index.md`**, which carries the version declaration (§10) and is the one place
 ODSF frontmatter on an index is permitted. Each `index.md` lists its directory's concepts as a
 bulleted set of described links for progressive disclosure. `log.md` is a flat, newest-first
@@ -428,11 +428,11 @@ How an agent SHOULD use a bundle when handed a design task:
 1. **Orient.** Read the bundle-root `index.md` and the `Design System` overview concept for the
    system's principles and the lay of the land.
 2. **Pull foundations.** Load the foundation tokens relevant to the task (color, typography,
-   spacing) — or simply link/inline `styles/tokens.css`, the runnable projection of all of them.
+   spacing), or simply link/inline `styles/tokens.css`, the runnable projection of all of them.
 3. **Descend by need.** Follow `index.md` listings and cross-links to the `Component`,
    `Pattern`, and `Behavior` concepts the task requires; don't read the whole bundle.
 4. **Copy from the assets.** Reproduce structure, class names, and attributes from the relevant
-   `*.example.html`, restyled by the same `tokens.css` — not from a prose paraphrase.
+   `*.example.html`, restyled by the same `tokens.css`, not from a prose paraphrase.
 5. **Respect the rules.** Honor the `Guideline` and `Accessibility` concepts in scope, and the
    `*.dont.html` counter-examples, so the output avoids the system's known failure modes.
 6. **Stay forgiving.** Tolerate everything optional (missing tokens, absent assets, unknown
@@ -474,16 +474,15 @@ ODSF sits deliberately between the two it builds on:
 - **design.md** gives the *seed of the content*: frontmatter design tokens, the `{group.name}`
   reference syntax, variant/state entries, and the do/don't framing. ODSF embraces that token
   model and keeps it compatible.
-- **ODSF adds the rest**: companion HTML/CSS assets that turn description into a copyable
-  artifact, a runnable `tokens.css` projection, first-class `Pattern` / `Behavior` /
-  `Guideline` / `Accessibility` concepts, and the OKF-style graph that ties a task to exactly
-  the design knowledge it needs. It fills design.md's noted gaps — motion, breakpoints,
-  behavioral and accessibility modeling — by making each its own concept type rather than
-  loose prose.
+- **ODSF adds the rest**: first-class `Pattern` / `Behavior` / `Guideline` / `Accessibility`
+  concepts, the OKF-style graph that ties a task to exactly the design knowledge it needs, a
+  runnable `tokens.css` projection, and companion HTML/CSS assets that make an example concrete
+  rather than paraphrased. It fills design.md's noted gaps (motion, breakpoints, behavioral and
+  accessibility modeling) by making each its own concept type rather than loose prose.
 
 The one-sentence version: **OKF told us how to bundle knowledge for an agent; design.md told us
-what design knowledge to write down; ODSF bundles design knowledge the OKF way and ships the
-working examples too.**
+how to write down a design token; ODSF bundles a whole design system the OKF way, linked into a
+graph an agent navigates from a task to the rule it needs.**
 
 ---
 
@@ -492,7 +491,7 @@ working examples too.**
 A bundle is a directory of text files, so it ships however files ship: a git repository (the
 recommended home, versioned beside the product it styles), a tarball, or a subdirectory of a
 larger repo. Because every file is `.md`, `.html`, or `.css`, a bundle is diffable, reviewable,
-and openable without any tooling — the example HTML literally renders in a browser.
+and openable without any tooling: the example HTML literally renders in a browser.
 
 ---
 
@@ -502,8 +501,8 @@ The convictions behind these are argued at length in [PHILOSOPHY.md](./PHILOSOPH
 
 - **A profile, not a fork.** ODSF adds the minimum to OKF to make design systems first-class
   and keeps every ODSF bundle a valid OKF bundle. One new hard rule, the rest recommended.
-- **Two projections, one truth.** Tokens live once and appear twice — as agent-readable
-  frontmatter and as runnable CSS — so describing the system and using it never diverge.
+- **Two projections, one truth.** Tokens live once and appear twice: as agent-readable
+  frontmatter and as runnable CSS, so describing the system and using it never diverge.
 - **Show, don't just tell.** Every concept can ship a concrete, self-rendering artifact. An
   agent copies a correct example far more reliably than it follows prose.
 - **Forgiving by default.** A consumer degrades gracefully through every missing optional part,
