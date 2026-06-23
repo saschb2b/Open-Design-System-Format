@@ -16,9 +16,9 @@ const examples = [
 ];
 
 const pillars = [
-  { t: "Two projections, one truth", d: "Every token lives once and appears twice: as agent-readable frontmatter and as a runnable CSS variable. The doc and the code stay in sync because they come from the same source." },
-  { t: "Show, don't just tell", d: "Each component ships a self-rendering *.example.html. An agent copies a correct, working example far more reliably than it follows a paragraph." },
-  { t: "One hard rule, forgiving rest", d: "A bundle is conformant if every concept declares a type and the bundle states its version. Everything else degrades gracefully. Adoption beats enforcement." },
+  { t: "From a task to the exact rule", d: "Every piece (a token, a component, a behavior, a do/don't) is a typed concept in a linked graph. An agent walks from \"build a sign-up form\" to the patterns, components, and rules that task needs, and reads only those." },
+  { t: "Two projections, one truth", d: "Every token lives once and appears twice: as agent-readable frontmatter and as a runnable CSS variable. The description and the code come from one source, so they never drift apart." },
+  { t: "One rule, no platform", d: "A bundle is conformant if every concept declares a type and the bundle states its version. That single contract lets any agent or tool read any bundle the same way, with no SDK and no lock-in." },
 ];
 ---
 
@@ -28,7 +28,7 @@ const pillars = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ODSF · Open Design System Format</title>
-  <meta name="description" content="Bundle a design system (tokens, components, rules, and runnable examples) into one portable package an agent can read and adhere to. The Open Knowledge Format's structure with design.md's tokens." />
+  <meta name="description" content="ODSF packages a whole design system (tokens, components, behaviors, and rules) as one navigable bundle an agent reads from a task and adheres to. A profile of the Open Knowledge Format, built on design.md's token model." />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -66,15 +66,15 @@ const pillars = [
           <span class="eyebrow">Open Design System Format · v0.1</span>
           <h1>Hand your <em>design system</em> to an agent.</h1>
           <p class="lead">
-            ODSF packages a design system (tokens, components, behaviors, rules, and <strong>runnable
-            examples</strong>) into one portable bundle of markdown, HTML, and CSS that an agent
-            can read and actually <em>adhere&nbsp;to</em>. Clone it, diff it, hand it to any agent.
+            A design system is more than tokens. ODSF packages the whole of it (tokens, components,
+            behaviors, and rules) into one bundle of markdown, HTML, and CSS. An agent reads it from a
+            task down to the exact rule that task needs, and produces UI that <em>adheres&nbsp;to</em> your system.
           </p>
           <div class="cta">
             <a class="btn btn--primary" href="#examples">See a bundle live</a>
             <a class="btn" href={spec}>Read the spec ↗</a>
           </div>
-          <p class="microcopy">A profile of <a href={okfUrl}>OKF</a> that embraces <a href={designMdUrl}>design.md</a>'s tokens, plus the working examples agents copy from.</p>
+          <p class="microcopy">A profile of <a href={okfUrl}>OKF</a> built on <a href={designMdUrl}>design.md</a>'s token model.</p>
         </div>
 
         <!-- Bundle preview card -->
@@ -120,12 +120,12 @@ styles/
           <span class="eq-op">+</span>
           <div class="eq-term">
             <a href={designMdUrl} class="eq-name">design.md</a>
-            <span class="eq-desc">what design knowledge to write down</span>
+            <span class="eq-desc">how to write down a design token</span>
           </div>
           <span class="eq-op">=</span>
           <div class="eq-term eq-term--out">
             <span class="eq-name grad">ODSF</span>
-            <span class="eq-desc">bundle design knowledge the OKF way, and ship the working examples too</span>
+            <span class="eq-desc">the whole design system as one bundle an agent navigates</span>
           </div>
         </div>
       </div>
@@ -149,13 +149,15 @@ styles/
             <h3><a href={designMdUrl}>design.md</a></h3>
             <p>Google Labs' format for documenting a design system for coding agents: design tokens in
               YAML frontmatter (colors, type, spacing) with <code>{`{group.name}`}</code> references
-              and human-readable rationale. It nails <em>what</em> to write down. It stops at one loose
-              file: no bigger picture, no runnable examples.</p>
+              and human-readable rationale. It nails how to write down a <em>token</em>. It stops
+              there: one file of tokens, with nowhere for components, behaviors, and rules to live,
+              and no structure for an agent to navigate.</p>
           </article>
         </div>
-        <p class="bridge">ODSF bundles design.md-style tokens the OKF way, adds first-class
-          <strong>components, patterns, behaviors, and guidelines</strong>, and ships the part neither
-          had: <strong>companion HTML/CSS an agent copies from</strong>.</p>
+        <p class="bridge">ODSF bundles those tokens the OKF way and makes <strong>components, patterns,
+          behaviors, and guidelines</strong> first-class typed concepts, linked into a graph an agent
+          navigates from a task to the rule it needs. One conformance rule keeps every bundle readable
+          by any agent or tool.</p>
       </div>
     </section>
 
