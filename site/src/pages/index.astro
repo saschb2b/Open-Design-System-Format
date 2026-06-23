@@ -1,0 +1,464 @@
+---
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith("/") ? rawBase : rawBase + "/";
+const repo = "https://github.com/saschb2b/Open-Design-System-Format";
+const spec = `${repo}/blob/main/SPEC.md`;
+const philosophy = `${repo}/blob/main/PHILOSOPHY.md`;
+const templates = `${repo}/blob/main/TEMPLATES.md`;
+const okfUrl = "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md";
+const designMdUrl = "https://github.com/google-labs-code/design.md";
+const viewer = (id) => `${base}tools/viewer.html?bundle=${base}examples/${id}`;
+
+const examples = [
+  { id: "claude", name: "Claude", by: "Anthropic", color: "var(--coral)", blurb: "A warm, editorial brand voice — cream canvas, coral accent, slab-serif display. A fixed identity.", meta: "9 components · landing page" },
+  { id: "primer", name: "Primer", by: "GitHub", color: "var(--green)", blurb: "Functional color roles, full light/dark theming, and the signature green primary action.", meta: "45 components · repo page" },
+  { id: "geist", name: "Geist", by: "Vercel", color: "var(--blue)", blurb: "High-contrast and monochrome-first on numbered scales, fully theme-able across light and dark.", meta: "70 components · dashboard" },
+];
+
+const pillars = [
+  { t: "Two projections, one truth", d: "Every token lives once and appears twice — as agent-readable frontmatter and as a runnable CSS variable — so describing the system and using it never drift." },
+  { t: "Show, don't just tell", d: "Each component ships a self-rendering *.example.html. An agent copies a correct, working example far more reliably than it follows a paragraph." },
+  { t: "One hard rule, forgiving rest", d: "A bundle is conformant if every concept declares a type and the bundle states its version. Everything else degrades gracefully. Adoption beats enforcement." },
+];
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ODSF — Open Design System Format</title>
+  <meta name="description" content="Bundle a design system — tokens, components, rules, and runnable examples — into one portable package an AI agent can read and adhere to. The Open Knowledge Format's structure meets design.md's tokens." />
+  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script is:inline>
+    (function(){try{var t=localStorage.getItem("odsf-theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;}catch(e){}})();
+  </script>
+</head>
+<body>
+  <div class="topline" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="#top" aria-label="ODSF home">
+        <span class="diamond" aria-hidden="true"></span>
+        <span class="brand__name">ODSF</span>
+        <span class="brand__sub">Open Design System Format</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#what">What it is</a>
+        <a href="#why">Why</a>
+        <a href="#examples">Examples</a>
+        <a href={spec}>Spec ↗</a>
+        <a href={repo} class="nav__gh">GitHub</a>
+        <button id="theme" class="iconbtn" type="button" aria-label="Toggle theme" title="Toggle theme">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <span class="eyebrow">Open Design System Format · v0.1</span>
+          <h1>Hand your <em>design system</em> to an agent.</h1>
+          <p class="lead">
+            ODSF packages a design system — tokens, components, behaviors, rules, and <strong>runnable
+            examples</strong> — into one portable bundle of markdown, HTML, and CSS that an AI agent
+            can read and actually <em>adhere&nbsp;to</em>. Clone it, diff it, throw it at any agent.
+          </p>
+          <div class="cta">
+            <a class="btn btn--primary" href="#examples">See a bundle live</a>
+            <a class="btn" href={spec}>Read the spec ↗</a>
+          </div>
+          <p class="microcopy">A profile of <a href={okfUrl}>OKF</a>, embracing
+            <a href={designMdUrl}>design.md</a>'s tokens — plus the working examples agents copy from.</p>
+        </div>
+
+        <!-- Bundle preview card -->
+        <div class="hero__art" aria-hidden="true">
+          <div class="bundle">
+            <div class="bundle__head">
+              <span class="diamond diamond--sm"></span>
+              <span class="bundle__title">design-system<span class="dim">.odsf</span></span>
+              <span class="bundle__tag">→ agent</span>
+            </div>
+            <div class="swatches">
+              <span style="--c:var(--coral)"></span>
+              <span style="--c:var(--green)"></span>
+              <span style="--c:var(--blue)"></span>
+              <span style="--c:var(--ink)"></span>
+              <span style="--c:var(--surface-2)"></span>
+            </div>
+            <pre class="tree"><span class="d">index.md</span>
+foundations/
+  <span class="f">color.md</span>      <span class="c"># tokens + roles</span>
+  typography.md
+components/
+  <span class="f">button.md</span>
+  <span class="h">button.example.html</span>  <span class="c"># renders</span>
+behaviors/  guidelines/
+styles/
+  <span class="s">tokens.css</span>   <span class="c"># --color-primary…</span></pre>
+            <div class="bundle__foot"><span class="kind d">md</span><span class="kind h">html</span><span class="kind s">css</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The equation / aha -->
+    <section class="band" id="aha">
+      <div class="container">
+        <div class="equation">
+          <div class="eq-term">
+            <a href={okfUrl} class="eq-name">OKF</a>
+            <span class="eq-desc">how to bundle knowledge for an agent</span>
+          </div>
+          <span class="eq-op">+</span>
+          <div class="eq-term">
+            <a href={designMdUrl} class="eq-name">design.md</a>
+            <span class="eq-desc">what design knowledge to write down</span>
+          </div>
+          <span class="eq-op">=</span>
+          <div class="eq-term eq-term--out">
+            <span class="eq-name grad">ODSF</span>
+            <span class="eq-desc">bundle design knowledge the OKF way — and ship the working examples too</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What they are -->
+    <section class="section" id="what">
+      <div class="container">
+        <h2 class="section__title">New to the pieces?</h2>
+        <p class="section__sub">ODSF stands on two recent ideas. Here's each, in a sentence.</p>
+        <div class="cards-2">
+          <article class="card">
+            <span class="card__kicker">The container</span>
+            <h3><a href={okfUrl}>Open Knowledge Format</a></h3>
+            <p>Google's open, vendor-neutral spec for the context an AI agent needs. Plain markdown
+              files, each a typed <em>concept</em>, with one-rule conformance, cross-links, and
+              progressive disclosure. No SDK, no platform — if you can read a file, you can read OKF.</p>
+          </article>
+          <article class="card">
+            <span class="card__kicker">The content seed</span>
+            <h3><a href={designMdUrl}>design.md</a></h3>
+            <p>Google Labs' format for documenting a design system for coding agents: design tokens in
+              YAML frontmatter — colors, type, spacing — with <code>{`{group.name}`}</code> references
+              and human-readable rationale. It nails <em>what</em> to write down. It stops at one loose
+              file: no bigger picture, no runnable examples.</p>
+          </article>
+        </div>
+        <p class="bridge">ODSF bundles design.md-style tokens the OKF way, adds first-class
+          <strong>components, patterns, behaviors, and guidelines</strong>, and ships the part neither
+          had: <strong>companion HTML/CSS an agent copies from</strong>.</p>
+      </div>
+    </section>
+
+    <!-- Why -->
+    <section class="section section--alt" id="why">
+      <div class="container">
+        <h2 class="section__title">Agents write UI well — and <em>your</em> UI badly.</h2>
+        <p class="section__sub">They don't know your color roles, your spacing scale, your "never
+          convey meaning with color alone" rule — so they invent plausible-but-wrong defaults. The fix
+          is to hand them the system as context they can load.</p>
+        <div class="cards-3">
+          {pillars.map((p) => (
+            <article class="pillar">
+              <span class="pillar__mark" aria-hidden="true"></span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Anatomy -->
+    <section class="section" id="anatomy">
+      <div class="container anatomy">
+        <div class="anatomy__text">
+          <h2 class="section__title">Just files. Three kinds.</h2>
+          <p class="section__sub">A bundle is a directory you commit next to your product. Open it in a
+            browser, diff it in a PR, point an agent at it.</p>
+          <ul class="kinds">
+            <li><span class="kind d">.md</span> <b>Concepts</b> — the knowledge, each with a required
+              <code>type</code>. This is what makes a bundle conformant.</li>
+            <li><span class="kind h">.html</span> <b>Examples</b> — self-rendering, so an agent sees the
+              exact markup, classes, and states to reproduce.</li>
+            <li><span class="kind s">.css</span> <b>Tokens</b> — the same values as runnable CSS
+              variables, in sync with the frontmatter.</li>
+          </ul>
+        </div>
+        <pre class="code"><span class="c">// a conformant ODSF concept</span>
+<span class="p">---</span>
+<span class="k">type</span>: Component
+<span class="k">title</span>: Button
+<span class="k">tokens</span>:
+  button-primary:
+    background: <span class="str">"&#123;colors.primary&#125;"</span>
+    color: <span class="str">"&#123;colors.on-primary&#125;"</span>
+<span class="p">---</span>
+
+<span class="h2"># Examples</span>
+- <span class="lnk">button.example.html</span> — every variant, live.</pre>
+      </div>
+    </section>
+
+    <!-- Examples -->
+    <section class="section section--alt" id="examples">
+      <div class="container">
+        <h2 class="section__title">See a real design system as a bundle.</h2>
+        <p class="section__sub">Three well-known systems, each cloned into a conformant ODSF bundle and
+          rendered live in the single-file viewer. Browse the tokens, the components, the do/don'ts —
+          and flip light/dark.</p>
+        <div class="ex-grid">
+          {examples.map((e) => (
+            <a class="ex" href={viewer(e.id)} style={`--accent:${e.color}`}>
+              <span class="ex__stripe" aria-hidden="true"></span>
+              <div class="ex__row">
+                <h3>{e.name}</h3>
+                <span class="ex__by">{e.by}</span>
+              </div>
+              <p>{e.blurb}</p>
+              <div class="ex__foot">
+                <span class="ex__meta">{e.meta}</span>
+                <span class="ex__go">Open in viewer →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+        <p class="microcopy center">The viewer is one HTML file with no dependencies. It reads any
+          ODSF bundle's <code>index.md</code> and renders it.</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+      <div class="container">
+        <h2>Bundle your design system. Hand it to the agent.</h2>
+        <div class="cta">
+          <a class="btn btn--primary" href={spec}>Read the spec ↗</a>
+          <a class="btn" href={templates}>Start from a template ↗</a>
+          <a class="btn" href={repo}>Star on GitHub ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="diamond diamond--sm" aria-hidden="true"></span>
+        <span>ODSF — Open Design System Format · v0.1 · MIT</span>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href={spec}>Spec</a>
+        <a href={philosophy}>Philosophy</a>
+        <a href={templates}>Templates</a>
+        <a href={repo}>GitHub</a>
+      </nav>
+      <p class="footer__note">Built on <a href={okfUrl}>OKF</a> and <a href={designMdUrl}>design.md</a>.</p>
+    </div>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById("theme");
+      function sync() { if (btn) btn.textContent = document.documentElement.dataset.theme === "dark" ? "☀" : "☾"; }
+      if (btn) btn.addEventListener("click", function () {
+        var n = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = n;
+        try { localStorage.setItem("odsf-theme", n); } catch (e) {}
+        sync();
+      });
+      sync();
+    })();
+  </script>
+
+  <style is:global>
+    :root, [data-theme="light"] {
+      --paper: #faf9f6; --surface: #ffffff; --surface-2: #f3f1ea;
+      --ink: #19191c; --ink-2: #45454c; --muted: #76757d;
+      --line: #e8e5dd; --line-2: #d9d5ca;
+      --shadow: 0 1px 2px rgba(25,25,28,.04), 0 8px 24px -12px rgba(25,25,28,.12);
+    }
+    [data-theme="dark"] {
+      --paper: #0b0b0d; --surface: #141417; --surface-2: #1b1b1f;
+      --ink: #f3f2ef; --ink-2: #b7b6b0; --muted: #87867f;
+      --line: #26262b; --line-2: #34343c;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.6);
+    }
+    :root {
+      --coral: #cc785c; --green: #1f883d; --blue: #0070f3;
+      --grad: linear-gradient(115deg, var(--coral), var(--green) 52%, var(--blue));
+      --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+      --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --r: 10px; --r-lg: 16px; --maxw: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-sans);
+      font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .topline { height: 3px; background: var(--grad); }
+    .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    .diamond { width: 18px; height: 18px; background: var(--grad); transform: rotate(45deg); border-radius: 3px; display: inline-block; }
+    .diamond--sm { width: 13px; height: 13px; }
+
+    /* Nav */
+    .nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 82%, transparent);
+      backdrop-filter: saturate(180%) blur(10px); border-bottom: 1px solid var(--line); }
+    .nav__inner { display: flex; align-items: center; gap: 20px; height: 60px; }
+    .brand { display: inline-flex; align-items: baseline; gap: 9px; text-decoration: none; }
+    .brand__name { font-weight: 600; letter-spacing: -.01em; transform: translateY(-1px); }
+    .brand__sub { color: var(--muted); font-size: 13px; }
+    .nav__links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
+    .nav__links a { text-decoration: none; color: var(--ink-2); font-size: 14.5px; }
+    .nav__links a:hover { color: var(--ink); }
+    .nav__gh { font-weight: 500; }
+    .iconbtn { width: 34px; height: 34px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface);
+      color: var(--ink); cursor: pointer; font-size: 15px; }
+    .iconbtn:hover { border-color: var(--ink-2); }
+    @media (max-width: 720px) { .brand__sub, .nav__links a[href*="What"], .nav__links a[href="#why"] { display: none; } }
+
+    /* Hero */
+    .hero { padding: 84px 0 64px; }
+    .hero__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+    @media (max-width: 900px) { .hero__grid { grid-template-columns: 1fr; gap: 40px; } .hero { padding: 56px 0 40px; } }
+    .eyebrow { display: inline-block; font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; margin-bottom: 22px; }
+    .hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(44px, 7vw, 76px);
+      line-height: 1.02; letter-spacing: -.01em; margin: 0 0 22px; }
+    .hero h1 em { font-style: italic; }
+    .lead { font-size: 19px; color: var(--ink-2); max-width: 36ch; margin: 0 0 28px; }
+    .lead strong { color: var(--ink); font-weight: 600; }
+    .lead em { font-style: normal; border-bottom: 2px solid color-mix(in srgb, var(--blue) 50%, transparent); }
+    .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .microcopy { font-size: 14px; color: var(--muted); margin-top: 18px; }
+    .microcopy a { color: var(--ink-2); text-underline-offset: 3px; }
+    .microcopy.center { text-align: center; margin-top: 26px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r);
+      font: inherit; font-size: 15px; font-weight: 500; text-decoration: none; cursor: pointer;
+      border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); transition: transform .06s, border-color .15s; }
+    .btn:hover { border-color: var(--ink-2); }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .btn--primary:hover { background: color-mix(in srgb, var(--ink) 88%, var(--paper)); }
+
+    /* Bundle preview */
+    .bundle { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+      box-shadow: var(--shadow); overflow: hidden; }
+    .bundle__head { display: flex; align-items: center; gap: 9px; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+    .bundle__title { font-weight: 500; font-size: 14.5px; }
+    .bundle__title .dim { color: var(--muted); }
+    .bundle__tag { margin-left: auto; font-family: var(--font-mono); font-size: 11.5px; color: var(--muted);
+      border: 1px solid var(--line-2); border-radius: 999px; padding: 2px 9px; }
+    .swatches { display: flex; gap: 0; padding: 14px 16px 4px; }
+    .swatches span { flex: 1; height: 26px; background: var(--c); }
+    .swatches span:first-child { border-radius: 6px 0 0 6px; }
+    .swatches span:last-child { border-radius: 0 6px 6px 0; border: 1px solid var(--line-2); }
+    .tree { margin: 6px 0 0; padding: 8px 16px 14px; font-family: var(--font-mono); font-size: 12.5px;
+      line-height: 1.85; color: var(--ink-2); white-space: pre; overflow-x: auto; }
+    .tree .d { color: var(--ink); } .tree .f { color: var(--blue); } .tree .h { color: var(--coral); }
+    .tree .s { color: var(--green); } .tree .c { color: var(--muted); }
+    .bundle__foot { display: flex; gap: 6px; padding: 0 16px 14px; }
+    .kind { font-family: var(--font-mono); font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 6px;
+      border: 1px solid transparent; }
+    .kind.d { color: var(--ink); border-color: var(--line-2); }
+    .kind.h { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); }
+    .kind.s { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, transparent); }
+
+    /* Equation band */
+    .band { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface-2); }
+    .equation { display: flex; align-items: stretch; gap: 18px; padding: 36px 0; justify-content: center; flex-wrap: wrap; }
+    .eq-term { flex: 1 1 220px; max-width: 300px; text-align: center; }
+    .eq-name { display: block; font-family: var(--font-display); font-size: 30px; text-decoration: none; color: var(--ink); }
+    .eq-desc { display: block; font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+    .eq-op { font-family: var(--font-display); font-size: 30px; color: var(--muted); align-self: center; }
+    .eq-term--out .eq-name { font-weight: 400; }
+
+    /* Sections */
+    .section { padding: 84px 0; }
+    .section--alt { background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section__title { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.5vw, 44px);
+      line-height: 1.08; letter-spacing: -.01em; margin: 0 0 12px; max-width: 22ch; }
+    .section__title em { font-style: italic; }
+    .section__sub { font-size: 18px; color: var(--ink-2); max-width: 60ch; margin: 0 0 36px; }
+
+    .cards-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 760px) { .cards-2 { grid-template-columns: 1fr; } }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px; }
+    .card__kicker { font-size: 12.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
+    .card h3 { font-family: var(--font-display); font-weight: 400; font-size: 26px; margin: 8px 0 10px; }
+    .card h3 a { text-decoration: none; }
+    .card h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .card p { margin: 0; color: var(--ink-2); font-size: 16px; }
+    .card code { font-family: var(--font-mono); font-size: 13px; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
+    .bridge { margin: 28px auto 0; max-width: 64ch; text-align: center; font-size: 17px; color: var(--ink-2); }
+    .bridge strong { color: var(--ink); }
+
+    .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 820px) { .cards-3 { grid-template-columns: 1fr; } }
+    .pillar { padding: 4px 0; }
+    .pillar__mark { display: block; width: 26px; height: 26px; background: var(--grad); border-radius: 7px; transform: rotate(45deg); margin-bottom: 18px; }
+    .pillar h3 { font-size: 19px; margin: 0 0 8px; letter-spacing: -.01em; }
+    .pillar p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+
+    /* Anatomy */
+    .anatomy { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    @media (max-width: 860px) { .anatomy { grid-template-columns: 1fr; gap: 32px; } }
+    .kinds { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+    .kinds li { color: var(--ink-2); font-size: 16px; }
+    .kinds b { color: var(--ink); }
+    .kinds code { font-family: var(--font-mono); font-size: 13px; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
+    .code { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
+      margin: 0; padding: 22px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.75; overflow-x: auto; color: var(--ink-2); white-space: pre; }
+    .code .p { color: var(--muted); } .code .k { color: var(--blue); } .code .str { color: var(--green); }
+    .code .h2 { color: var(--ink); } .code .lnk { color: var(--coral); } .code .c { color: var(--muted); }
+
+    /* Examples */
+    .ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 860px) { .ex-grid { grid-template-columns: 1fr; } }
+    .ex { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--r-lg); padding: 0 24px 22px; overflow: hidden; transition: border-color .15s, transform .08s, box-shadow .15s; }
+    .ex:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .ex__stripe { height: 4px; background: var(--accent); margin: 0 -24px 22px; }
+    .ex__row { display: flex; align-items: baseline; gap: 10px; }
+    .ex h3 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0; }
+    .ex__by { color: var(--muted); font-size: 13px; margin-left: auto; }
+    .ex p { color: var(--ink-2); font-size: 15px; margin: 10px 0 18px; flex: 1; }
+    .ex__foot { display: flex; align-items: center; justify-content: space-between; }
+    .ex__meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+    .ex__go { font-size: 14px; font-weight: 500; color: var(--accent); }
+
+    /* CTA band */
+    .cta-band { padding: 80px 0; text-align: center; border-top: 1px solid var(--line); }
+    .cta-band h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4.5vw, 44px); margin: 0 0 26px; letter-spacing: -.01em; }
+    .cta-band .cta { justify-content: center; }
+
+    /* Footer */
+    .footer { border-top: 1px solid var(--line); background: var(--surface-2); padding: 32px 0 48px; }
+    .footer__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+    .footer__brand { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--ink-2); }
+    .footer__links { margin-left: auto; display: flex; gap: 20px; }
+    .footer__links a { color: var(--ink-2); text-decoration: none; font-size: 14px; }
+    .footer__links a:hover { color: var(--ink); }
+    .footer__note { width: 100%; margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+    .footer__note a { color: var(--ink-2); }
+
+    a:focus-visible, .btn:focus-visible, .iconbtn:focus-visible, .ex:focus-visible {
+      outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px;
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+  </style>
+</body>
+</html>
