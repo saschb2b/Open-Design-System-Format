@@ -3,7 +3,7 @@
 **A bundle format for handing a design system to an AI agent.**
 
 ODSF packages a design system as a small directory of markdown, HTML, and CSS that an agent can
-read, navigate, and *apply* — so "build this screen, and make it look and behave like our design
+read, navigate, and *apply*, so "build this screen, and make it look and behave like our design
 system" produces work that actually does. No SDK, no platform, no lock-in. Just files.
 
 > Status: **v0.1**, early and intentionally minimal, designed to grow backward-compatibly.
@@ -15,27 +15,30 @@ system" produces work that actually does. No SDK, no platform, no lock-in. Just 
 
 Coding agents are good at writing UI and bad at writing *your* UI. They don't know your color
 roles, your spacing scale, your button states, your "never convey meaning with color alone"
-rule — so they invent plausible-but-wrong defaults. The fix is to hand the agent the design
-system in a form it can consume on the spot: not a component library to reverse-engineer, not a
-docs site built for human eyes, but **context to load**.
+rule, so they invent plausible-but-wrong defaults. The fix is to give the agent the design
+system as **context it can load** on the spot, rather than a component library to reverse-engineer
+or a docs site built for human eyes.
 
-Two efforts pointed the way and each stopped short:
-**[OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)** (Google's
-Open Knowledge Format) nailed *how to bundle knowledge for an agent* but is domain-agnostic;
-**[design.md](https://github.com/google-labs-code/design.md)** nailed *what design knowledge to
-write down* but is a single loose file with no bigger picture and no runnable examples. **ODSF is
-the merger** — OKF's bundle as the container, design.md's token model as the content seed, plus the
-missing piece: **companion HTML/CSS assets** an agent copies from, and first-class concepts for
-components, patterns, behaviors, and rules.
+A design system is more than tokens, and that is where the two efforts ODSF builds on each stop
+short. **[OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)**
+(Google's Open Knowledge Format) nailed *how to bundle knowledge for an agent* but is
+domain-agnostic. **[design.md](https://github.com/google-labs-code/design.md)** nailed *how to
+write down a design token* but stops at a single file of tokens, with nowhere for components,
+behaviors, and rules to live and no structure for an agent to navigate. ODSF is the merger. OKF's
+bundle is the container and design.md's token model is the content seed, and ODSF makes the whole
+system first-class: components, patterns, behaviors, and guidelines become typed concepts, linked
+into a graph an agent walks from a task to the exact rule that task needs. Companion HTML/CSS
+assets ship beside the concepts, so the example an agent reproduces is concrete rather than
+paraphrased.
 
 ```
 OKF       →  how to bundle knowledge for an agent
-design.md →  what design knowledge to write down
-ODSF      →  bundle design knowledge the OKF way, and ship the working examples too
+design.md →  how to write down a design token
+ODSF      →  the whole design system as one bundle an agent navigates
 ```
 
-The full reasoning — why a design system is context, why the example is the contract, why
-description and implementation must stay one source, why the system is a graph — is in
+The full reasoning (why a design system is context, why description and implementation must stay
+one source, why the system is a graph, why the example is the contract) is in
 **[PHILOSOPHY.md](./PHILOSOPHY.md)**.
 
 ---
@@ -66,35 +69,35 @@ claude/
 
 Three file kinds, nothing else:
 
-- **`.md` concepts** carry the knowledge and a required `type` — this is what makes the bundle a
+- **`.md` concepts** carry the knowledge and a required `type`. That is what makes the bundle a
   conformant OKF bundle.
 - **`.html` / `.css` assets** are the concrete, self-rendering examples a concept points at. A
   `*.example.html` opens in a browser and renders with the real tokens, because it links
   `styles/tokens.css`. Change a token, every example re-renders.
 
-Three live, browsable example bundles ship in [`examples/`](./examples/) — each a faithful clone of a
+Three live, browsable example bundles ship in [`examples/`](./examples/), each a faithful clone of a
 real, recognizable design system, with tokens cross-checked against the live site in both themes:
 
-- **[`examples/claude/`](./examples/claude/)** — Anthropic's **Claude** marketing language: a warm,
+- **[`examples/claude/`](./examples/claude/)** is Anthropic's **Claude** marketing language: a warm,
   fixed editorial palette (cream canvas, coral accent, dark navy product surfaces, serif display).
   Open [its landing page](./examples/claude/patterns/landing-page.example.html).
-- **[`examples/primer/`](./examples/primer/)** — GitHub's **Primer**: a neutral, **theme-able**
+- **[`examples/primer/`](./examples/primer/)** is GitHub's **Primer**: a neutral, **theme-able**
   system built on functional color roles (`fgColor-*`/`bgColor-*`), with full light/dark modes, the
   signature green primary button, and 45 components. Open
   [its repository page](./examples/primer/patterns/repo-page.example.html).
-- **[`examples/geist/`](./examples/geist/)** — Vercel's **Geist**: a high-contrast, monochrome-first,
+- **[`examples/geist/`](./examples/geist/)** is Vercel's **Geist**: a high-contrast, monochrome-first,
   fully theme-able system built on numbered `--ds-*` color scales, with the inverted primary action,
   Geist Sans/Mono, and the **complete 70-component** library. Open
   [its dashboard](./examples/geist/patterns/dashboard.example.html).
 
-Together they show the format spans the spectrum — a fixed brand voice, a systematic multi-mode
+Together they show the format spans the spectrum: a fixed brand voice, a systematic multi-mode
 component library, and a comprehensive monochrome design system all fit the same bundle shape.
 
 ---
 
 ## The token model in one look
 
-Tokens live once and appear twice — as agent-readable frontmatter, and as runnable CSS:
+Tokens live once and appear twice: as agent-readable frontmatter, and as runnable CSS:
 
 ```yaml
 # foundations/color.md
@@ -105,7 +108,7 @@ tokens:
 ```
 
 ```css
-/* styles/tokens.css — the mechanical projection: colors.primary → --colors-primary */
+/* styles/tokens.css, the mechanical projection: colors.primary → --colors-primary */
 :root {
   --colors-primary: #3b5bdb;
   --colors-on-primary: #ffffff;
@@ -144,9 +147,9 @@ node tools/odsf-validate.mjs examples/claude
 It errors only on the hard requirements and warns (never fails) on the soft guidance, mirroring
 the permissive consumer contract.
 
-**Browse it.** Open [`tools/viewer.html`](./tools/viewer.html) — a single-file, zero-dependency
-viewer (light/dark, calm, Primer-inspired). It opens on an **Explore** landing — the system's
-identity, a click-to-copy swatch teaser, and a card per domain — then renders each concept by type:
+**Browse it.** Open [`tools/viewer.html`](./tools/viewer.html), a single-file, zero-dependency
+viewer (light/dark, calm, Primer-inspired). It opens on an **Explore** landing (the system's
+identity, a click-to-copy swatch teaser, and a card per domain), then renders each concept by type:
 color swatches, type specimens, spacing / shape / elevation / motion scales, and the live
 `*.example.html` in a **Preview / Code** frame, with an **On this page** table of contents. Either
 serve the repo and open `tools/viewer.html?bundle=../examples/claude`, or just open the file and
@@ -158,8 +161,8 @@ npx serve         # or: python -m http.server
 ```
 
 **Hand it to an agent.** Point the agent at the bundle and the task. It orients from `index.md`,
-pulls the foundation tokens, descends to the components/patterns/behaviors it needs, copies
-structure from the `*.example.html` files, and honors the guidelines — see
+pulls the foundation tokens, descends to the components, patterns, and behaviors it needs, copies
+structure from the `*.example.html` files, and honors the guidelines. See
 [SPEC.md §11](./SPEC.md#11-consuming-an-odsf-bundle).
 
 ---
@@ -168,7 +171,7 @@ structure from the `*.example.html` files, and honors the guidelines — see
 
 A bundle is a **conformant ODSF bundle** when it is a **conformant OKF bundle** (every `.md`
 concept has a non-empty `type`) **and** its root `index.md` declares `odsf_version`. Everything
-else — the token model, the asset conventions, the type vocabulary, the body sections — is
+else (the token model, the asset conventions, the type vocabulary, the body sections) is
 recommended structure a consumer exploits but tolerates the absence of. The full contract is
 [SPEC.md §1](./SPEC.md#1-conformance).
 
@@ -179,13 +182,13 @@ recommended structure a consumer exploits but tolerates the absence of. The full
 | Path | What |
 | --- | --- |
 | [`SPEC.md`](./SPEC.md) | The ODSF v0.1 normative specification. |
-| [`PHILOSOPHY.md`](./PHILOSOPHY.md) | The convictions behind the format — the "why". |
+| [`PHILOSOPHY.md`](./PHILOSOPHY.md) | The convictions behind the format: the "why". |
 | [`TEMPLATES.md`](./TEMPLATES.md) | Copy-paste shells for every concept type and asset. |
 | [`examples/claude/`](./examples/claude/) | A faithful clone of Anthropic's Claude design system (fixed warm brand). |
 | [`examples/primer/`](./examples/primer/) | A faithful clone of GitHub's Primer (functional, theme-able, light/dark). |
 | [`examples/geist/`](./examples/geist/) | A faithful clone of Vercel's Geist (monochrome, theme-able, all 70 components). |
 | [`tools/odsf-validate.mjs`](./tools/odsf-validate.mjs) | Zero-dependency conformance checker. |
-| [`tools/viewer.html`](./tools/viewer.html) | Single-file reference viewer — renders any ODSF bundle in the browser. |
+| [`tools/viewer.html`](./tools/viewer.html) | Single-file reference viewer; renders any ODSF bundle in the browser. |
 
 ---
 
