@@ -381,6 +381,29 @@ learns the exact class names, structure, and attributes to emit, knowledge that 
 conveys poorly. Keep examples **minimal**: the markup for the one thing the concept teaches,
 not a page of chrome around it.
 
+### Why the artifact stays a separate file
+
+A reader coming from OKF, where the guidance is to reach for the sharpest inline markdown form (a
+`mermaid` fence, TeX, a definition list) rather than a sidecar, may ask why the example is a
+separate `.html` file instead of a fenced block in the concept body. The answer is the split
+between what markdown can *render* and what it can only *show as source*. OKF's inline forms all
+render where bundles are read (GitHub, a viewer); a rendered, tokenized component does not. A
+` ```html ` fence renders as syntax-highlighted source, never as the component, and raw inline HTML
+is stripped of its `<style>`, `<link>`, and class styling by the sanitizers that fenced markdown
+passes through, so it cannot link `tokens.css` or render truthfully either. The standalone file is
+the only form that both renders on a double-click and stays wired to the token projection, which is
+the entire point of an asset (§6, "Self-rendering examples"). So a separate asset is not drift from
+OKF; it is the case OKF's inline forms do not cover, which is exactly why ODSF adds assets (§2). A
+consumer that wants the inline reading experience gets it by rendering the referenced file in a
+preview frame, not by the file being inlined at rest.
+
+The concept body MAY still inline the **markup fragment** in its `# Examples` section as a
+` ```html ` fence: the minimal element an agent should reproduce, which reads correctly as
+highlighted code on any renderer. When it does, it SHOULD link the full `*.example.html` beside the
+fence for the rendered, tokenized version. Code-as-code teaches the shape to copy; the sidecar file
+carries the render. The fence stays a fragment (the one element), not a whole document, so it does
+not duplicate the asset's `<head>` and stylesheet links.
+
 ### Snapshotting dynamic states
 
 An asset carries no JavaScript, so a state with no static look (loading, async, an open menu) is
