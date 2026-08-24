@@ -161,16 +161,38 @@ out-of-range `status`), but only once the root declares `okf_version: "0.2"`, so
 the v0.1 container validates clean.
 
 **Browse it.** Open [`tools/viewer.html`](./tools/viewer.html), a single-file, zero-dependency
-viewer (light/dark, calm, Primer-inspired). It opens on an **Explore** landing (the system's
-identity, a click-to-copy swatch teaser, and a card per domain), then renders each concept by type:
-color swatches, type specimens, spacing / shape / elevation / motion scales, and the live
-`*.example.html` in a **Preview / Code** frame, with an **On this page** table of contents. Either
-serve the repo and open `tools/viewer.html?bundle=../examples/claude`, or just open the file and
-click **Open folder…** to pick a bundle from disk (works over `file://`).
+viewer. It opens on an **Explore** landing (the system's identity, a click-to-copy swatch teaser,
+and a card per domain), and gives a bundle four ways in:
+
+- **Concept pages** render by type — color swatches, type specimens, spacing / shape / elevation /
+  motion scales — with **Overview / Tokens** tabs separating the demo and prose from the token
+  tables, example cards carrying a title, live preview, and **Description / Code** footer, Do &
+  Don't lists as best-practice rows, an **On this page** rail, and a prev/next pager.
+- **Gallery** previews every component live from its own example asset, grouped by the category
+  headings the bundle's own `components/index.md` declares (a flat index degrades to one group).
+- **All tokens** lists foundation tokens with their projected CSS custom properties and component
+  tokens with what they resolve to; click a row to copy.
+- **Changelog** renders the bundle's `log.md`.
+
+The sidebar is grouped by domain with per-domain accents and counts, `/` focuses the filter, and
+every view is a hash route (`#/components/button.md`, `#/gallery`, `#/tokens`) so any page is a
+shareable URL with working back/forward. The theme follows the system by default and is propagated
+into preview iframes, so a dark-capable bundle previews dark.
+
+Either serve the repo and open `tools/viewer.html?bundle=../examples/claude`, or just open the file
+and click **Open folder…** to pick a bundle from disk (works over `file://`).
 
 ```sh
 npx serve         # or: python -m http.server
 # then open http://localhost:3000/tools/viewer.html?bundle=../examples/claude
+```
+
+**Send it to someone.** [`tools/build-standalone.mjs`](./tools/build-standalone.mjs) packs a bundle
+into the viewer as one self-contained HTML file — no server, no network, no dependencies. Useful for
+a review link, an offline copy, or an attachment.
+
+```sh
+node tools/build-standalone.mjs examples/claude    # -> claude-viewer.html
 ```
 
 **Hand it to an agent.** Point the agent at the bundle and the task. It orients from `index.md`,
@@ -203,6 +225,7 @@ recommended structure a consumer exploits but tolerates the absence of. The full
 | [`examples/geist/`](./examples/geist/) | A faithful clone of Vercel's Geist (monochrome, theme-able, all 70 components). |
 | [`tools/odsf-validate.mjs`](./tools/odsf-validate.mjs) | Zero-dependency conformance checker. |
 | [`tools/viewer.html`](./tools/viewer.html) | Single-file reference viewer; renders any ODSF bundle in the browser. |
+| [`tools/build-standalone.mjs`](./tools/build-standalone.mjs) | Packs a bundle into the viewer as one offline, shareable HTML file. |
 
 ---
 

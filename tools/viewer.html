@@ -8,16 +8,39 @@
   ODSF Viewer — a single-file reference consumer for Open Design System Format bundles.
   Zero dependencies, no build. Browse any ODSF bundle visually in the browser.
 
-  Load a bundle two ways:
+  Load a bundle three ways:
     1. Served over HTTP:  tools/viewer.html?bundle=../examples/claude
        (serve the repo root first, e.g.  npx serve  or  python -m http.server)
     2. From local disk:   "Open folder…" and pick a bundle directory (works over file://).
+    3. Embedded:          set window.__ODSF_BUNDLE__ = { label, files: { "index.md": "…" } }
+       before this script runs, and the viewer reads from there — how a build step can
+       inline a whole bundle into one shareable, offline HTML file.
 
   It crawls the bundle's own index.md files (OKF progressive disclosure), then opens on an
   Explore landing: the system's identity, a click-to-copy swatch teaser, and one card per domain.
-  Each concept renders by type (color swatches, type specimens, spacing / shape / elevation /
-  motion scales) with an "On this page" table of contents and the live *.example.html in a
-  Preview / Code preview frame. Light and dark themes; the choice is remembered.
+
+  Navigation
+    · Sidebar grouped by domain, each with its own accent color, icon, and concept count.
+    · Gallery — every component previewed live from its own example asset, grouped by the
+      category headings the bundle's own components/index.md declares.
+    · All tokens — foundation tokens with their projected CSS custom properties, component
+      tokens with what they resolve to; click any row to copy.
+    · Changelog — the bundle's log.md.
+    · Hash routes (#/components/button.md, #/gallery, #/tokens, #/changelog) so any view is
+      a shareable URL, with working back/forward.
+    · "/" focuses the concept filter; prev/next pager at the foot of every concept.
+
+  Concept pages
+    · Overview / Tokens tabs split the demo and prose from the token tables.
+    · Example cards carry a title, the live preview, and a Description / Code footer; the
+      description comes from the concept's own "# Examples" list.
+    · Do & Don't lists render as best-practice rows with Do/Don't pills (presentation only —
+      the markdown stays canonical).
+    · "On this page" tracks the visible tab and scroll position.
+
+  Theme follows the system by default; an explicit toggle persists and is propagated into
+  every preview iframe (prefers-color-scheme blocks are rewritten to match, plus color-scheme
+  and a data-theme attribute), so previews of dark-capable bundles follow the viewer.
 -->
 <style>
   :root {
@@ -47,9 +70,17 @@
 
   /* ---- Top bar ---- */
   .topbar { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
-  .brand { display: flex; align-items: baseline; gap: 8px; font-weight: 600; letter-spacing: -.01em; }
-  .brand__mark { color: var(--accent); font-size: 13px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: -.01em; color: var(--fg); cursor: pointer; }
+  .brand:hover { text-decoration: none; }
+  .brand:hover .brand__mark { transform: rotate(45deg); }
+  .brand__mark { width: 15px; height: 15px; color: var(--accent); flex: none; transition: transform .25s; }
   .brand__sub { color: var(--fg-subtle); font-weight: 400; font-size: 13px; }
+  .topbar__bundle { display: flex; align-items: baseline; gap: 8px; min-width: 0; color: var(--fg-muted); font-size: 13px; cursor: pointer; }
+  .topbar__bundle:hover { color: var(--fg); text-decoration: none; }
+  .topbar__bundle-name { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar__ver { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); flex: none; }
+  @media (max-width: 1100px) { .topbar__bundle-name { max-width: 180px; } }
+  @media (max-width: 880px) { .loader input[type=text], #loadBtn { display: none; } .topbar__bundle-name { max-width: 130px; } }
   .topbar .spacer { flex: 1; }
   .loader { display: flex; align-items: center; gap: 8px; }
   .loader input[type=text] { width: 230px; height: 32px; padding: 0 10px; font: inherit; font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); }
@@ -58,32 +89,53 @@
   .btn:hover { background: var(--bg-inset); }
   .btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn--primary:hover { background: #0860c8; }
-  .icon-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-subtle); color: var(--fg-muted); cursor: pointer; }
+  .icon-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-subtle); color: var(--fg-muted); cursor: pointer; flex: none; }
+  a.icon-btn:hover { text-decoration: none; }
+  .topbar__sep { width: 1px; height: 20px; background: var(--border); margin: 0 2px; flex: none; }
   .icon-btn:hover { background: var(--bg-inset); color: var(--fg); }
   .icon-btn svg { width: 16px; height: 16px; }
 
   /* ---- App layout ---- */
   .app { display: grid; grid-template-columns: 248px 1fr; min-height: 0; }
-  .side { overflow: auto; border-right: 1px solid var(--border); background: var(--bg); padding: 16px 12px 40px; }
-  .side__head { padding: 4px 8px 12px; }
-  .side__name { font-weight: 600; font-size: 15px; }
-  .side__ver { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); margin-top: 2px; }
-  .side__filter { width: 100%; height: 32px; padding: 0 10px; margin-bottom: 10px; font: inherit; font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); }
+  .side { overflow: auto; border-right: 1px solid var(--border); background: var(--bg); padding: 20px 14px 56px; }
+  .side__filter { width: 100%; height: 34px; padding: 0 12px; margin-bottom: 6px; font: inherit; font-size: 13px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); }
   .side__filter:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); background: var(--bg); }
 
-  .nav-item { display: block; padding: 6px 10px; border-radius: var(--radius); color: var(--fg); font-size: 14px; cursor: pointer; }
+  .nav-item { display: flex; align-items: center; min-height: 30px; padding: 4px 10px; border-radius: var(--radius); color: var(--fg); font-size: 13.5px; line-height: 1.35; cursor: pointer; }
   .nav-item:hover { background: var(--bg-subtle); text-decoration: none; }
   .nav-item.active { background: var(--accent-subtle); color: var(--fg); font-weight: 600; }
-  [data-path], [data-home], [data-copy] { cursor: pointer; }
-  [data-path]:focus-visible, [data-home]:focus-visible, .nav-group__title:focus-visible, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: var(--radius); }
-  .nav-home { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  [data-path], [data-home], [data-copy], [data-tokens], [data-log], [data-gallery] { cursor: pointer; }
+  [data-path]:focus-visible, [data-home]:focus-visible, [data-tokens]:focus-visible, [data-log]:focus-visible, .nav-group__title:focus-visible, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: var(--radius); }
+  .nav-home { gap: 8px; margin: 4px 0 4px; font-weight: 500; }
   .nav-home svg { width: 16px; height: 16px; color: var(--fg-muted); }
-  .nav-group { margin-top: 6px; }
-  .nav-group__title { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 8px; background: none; border: 0; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-muted); }
-  .nav-group__title .caret { transition: transform .15s; color: var(--fg-subtle); }
+  .nav-group { margin-top: 18px; }
+  .nav-group__title { display: flex; align-items: center; gap: 7px; width: 100%; padding: 4px 8px 8px; background: none; border: 0; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--fg-muted); }
+  .nav-group__title .caret { width: 12px; text-align: center; flex: none; transition: transform .15s; color: var(--fg-subtle); }
   .nav-group.collapsed .caret { transform: rotate(-90deg); }
   .nav-group.collapsed .nav-group__items { display: none; }
-  .nav-group__items { display: flex; flex-direction: column; gap: 1px; }
+  .nav-group__items { display: flex; flex-direction: column; gap: 2px; margin-left: 14px; padding-left: 6px; border-left: 1px solid var(--border-muted); }
+
+  /* ---- Domain accents ---- */
+  :root {
+    --hue-overview: #0969da; --hue-foundations: #0969da; --hue-components: #8250df;
+    --hue-patterns: #bc4c00; --hue-behaviors: #1a7f37; --hue-guidelines: #cf222e; --hue-references: #6e7781;
+  }
+  :root[data-theme="dark"] {
+    --hue-overview: #4493f8; --hue-foundations: #4493f8; --hue-components: #a371f7;
+    --hue-patterns: #f0883e; --hue-behaviors: #3fb950; --hue-guidelines: #f85149; --hue-references: #9198a1;
+  }
+  .nav-group { --g: var(--accent); }
+  .nav-group[data-group="foundations"] { --g: var(--hue-foundations); }
+  .nav-group[data-group="components"] { --g: var(--hue-components); }
+  .nav-group[data-group="patterns"] { --g: var(--hue-patterns); }
+  .nav-group[data-group="behaviors"] { --g: var(--hue-behaviors); }
+  .nav-group[data-group="guidelines"] { --g: var(--hue-guidelines); }
+  .nav-group[data-group="references"] { --g: var(--hue-references); }
+  .nav-group__title svg { width: 14px; height: 14px; color: var(--g); flex: none; }
+  .nav-group__count { margin-left: auto; font-weight: 400; color: var(--fg-subtle); font-size: 11px; background: var(--bg-subtle); border: 1px solid var(--border-muted); border-radius: 999px; padding: 0 6px; line-height: 16px; }
+  .nav-group__items .nav-item { gap: 9px; padding-left: 10px; }
+  .nav-item__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-group__items .nav-item.active { background: color-mix(in srgb, var(--g) 11%, transparent); }
 
   /* ---- Content shell ---- */
   .content { overflow: auto; }
@@ -128,6 +180,34 @@
   .breadcrumb { font-size: 13px; color: var(--fg-subtle); margin-bottom: 14px; }
   .breadcrumb a { color: var(--fg-muted); }
   .breadcrumb .sep { margin: 0 6px; }
+  .chead__top { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .chead__icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--g, var(--accent)); background: color-mix(in srgb, currentColor 11%, transparent); flex: none; }
+  .chead__icon svg { width: 21px; height: 21px; }
+  .chead__top h1 { margin: 0; }
+  .concept .label.type { color: var(--g, var(--accent)); border-color: color-mix(in srgb, var(--g, var(--accent)) 40%, transparent); background: color-mix(in srgb, var(--g, var(--accent)) 10%, transparent); }
+  .section-card__head svg { color: var(--g, var(--accent)); }
+  .dd { border: 1px solid var(--border); border-radius: var(--radius-lg); margin: 14px 0; max-width: 760px; }
+  .dd-row { display: flex; gap: 14px; padding: 13px 16px; align-items: flex-start; }
+  .dd-row + .dd-row { border-top: 1px solid var(--border-muted); }
+  .dd-pill { flex: none; font-size: 11px; font-weight: 600; line-height: 1; padding: 4px 9px; border-radius: 999px; color: #fff; margin-top: 3px; }
+  .dd-pill--do { background: var(--success); }
+  .dd-pill--dont { background: var(--danger); }
+  .dd-text { min-width: 0; }
+  .dd-text::first-letter { text-transform: uppercase; }
+  .md h2.dd-h { display: inline-flex; padding: 4px 11px; border-radius: 999px; color: #fff; font-size: 12px; letter-spacing: .02em; margin: 24px 0 10px; }
+  .md h2.dd-h--do { background: var(--success); }
+  .md h2.dd-h--dont { background: var(--danger); }
+  .ctabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin: 20px 0 24px; max-width: 760px; }
+  .ctab { background: none; border: 0; padding: 8px 2px 10px; margin-bottom: -1px; font: inherit; font-size: 14px; font-weight: 500; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  .ctab:hover { color: var(--fg); }
+  .ctab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--g, var(--accent)); }
+  .ctab .section-card__count { margin-left: 6px; }
+  .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 56px; max-width: 760px; }
+  .pager a { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 16px; }
+  .pager a:hover { text-decoration: none; border-color: var(--g, var(--accent)); background: var(--bg-subtle); }
+  .pager a.next { text-align: right; }
+  .pager__dir { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--fg-muted); margin-bottom: 2px; }
+  .pager__title { display: block; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .chead h1 { font-size: 28px; font-weight: 600; letter-spacing: -.01em; margin: 0 0 6px; }
   .chead .desc { font-size: 17px; color: var(--fg-muted); margin: 0 0 14px; }
   .labels { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
@@ -163,14 +243,25 @@
   .box .v { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); }
 
   table.kv { width: 100%; border-collapse: collapse; }
-  table.kv th, table.kv td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-muted); font-size: 13.5px; vertical-align: top; }
+  table.kv th, table.kv td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-muted); font-size: 13.5px; vertical-align: top; overflow-wrap: anywhere; }
   table.kv th { color: var(--fg-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; border-bottom-color: var(--border); }
-  table.kv td.token { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+  table.kv td.token { font-family: var(--mono); font-size: 12.5px; }
+  .gallery__cat { font-size: 15px; font-weight: 600; margin: 32px 0 12px; }
+  .gallery__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+  .g-tile { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; background: var(--bg); padding: 0; text-align: left; font: inherit; color: inherit; display: block; }
+  .g-tile:hover { border-color: var(--g, var(--accent)); box-shadow: var(--shadow); }
+  .g-tile__frame { display: block; position: relative; aspect-ratio: 3 / 2; background: #fff; overflow: hidden; border-bottom: 1px solid var(--border-muted); }
+  .g-tile__frame iframe { width: 900px; height: 600px; border: 0; transform: scale(.333); transform-origin: 0 0; pointer-events: none; position: absolute; }
+  .g-tile__name { display: block; padding: 9px 12px; font-size: 13px; font-weight: 500; }
+  .tokens-table tr { cursor: pointer; }
+  .tokens-table tr:hover td { background: var(--bg-subtle); }
+  .tokens__group { font-size: 15px; font-weight: 600; margin: 28px 0 10px; text-transform: capitalize; }
   .dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; border: 1px solid var(--border); }
 
   /* ---- Live example preview ---- */
   .preview { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 0 0 16px; scroll-margin-top: 16px; }
   .preview__head { display: flex; align-items: center; gap: 8px; padding: 7px 12px 7px 14px; border-bottom: 1px solid var(--border-muted); background: var(--bg-subtle); }
+  .preview__title { font-weight: 600; font-size: 13px; }
   .preview__kind { font-size: 12px; font-weight: 600; }
   .preview__kind.do { color: var(--success); } .preview__kind.dont { color: var(--danger); }
   .preview__tabs { display: flex; gap: 4px; }
@@ -179,7 +270,11 @@
   .preview__path { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--fg-subtle); }
   .preview iframe { width: 100%; border: 0; display: block; background: #fff; }
   .preview iframe[hidden] { display: none; }
-  .preview__code { margin: 0; padding: 14px; overflow: auto; max-height: 440px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.55; color: var(--fg); }
+  .preview__foot { border-top: 1px solid var(--border-muted); padding: 8px 14px 12px; background: var(--bg); }
+  .preview__desc { padding-top: 8px; font-size: 13.5px; color: var(--fg-muted); max-width: 74ch; }
+  .preview__desc[hidden] { display: none; }
+  .preview__desc::first-letter { text-transform: uppercase; }
+  .preview__code { margin: 8px 0 0; padding: 0; overflow: auto; max-height: 440px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.55; color: var(--fg); }
   .preview__code[hidden] { display: none; }
 
   /* ---- Markdown body ---- */
@@ -193,7 +288,7 @@
   .md code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-subtle); padding: 1px 5px; border-radius: 4px; }
   .md pre { background: var(--bg-subtle); border: 1px solid var(--border-muted); border-radius: var(--radius); padding: 14px; overflow: auto; }
   .md pre code { background: none; padding: 0; }
-  .md table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  .md table { border-collapse: collapse; width: 100%; margin: 12px 0; display: block; overflow-x: auto; }
   .md th, .md td { border: 1px solid var(--border-muted); padding: 7px 10px; text-align: left; font-size: 13.5px; }
   .md th { background: var(--bg-subtle); }
   .md blockquote { border-left: 3px solid var(--border); margin: 12px 0; padding: 2px 14px; color: var(--fg-muted); }
@@ -209,19 +304,27 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand__mark">◆</span> ODSF <span class="brand__sub">viewer</span></div>
+  <a class="brand" data-home="1" tabindex="0" title="Back to Explore">
+    <svg class="brand__mark" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5 14.5 8 8 14.5 1.5 8z"/><path d="M8 4.8 11.2 8 8 11.2 4.8 8z"/></svg>
+    ODSF <span class="brand__sub">viewer</span></a>
+  <span class="topbar__sep topbar__bundle-sep" aria-hidden="true" hidden></span>
+  <a class="topbar__bundle" data-home="1" tabindex="0" id="topBundle" hidden title="Back to Explore">
+    <span class="topbar__bundle-name" id="topBundleName"></span><span class="topbar__ver" id="topVer"></span></a>
   <div class="spacer"></div>
-  <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"></button>
   <div class="loader">
     <input type="text" id="bundleUrl" placeholder="bundle path (e.g. ../examples/claude)">
     <button class="btn btn--primary" id="loadBtn">Load</button>
     <label class="btn">Open folder…<input type="file" id="folderInput" webkitdirectory directory multiple hidden></label>
   </div>
+  <span class="topbar__sep" aria-hidden="true"></span>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"></button>
+  <a class="icon-btn" href="https://saschb2b.github.io/Open-Design-System-Format/" target="_blank" rel="noopener" title="About the Open Design System Format" aria-label="About the Open Design System Format">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.6"/><path d="M6 6.2a2 2 0 1 1 2.7 1.9c-.5.2-.7.5-.7 1v.3"/><circle cx="8" cy="11.6" r=".1" stroke-width="1.8"/></svg>
+  </a>
 </header>
 <div class="app">
   <nav class="side">
-    <div class="side__head"><div class="side__name" id="bundleName">No bundle</div><div class="side__ver" id="ver"></div></div>
-    <input class="side__filter" id="filter" placeholder="Filter concepts…" autocomplete="off">
+    <input class="side__filter" id="filter" placeholder="Filter concepts (press /)…" autocomplete="off">
     <div id="nav"></div>
   </nav>
   <main class="content"><div id="view"></div></main>
@@ -346,7 +449,25 @@ function mdToHtml(md) {
 }
 
 // ---------- bundle source ----------
-let source = null, TOKENS = {}, CONCEPTS = [], META = {}, spyHandler = null;
+let source = null, TOKENS = {}, GROUP_OWNER = {}, CONCEPTS = [], META = {}, spyHandler = null, rerender = null;
+
+// ---------- hash routing (shareable URLs) ----------
+let currentRoute = "\0";
+function setRoute(r) { currentRoute = r; if (location.hash.replace(/^#/, "") !== r) location.hash = r; }
+function applyRoute() {
+  const h = decodeURIComponent(location.hash.replace(/^#/, ""));
+  if (h === currentRoute) return;
+  currentRoute = h;
+  if (!h || h === "/") renderHome();
+  else if (h === "/tokens") renderTokens();
+  else if (h === "/gallery") renderGallery();
+  else if (h === "/changelog") renderLog();
+  else {
+    const p = h.replace(/^\//, "");
+    if (CONCEPTS.some(c => c.path === p)) selectConcept(p); else renderHome();
+  }
+}
+window.addEventListener("hashchange", applyRoute);
 
 function fetchSource(base) {
   base = base.replace(/\/+$/, "");
@@ -394,9 +515,18 @@ function folderSource(fileList) {
   return { read, listMd, label: rootPrefix.replace(/\/$/, "") + " (local)" };
 }
 
+function embeddedSource(payload) {
+  const map = new Map(Object.entries(payload.files || {}));
+  async function read(path) { return map.has(path) ? map.get(path) : null; }
+  async function listMd() {
+    return [...map.keys()].filter(p => p.endsWith(".md") && !["index.md", "log.md"].includes(p.split("/").pop()));
+  }
+  return { read, listMd, label: (payload.label || "embedded") + " (embedded)" };
+}
+
 // ---------- load + index a bundle ----------
 async function loadBundle(src) {
-  source = src; TOKENS = {}; CONCEPTS = []; META = {};
+  source = src; TOKENS = {}; GROUP_OWNER = {}; CONCEPTS = []; META = {};
   $("#view").innerHTML = '<div class="home-wrap"><div class="empty">Loading…</div></div>';
   const rootIdx = await source.read("index.md");
   const meta = rootIdx ? splitFrontmatter(rootIdx).fm : {};
@@ -410,6 +540,7 @@ async function loadBundle(src) {
     const { fm, body } = splitFrontmatter(txt);
     CONCEPTS.push({ path: p, fm, body });
     flattenTokens(fm.tokens, "", TOKENS);
+    if (fm.tokens) for (const g of Object.keys(fm.tokens)) (GROUP_OWNER[g] ||= p);
   }
   CONCEPTS.sort((a, b) => a.path.localeCompare(b.path));
   const ds = CONCEPTS.find(c => /design system/i.test(c.fm.type || ""));
@@ -418,10 +549,13 @@ async function loadBundle(src) {
     description: (ds && ds.fm.description) || "",
     odsf: meta.odsf_version, okf: meta.okf_version,
   };
-  $("#bundleName").textContent = META.name;
-  $("#ver").textContent = [META.odsf && "odsf " + META.odsf, META.okf && "okf " + META.okf].filter(Boolean).join(" · ");
+  $("#topBundleName").textContent = META.name;
+  $("#topVer").textContent = [META.odsf && "odsf " + META.odsf, META.okf && "okf " + META.okf].filter(Boolean).join(" · ");
+  $("#topBundle").hidden = false;
+  document.querySelector(".topbar__bundle-sep").hidden = false;
   buildSidebar();
-  renderHome();
+  currentRoute = "\0";
+  if (location.hash && location.hash !== "#/") applyRoute(); else renderHome();
 }
 function flattenTokens(node, prefix, into) {
   if (!node || typeof node !== "object") return;
@@ -464,17 +598,24 @@ function groupedConcepts() {
   return groups;
 }
 function orderedGroups(groups) { return [...new Set([...GROUP_ORDER, ...Object.keys(groups)])].filter(g => groups[g]); }
+const HUEVAR = { "": "--hue-overview", foundations: "--hue-foundations", components: "--hue-components", patterns: "--hue-patterns", behaviors: "--hue-behaviors", guidelines: "--hue-guidelines", references: "--hue-references" };
+const hue = (g) => "var(" + (HUEVAR[g] || "--hue-overview") + ")";
+function flatConcepts() { const groups = groupedConcepts(), out = []; for (const g of orderedGroups(groups)) out.push(...groups[g]); return out; }
 const icon = (g) => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[g] || ICONS[""]) + '</svg>';
 
 // ---------- sidebar ----------
 function buildSidebar() {
   const groups = groupedConcepts();
-  let html = '<a class="nav-item nav-home" data-home="1" tabindex="0">' + icon("") + ' Explore</a>';
+  let html = '<a class="nav-item nav-home" data-home="1" tabindex="0">' + icon("") + ' Explore</a>' +
+    '<a class="nav-item nav-home" data-tokens="1" tabindex="0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><ellipse cx="10" cy="5.5" rx="6.5" ry="2.8"/><path d="M3.5 5.5v9c0 1.5 2.9 2.8 6.5 2.8s6.5-1.3 6.5-2.8v-9M3.5 10c0 1.5 2.9 2.8 6.5 2.8s6.5-1.3 6.5-2.8"/></svg> All tokens</a>' +
+    '<a class="nav-item nav-home" data-gallery="1" tabindex="0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="6.2" height="6.2" rx="1"/><rect x="10.8" y="3" width="6.2" height="6.2" rx="1"/><rect x="3" y="10.8" width="6.2" height="6.2" rx="1"/><rect x="10.8" y="10.8" width="6.2" height="6.2" rx="1"/></svg> Gallery</a>' +
+    '<a class="nav-item nav-home" data-log="1" tabindex="0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4.2l2.8 1.6"/></svg> Changelog</a>';
   for (const g of orderedGroups(groups)) {
     html += '<div class="nav-group" data-group="' + esc(g) + '">' +
-      '<button class="nav-group__title"><span class="caret">▾</span>' + esc(GROUPS[g] ? GROUPS[g].label : g || "Overview") + '</button>' +
+      '<button class="nav-group__title"><span class="caret">▾</span>' + icon(g) + esc(GROUPS[g] ? GROUPS[g].label : g || "Overview") +
+      '<span class="nav-group__count">' + groups[g].length + '</span></button>' +
       '<div class="nav-group__items">';
-    for (const c of groups[g]) html += '<a class="nav-item" data-path="' + esc(c.path) + '" tabindex="0">' + esc(c.fm.title || c.path) + '</a>';
+    for (const c of groups[g]) html += '<a class="nav-item" data-path="' + esc(c.path) + '" tabindex="0"><span class="nav-item__label">' + esc(c.fm.title || c.path) + '</span></a>';
     html += '</div></div>';
   }
   $("#nav").innerHTML = html;
@@ -484,9 +625,118 @@ function setActive(sel) {
   if (sel) { const el = $("#nav").querySelector(sel); if (el) el.classList.add("active"); }
 }
 
+// ---------- all tokens + changelog ----------
+function renderTokens() {
+  rerender = renderTokens;
+  setRoute("/tokens");
+  if (spyHandler) { document.removeEventListener("scroll", spyHandler, true); spyHandler = null; }
+  setActive('.nav-item[data-tokens]');
+  const groups = {};
+  for (const [path, vr] of Object.entries(TOKENS)) (groups[path.split(".")[0]] ||= []).push([path, vr]);
+  const isFoundation = (g) => (GROUP_OWNER[g] || "").startsWith("foundations/");
+  const fGroups = Object.keys(groups).filter(isFoundation).sort();
+  const cGroups = Object.keys(groups).filter(g => !isFoundation(g)).sort();
+  let html = '<div class="hero"><h1>All tokens</h1><p>' + Object.keys(TOKENS).length + " tokens. Foundation tokens project to " +
+    '<span class="token">tokens.css</span> custom properties (click to copy the <span class="token">var()</span>); component tokens are realized in ' +
+    '<span class="token">components.css</span> (click to copy the resolved value).</p></div>';
+  html += "<h2>Foundation tokens</h2>";
+  for (const g of fGroups) {
+    html += '<h3 class="tokens__group">' + esc(g) + ' <span class="section-card__count">' + groups[g].length + "</span></h3>" +
+      '<table class="kv tokens-table"><tr><th>Token</th><th>CSS property</th><th>Value</th></tr>';
+    for (const [p, vr] of groups[g].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const v = String(resolveRef(vr)), cssVar = "--" + p.replace(/\./g, "-");
+      const chip = isColor(v) ? '<span class="dot" style="background:' + esc(v) + '"></span> ' : "";
+      html += '<tr data-copy="var(' + esc(cssVar) + ')"><td class="token">' + esc(p) + '</td><td class="token">' + esc(cssVar) + "</td><td>" + chip + esc(v) + "</td></tr>";
+    }
+    html += "</table>";
+  }
+  html += "<h2 style=\"margin-top:40px\">Component tokens</h2>";
+  for (const g of cGroups) {
+    const owner = GROUP_OWNER[g];
+    const ownerC = CONCEPTS.find(c => c.path === owner);
+    html += '<h3 class="tokens__group">' + esc(g) +
+      (ownerC ? ' <a data-path="' + esc(owner) + '" tabindex="0" style="font-size:12px;font-weight:400">' + esc(ownerC.fm.title || owner) + " →</a>" : "") +
+      ' <span class="section-card__count">' + groups[g].length + "</span></h3>" +
+      '<table class="kv tokens-table"><tr><th>Token</th><th>Resolves to</th></tr>';
+    for (const [p, vr] of groups[g].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const v = String(resolveRef(vr));
+      const chip = isColor(v) ? '<span class="dot" style="background:' + esc(v) + '"></span> ' : "";
+      html += '<tr data-copy="' + esc(v) + '"><td class="token">' + esc(p) + "</td><td>" + chip + esc(v) +
+        (String(vr) !== v ? ' <span class="token" style="opacity:.6">' + esc(String(vr)) + "</span>" : "") + "</td></tr>";
+    }
+    html += "</table>";
+  }
+  $("#view").innerHTML = '<div class="home-wrap">' + html + "</div>";
+  $(".content").scrollTop = 0;
+}
+async function renderLog() {
+  rerender = renderLog;
+  setRoute("/changelog");
+  if (spyHandler) { document.removeEventListener("scroll", spyHandler, true); spyHandler = null; }
+  setActive('.nav-item[data-log]');
+  const txt = await source.read("log.md");
+  $("#view").innerHTML = '<div class="home-wrap"><div class="hero"><h1>Changelog</h1><p>The bundle\u2019s log.md, newest first.</p></div><div class="md">' +
+    (txt ? mdToHtml(txt) : "<p>This bundle has no log.md.</p>") + "</div></div>";
+  $(".content").scrollTop = 0;
+}
+
+// ---------- component gallery ----------
+async function renderGallery() {
+  rerender = renderGallery;
+  setRoute("/gallery");
+  if (spyHandler) { document.removeEventListener("scroll", spyHandler, true); spyHandler = null; }
+  setActive('.nav-item[data-gallery]');
+  // categories come from the bundle's own components/index.md headings
+  const idx = await source.read("components/index.md") || "";
+  const cats = [];
+  let cur = null;
+  for (const line of idx.split("\n")) {
+    const h = line.match(/^##\s+(.+)/);
+    if (h) { cur = { name: h[1].trim(), slugs: [] }; cats.push(cur); continue; }
+    const l = line.match(/\]\(([a-z0-9-]+)\.md\)/);
+    if (l && cur) cur.slugs.push("components/" + l[1] + ".md");
+  }
+  const withEx = (c) => c && (c.fm.examples || []).length;
+  const listed = new Set(cats.flatMap(c => c.slugs));
+  const rest = CONCEPTS.filter(c => groupOf(c.path) === "components" && !listed.has(c.path)).map(c => c.path);
+  if (!cats.length) cats.push({ name: "All components", slugs: [] });
+  if (rest.length) cats[cats.length ? 0 : 0].slugs.push(...rest);
+  const patterns = CONCEPTS.filter(c => groupOf(c.path) === "patterns" && withEx(c)).map(c => c.path);
+  if (patterns.length) cats.push({ name: "Patterns", slugs: patterns });
+
+  let html = '<div class="hero"><h1>Component gallery</h1><p>Every component, previewed live from its own example asset. Click a tile to open the concept.</p></div>';
+  for (const cat of cats) {
+    const tiles = cat.slugs.map(s => CONCEPTS.find(c => c.path === s)).filter(withEx);
+    if (!tiles.length) continue;
+    html += '<h2 class="gallery__cat">' + esc(cat.name) + ' <span class="section-card__count">' + tiles.length + "</span></h2>" +
+      '<div class="gallery__grid">';
+    for (const c of tiles) {
+      html += '<button class="g-tile" style="--g:' + hue(groupOf(c.path)) + '" data-path="' + esc(c.path) + '">' +
+        '<span class="g-tile__frame" data-ex="' + esc(resolvePath(dirOf(c.path), c.fm.examples[0])) + '"></span>' +
+        '<span class="g-tile__name">' + esc(c.fm.title || c.path) + "</span></button>";
+    }
+    html += "</div>";
+  }
+  $("#view").innerHTML = '<div class="home-wrap">' + html + "</div>";
+  $(".content").scrollTop = 0;
+
+  for (const el of $("#view").querySelectorAll(".g-tile__frame")) {
+    const path = el.dataset.ex;
+    const raw = await source.read(path);
+    if (raw == null) continue;
+    const fr = document.createElement("iframe");
+    fr.setAttribute("sandbox", "allow-same-origin");
+    fr.title = path;
+    fr.srcdoc = await inlineCss(raw, dirOf(path));
+    el.appendChild(fr);
+  }
+}
+
 // ---------- explore landing ----------
 function renderHome() {
-  if (spyHandler) { $(".content").removeEventListener("scroll", spyHandler); spyHandler = null; }
+  rerender = renderHome;
+  setRoute("/");
+  if (spyHandler) { document.removeEventListener("scroll", spyHandler, true); spyHandler = null; }
   setActive(".nav-home");
   const groups = groupedConcepts();
   let html = '<div class="hero"><h1>' + esc(META.name) + "</h1>";
@@ -494,7 +744,7 @@ function renderHome() {
   html += '<div class="hero__meta">' +
     (META.odsf ? '<span class="label type">ODSF ' + esc(META.odsf) + "</span>" : "") +
     '<span class="label">' + CONCEPTS.length + " concepts</span>" +
-    '<span class="label">' + Object.keys(TOKENS).length + " tokens</span></div></div>";
+    '<span class="label" data-tokens="1" tabindex="0">' + Object.keys(TOKENS).length + " tokens →</span></div></div>";
 
   const colorConcept = CONCEPTS.find(c => /color/i.test(c.fm.type || ""));
   const colors = colorConcept && colorConcept.fm.tokens && colorConcept.fm.tokens.colors;
@@ -507,10 +757,11 @@ function renderHome() {
     html += "</div>";
   }
 
+  html += '<div class="hero__meta" style="margin-top:0;margin-bottom:18px"><span class="label" data-gallery="1" tabindex="0">Browse the component gallery →</span></div>';
   html += '<div class="section-cards">';
   for (const g of orderedGroups(groups)) {
     const meta = GROUPS[g] || { label: g, desc: "" };
-    html += '<div class="section-card"><div class="section-card__head">' + icon(g) +
+    html += '<div class="section-card" style="--g:' + hue(g) + '"><div class="section-card__head">' + icon(g) +
       "<h3>" + esc(meta.label) + '</h3><span class="section-card__count">' + groups[g].length + "</span></div>" +
       '<p class="section-card__desc">' + esc(meta.desc) + '</p><div class="section-card__list">';
     for (const c of groups[g]) html += '<a data-path="' + esc(c.path) + '" tabindex="0">' + esc(c.fm.title || c.path) + "</a>";
@@ -530,25 +781,58 @@ function isLight(hex) {
 // ---------- concept page ----------
 async function selectConcept(path) {
   const c = CONCEPTS.find(x => x.path === path); if (!c) return;
+  rerender = () => selectConcept(path);
+  setRoute("/" + path);
   setActive('.nav-item[data-path="' + cssEsc(path) + '"]');
   const fm = c.fm, type = fm.type || "Concept", g = groupOf(path);
   const groupLabel = GROUPS[g] ? GROUPS[g].label : (g || "Overview");
 
   let head = '<div class="breadcrumb"><a data-home="1" tabindex="0">Explore</a><span class="sep">/</span>' + esc(groupLabel) +
     '<span class="sep">/</span>' + esc(fm.title || path) + "</div>";
-  head += '<div class="chead"><h1>' + esc(fm.title || path) + "</h1>";
+  head += '<div class="chead"><div class="chead__top"><div class="chead__icon">' + icon(g) + '</div><h1>' + esc(fm.title || path) + "</h1></div>";
   if (fm.description) head += '<p class="desc">' + esc(fm.description) + "</p>";
   head += '<div class="labels"><span class="label type">' + esc(type) + "</span>";
   if (fm.status) head += '<span class="label s-' + esc(fm.status) + '">' + esc(fm.status) + "</span>";
   for (const t of (fm.tags || [])) head += '<span class="label">#' + esc(t) + "</span>";
   if (fm.applies_to) head += '<span class="label">' + esc([].concat(fm.applies_to).join(", ")) + "</span>";
   head += "</div></div>";
-  head += renderTokenViz(type, fm.tokens);
+
+  const flat = flatConcepts(), fi = flat.findIndex(x => x.path === path);
+  const pv = flat[fi - 1], nx = flat[fi + 1];
+  const pagerLink = (cc, cls, dir) => '<a class="' + cls + '" data-path="' + esc(cc.path) + '" tabindex="0"><span class="pager__dir">' + dir + ' · ' +
+    esc((GROUPS[groupOf(cc.path)] || {}).label || "Overview") + '</span><span class="pager__title">' + esc(cc.fm.title || cc.path) + '</span></a>';
+  const pager = (pv || nx) ? '<nav class="pager" aria-label="Previous and next concept">' +
+    (pv ? pagerLink(pv, "prev", "← Previous") : '<span style="flex:1"></span>') +
+    (nx ? pagerLink(nx, "next", "Next →") : '<span style="flex:1"></span>') + '</nav>' : '';
+
+  // Split the body: "# Tokens" sections join the technical tab, the rest is the overview.
+  const secs = [{ title: "", md: [] }];
+  for (const ln of c.body.split("\n")) {
+    const m = ln.match(/^#\s+(.+)/);
+    if (m) secs.push({ title: m[1].trim(), md: [ln] }); else secs[secs.length - 1].md.push(ln);
+  }
+  const isTok = (s) => /^tokens$/i.test(s.title);
+  const ovMd = mdToHtml(secs.filter(s => !isTok(s)).map(s => s.md.join("\n")).join("\n"));
+  const tokMd = secs.filter(isTok).map(s => s.md.join("\n")).join("\n");
+  const viz = renderTokenViz(type, fm.tokens);
+  const _tt = {}; if (fm.tokens) flattenTokens(fm.tokens, "", _tt);
+  const tokCount = Object.keys(_tt).length;
+  const hasTok = !!(viz || tokMd.trim());
+  const bodyHtml = hasTok
+    ? '<div class="ctabs" role="tablist"><button class="ctab" role="tab" aria-selected="true" data-ctab="overview">Overview</button>' +
+      '<button class="ctab" role="tab" aria-selected="false" data-ctab="tokens">Tokens' + (tokCount ? '<span class="section-card__count">' + tokCount + "</span>" : "") + "</button></div>" +
+      '<div class="ctab-panel" data-panel="overview"><div id="examples"></div><div class="md">' + ovMd + "</div></div>" +
+      '<div class="ctab-panel" data-panel="tokens" hidden>' + viz + '<div class="md">' + (tokMd.trim() ? mdToHtml(tokMd) : "") + "</div></div>"
+    : '<div id="examples"></div><div class="md">' + ovMd + "</div>";
 
   const view = $("#view");
-  view.innerHTML = '<div class="concept"><div class="concept__main">' + head +
-    '<div id="examples"></div><div class="md">' + mdToHtml(c.body) + '</div></div>' +
-    '<aside class="toc" id="toc"></aside></div>';
+  view.innerHTML = '<div class="concept" style="--g:' + hue(g) + '"><div class="concept__main">' + head +
+    bodyHtml + pager + '</div><aside class="toc" id="toc"></aside></div>';
+  view.querySelectorAll(".ctab").forEach(b => b.onclick = () => {
+    view.querySelectorAll(".ctab").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+    view.querySelectorAll(".ctab-panel").forEach(pn => pn.hidden = pn.dataset.panel !== b.dataset.ctab);
+    buildToc();
+  });
   $(".content").scrollTop = 0;
 
   view.querySelectorAll(".md a[data-link]").forEach(a => {
@@ -564,8 +848,46 @@ async function selectConcept(path) {
   for (const m of c.body.matchAll(/\]\(([^)\s#]+\.html)\)/g)) {
     if (!/^[a-z]+:/i.test(m[1])) assets.add(resolvePath(dirOf(path), m[1]));
   }
-  await renderExamples([...assets]);
+  enhanceDoDont(view);
+  const exMeta = { baseTitle: fm.title || path };
+  for (const line of c.body.split("\n")) {
+    const mm = line.match(/^\s*[-*]\s*\[[^\]]+\]\(([^)\s#]+\.html)\)\s*[-\u2013\u2014]?\s*(.*)$/);
+    if (mm) exMeta[resolvePath(dirOf(path), mm[1])] = { desc: mm[2].trim() };
+  }
+  await renderExamples([...assets], exMeta);
   buildToc();
+}
+
+// Do/Don't lists -> best-practice rows with pills (presentation only; the md stays canonical)
+function enhanceDoDont(root) {
+  const kind = (li) => {
+    const s = li.firstElementChild;
+    if (s && s.tagName === "STRONG") {
+      const k = s.textContent.trim().toLowerCase().replace(/[\u2019']/g, "");
+      if (k === "do") return "do";
+      if (k === "dont") return "dont";
+    }
+    return null;
+  };
+  root.querySelectorAll(".md ul").forEach(ul => {
+    const lis = [...ul.children];
+    if (!lis.length || !lis.every(li => kind(li))) return;
+    const wrap = document.createElement("div"); wrap.className = "dd";
+    for (const li of lis) {
+      const k = kind(li);
+      li.firstElementChild.remove();
+      const row = document.createElement("div"); row.className = "dd-row";
+      row.innerHTML = '<span class="dd-pill dd-pill--' + k + '">' + (k === "do" ? "Do" : "Don\u2019t") + '</span><div class="dd-text"></div>';
+      row.lastElementChild.innerHTML = li.innerHTML.trim();
+      wrap.appendChild(row);
+    }
+    ul.replaceWith(wrap);
+  });
+  root.querySelectorAll(".md h2").forEach(h => {
+    const k = h.textContent.trim().toLowerCase().replace(/[\u2019']/g, "");
+    if (k === "do") h.classList.add("dd-h", "dd-h--do");
+    else if (k === "dont") h.classList.add("dd-h", "dd-h--dont");
+  });
 }
 
 // "On this page" table of contents + scroll-spy
@@ -573,7 +895,8 @@ function buildToc() {
   const main = $(".concept__main"), toc = $("#toc"); if (!main || !toc) return;
   const items = [], used = new Set();
   main.querySelectorAll(".viz > h2, #examples, .md h2, .md h3").forEach(n => {
-    if (n.id === "examples") { if (n.children.length) items.push({ id: "examples", text: "Preview", lvl: 2 }); return; }
+    if (n.closest("[hidden]")) return;
+    if (n.id === "examples") { if (n.children.length) { items.push({ id: "examples", text: "Preview", lvl: 2 }); used.add("examples"); } return; }
     let id = slug(n.textContent) || ("s" + items.length); const base = id;
     for (let k = 2; used.has(id); k++) id = base + "-" + k;
     used.add(id); n.id = id;
@@ -583,18 +906,20 @@ function buildToc() {
   toc.innerHTML = '<div class="toc__title">On this page</div>' +
     items.map(it => '<a class="' + (it.lvl === 3 ? "lvl3" : "") + '" data-anchor="' + esc(it.id) + '" href="#' + esc(it.id) + '" tabindex="0">' + esc(it.text) + "</a>").join("");
   const root = $(".content");
-  if (spyHandler) root.removeEventListener("scroll", spyHandler);
+  if (spyHandler) document.removeEventListener("scroll", spyHandler, true);
   const ids = items.map(it => it.id);
   const linkOf = (id) => toc.querySelector('a[data-anchor="' + cssEsc(id) + '"]');
-  spyHandler = () => {
+  const update = () => {
     const lineY = root.getBoundingClientRect().top + 96;   // a band just under the top bar
     let current = ids[0];
     for (const id of ids) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= lineY) current = id; }
     if (root.scrollTop + root.clientHeight >= root.scrollHeight - 4) current = ids[ids.length - 1];  // pin last at bottom
     for (const id of ids) { const l = linkOf(id); if (l) l.classList.toggle("active", id === current); }
   };
-  root.addEventListener("scroll", spyHandler, { passive: true });
-  spyHandler();
+  // capture-phase on document: sees scrolls of any container (content pane, window, anything)
+  spyHandler = update;
+  document.addEventListener("scroll", spyHandler, { capture: true, passive: true });
+  update();
 }
 
 function renderTokenViz(type, tokens) {
@@ -678,30 +1003,46 @@ async function inlineCss(html, baseDir) {
     const css = await source.read(resolvePath(baseDir, hrefM[1]));
     html = html.replace(m[0], css != null ? "<style>" + css + "</style>" : "");
   }
+  // Propagate the viewer's theme into the preview. An iframe's media queries
+  // follow the OS, not the viewer toggle, so rewrite prefers-color-scheme
+  // blocks to match the chosen theme; also expose color-scheme and a
+  // data-theme attribute for bundles that theme via attribute convention.
+  const th = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  html = html
+    .replace(/\(\s*prefers-color-scheme\s*:\s*dark\s*\)/gi, th === "dark" ? "all" : "not all")
+    .replace(/\(\s*prefers-color-scheme\s*:\s*light\s*\)/gi, th === "light" ? "all" : "not all")
+    .replace(/<html(?![^>]*data-theme)/i, '<html data-theme="' + th + '"');
+  html = html.replace(/<\/head>/i, "<style>:root{color-scheme:" + th + "}</style></head>");
   return html;
 }
-async function renderExamples(paths) {
+async function renderExamples(paths, meta = {}) {
   const host = $("#examples"); host.innerHTML = "";
   for (const p of paths) {
     const raw = await source.read(p);
     if (raw == null) continue;
     const kind = /\.dont\./.test(p) ? "dont" : /\.do\./.test(p) ? "do" : "example";
-    const kindLabel = kind === "dont" ? "Don't" : kind === "do" ? "Do" : "";
+    const kindLabel = kind === "dont" ? "Don\u2019t" : kind === "do" ? "Do" : "";
+    const m = meta[p] || {};
+    const title = (meta.baseTitle || "Example") + (kindLabel ? " \u2014 " + kindLabel : "");
+    const desc = m.desc || "";
     const wrap = document.createElement("div"); wrap.className = "preview";
     wrap.innerHTML =
-      '<div class="preview__head">' +
+      '<div class="preview__head"><span class="preview__title">' + esc(title) + "</span>" +
         (kindLabel ? '<span class="preview__kind ' + kind + '">' + kindLabel + "</span>" : "") +
-        '<div class="preview__tabs"><button class="preview__tab is-active" data-tab="preview">Preview</button><button class="preview__tab" data-tab="code">Code</button></div>' +
         '<span class="preview__path">' + esc(p) + "</span>" +
       "</div>" +
-      '<div class="preview__body"><iframe sandbox="allow-same-origin" title="' + esc(p) + '"></iframe>' +
-      '<pre class="preview__code" hidden><code>' + esc(raw) + "</code></pre></div>";
+      '<div class="preview__body"><iframe sandbox="allow-same-origin allow-scripts" title="' + esc(p) + '"></iframe></div>' +
+      '<div class="preview__foot"><div class="preview__tabs">' +
+        (desc ? '<button class="preview__tab is-active" data-tab="desc">Description</button>' : "") +
+        '<button class="preview__tab' + (desc ? "" : " is-active") + '" data-tab="code">Code</button></div>' +
+        (desc ? '<div class="preview__desc">' + inline(desc) + "</div>" : "") +
+        '<pre class="preview__code"' + (desc ? " hidden" : "") + "><code>" + esc(raw) + "</code></pre></div>";
     host.appendChild(wrap);
-    const iframe = wrap.querySelector("iframe"), code = wrap.querySelector(".preview__code");
+    const iframe = wrap.querySelector("iframe"), code = wrap.querySelector(".preview__code"), descEl = wrap.querySelector(".preview__desc");
     wrap.querySelectorAll(".preview__tab").forEach(btn => btn.onclick = () => {
       wrap.querySelectorAll(".preview__tab").forEach(b => b.classList.toggle("is-active", b === btn));
       const showCode = btn.dataset.tab === "code";
-      iframe.hidden = showCode; code.hidden = !showCode;
+      code.hidden = !showCode; if (descEl) descEl.hidden = showCode;
     });
     const doc = await inlineCss(raw, dirOf(p));
     iframe.addEventListener("load", () => {
@@ -748,14 +1089,17 @@ async function copyText(t) {
 const ICON_MOON = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.6 1.3a6.7 6.7 0 1 0 5.1 9.9A5.4 5.4 0 0 1 9.6 1.3z"/></svg>';
 const ICON_SUN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="3.2"/><path d="M8 .8v1.8M8 13.4v1.8M.8 8h1.8M13.4 8h1.8M2.7 2.7l1.3 1.3M12 12l1.3 1.3M13.3 2.7L12 4M4 12l-1.3 1.3" stroke-linecap="round"/></svg>';
 function setTheme(t, persist) {
+  const changed = document.documentElement.dataset.theme !== t;
   document.documentElement.dataset.theme = t;
   if (persist) { try { localStorage.setItem("odsf-theme", t); } catch {} }
   $("#themeBtn").innerHTML = t === "dark" ? ICON_SUN : ICON_MOON;
+  if (changed && rerender) rerender();  // rebuild live previews with the new scheme
 }
 
 // ---------- empty / error ----------
 function renderEmpty(rootMissing) {
-  $("#nav").innerHTML = ""; $("#bundleName").textContent = "No bundle"; $("#ver").textContent = "";
+  $("#nav").innerHTML = "";
+  $("#topBundle").hidden = true; document.querySelector(".topbar__bundle-sep").hidden = true;
   const fileProto = location.protocol === "file:";
   $("#view").innerHTML = '<div class="home-wrap"><div class="empty">' +
     (rootMissing ? '<p class="err">Could not read this bundle&rsquo;s <code>index.md</code>.</p>' : "<p>No concepts found in this bundle.</p>") +
@@ -773,6 +1117,12 @@ document.addEventListener("click", (e) => {
   if (anchor) { e.preventDefault(); const t = document.getElementById(anchor.getAttribute("data-anchor")); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
   const home = e.target.closest("[data-home]");
   if (home) { e.preventDefault(); renderHome(); return; }
+  const tk = e.target.closest("[data-tokens]");
+  if (tk) { e.preventDefault(); renderTokens(); return; }
+  const ga = e.target.closest("[data-gallery]");
+  if (ga) { e.preventDefault(); renderGallery(); return; }
+  const lg = e.target.closest("[data-log]");
+  if (lg) { e.preventDefault(); renderLog(); return; }
   const gt = e.target.closest(".nav-group__title");
   if (gt) { gt.parentElement.classList.toggle("collapsed"); return; }
   const item = e.target.closest("[data-path]");
@@ -780,7 +1130,7 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Enter" && e.key !== " ") return;
-  const el = e.target.closest("[data-path],[data-home],[data-copy],.toc a[data-anchor]");
+  const el = e.target.closest("[data-path],[data-home],[data-copy],[data-tokens],[data-log],[data-gallery],.toc a[data-anchor]");
   if (el) { e.preventDefault(); el.click(); }
 });
 $("#themeBtn").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark", true);
@@ -788,10 +1138,20 @@ $("#loadBtn").onclick = () => { const u = $("#bundleUrl").value.trim(); if (u) l
 $("#bundleUrl").addEventListener("keydown", e => { if (e.key === "Enter") $("#loadBtn").click(); });
 $("#folderInput").onchange = (e) => { if (e.target.files.length) loadBundle(folderSource([...e.target.files])); };
 $("#filter").addEventListener("input", e => applyFilter(e.target.value));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) { e.preventDefault(); $("#filter").focus(); }
+  else if (e.key === "Escape" && document.activeElement === $("#filter")) { $("#filter").value = ""; applyFilter(""); $("#filter").blur(); }
+});
 
 (function init() {
   let saved = null; try { saved = localStorage.getItem("odsf-theme"); } catch {}
-  setTheme(saved || "light", false);  // calm light by default; only an explicit toggle persists
+  const sysDark = matchMedia("(prefers-color-scheme: dark)");
+  setTheme(saved || (sysDark.matches ? "dark" : "light"), false);  // follow the system; only an explicit toggle persists
+  sysDark.addEventListener("change", (e) => {
+    let s = null; try { s = localStorage.getItem("odsf-theme"); } catch {}
+    if (!s) setTheme(e.matches ? "dark" : "light", false);
+  });
+  if (window.__ODSF_BUNDLE__) { loadBundle(embeddedSource(window.__ODSF_BUNDLE__)); return; }
   const param = new URLSearchParams(location.search).get("bundle");
   const def = param || "../examples/claude";
   $("#bundleUrl").value = def;
