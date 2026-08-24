@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "no-slop": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/no-slop/SKILL.md",
+      "computedHash": "d2930f750233a2f2bc1369ffced9dbe6fde7522213a5d8d6f0c3c29eb848dd6c"
+    },
+    "odsf": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/odsf/SKILL.md",
+      "computedHash": "675210ece65295e839e719110bed9664df333e06a1dd7bc0ef305801c8b8d477"
+    },
+    "okf": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/okf/SKILL.md",
+      "computedHash": "0aa0e362580a2e6d61f03d18d7e44435a5855fffe5b752e556cb0f9d6497093f"
+    }
+  }
+}

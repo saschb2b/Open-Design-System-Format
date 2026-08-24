@@ -1,0 +1,30 @@
+[
+  {
+    "path": "SKILL.md",
+    "sha256": "3286d6b2acc154482489c02bad2e106222abe460895acad9bf14af14dc26c9f9"
+  },
+  {
+    "path": "commands.md",
+    "sha256": "ba65bd318aa733820438e24d6eab5fa9215695d95e2e9068a6b23676c827ae9c"
+  },
+  {
+    "path": "enrich-machine.md",
+    "sha256": "54d331ad025aab2ef2b3d27a965acb080a9c4dd92a4587aa36c4c81640ce95ad"
+  },
+  {
+    "path": "odsf-validate.mjs",
+    "sha256": "c3130eac6abada8780eb5d5a9de96bda3dbbbab59d09182545be50d213c9c750"
+  },
+  {
+    "path": "permissions.yaml",
+    "sha256": "6be32f4985b917b53a1adbedb2d7652f7229e77c4b482bd1b910715f5af7ceb8"
+  },
+  {
+    "path": "spec.md",
+    "sha256": "345e168bae9c1bb168b50e23def230ee6d10e64cb3adbaee78426578c7fb3d3c"
+  },
+  {
+    "path": "templates.md",
+    "sha256": "2519bc9bce4aec363a4f5401e84ff3a21a00c9443eb1559f626e01e4222561da"
+  }
+]
