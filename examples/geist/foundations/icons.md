@@ -5,7 +5,10 @@ description: Geist Icons — a consistent line-icon set tailored for developer t
 resource: https://vercel.com/geist/icons
 tags: [foundations, icons, reference]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://vercel.com/geist/icons
+    title: "Geist Icons"
 ---
 
 Geist ships an **icon set tailored for developer tools** — a large, consistent line-icon family drawn
@@ -24,6 +27,3 @@ set is a licensed React package). See [Geist Icons](https://vercel.com/geist/ico
 # Do & Don't
 - **Do** keep a single stroke weight and inherit color from text.
 - **Don't** mix icon families; consistency of stroke and grid is the system.
-
-# Citations
-[1] [Geist Icons](https://vercel.com/geist/icons)

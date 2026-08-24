@@ -4,7 +4,7 @@ title: Focus
 description: A consistent, always-visible accent focus indicator across every interactive element.
 tags: [behaviors, focus, keyboard, accessibility]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Every interactive element shows the same focus indicator when reached by keyboard. Primer is

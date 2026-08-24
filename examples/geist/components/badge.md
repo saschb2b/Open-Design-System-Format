@@ -5,7 +5,7 @@ description: A small rounded label for status and metadata, with neutral and acc
 tags: [components, badge, pill, status]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/badge.example.html
 tokens:

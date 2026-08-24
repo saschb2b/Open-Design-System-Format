@@ -4,7 +4,7 @@ title: Surface rhythm
 description: Alternate surface modes band to band — never repeat a surface in two consecutive bands.
 tags: [behaviors, layout, surface, pacing]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 The page's pacing comes from alternating surface modes. This is a system-wide rule, not a

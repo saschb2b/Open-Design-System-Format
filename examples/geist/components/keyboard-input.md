@@ -5,7 +5,7 @@ description: A kbd key cap for documenting keyboard shortcuts.
 tags: [components, kbd, keyboard, shortcut]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/keyboard-input.example.html
 tokens:

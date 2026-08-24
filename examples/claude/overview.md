@@ -4,7 +4,7 @@ title: Claude
 description: Anthropic's warm, editorial design language for the Claude marketing surface.
 tags: [overview, design-system, brand]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Claude is the warmest, most editorial interface in the AI-product category. This bundle encodes its

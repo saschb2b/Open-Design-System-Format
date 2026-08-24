@@ -4,7 +4,12 @@ title: Typography
 description: The editorial serif-display / humanist-sans split that gives Claude its literary voice.
 tags: [foundations, typography, tokens, brand]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/claude-design-md.md
+    title: "Claude design.md"
+  - resource: /references/anthropic-brand.md
+    title: "Anthropic brand — live verification"
 tokens:
   typography:
     fontFamily-display: '"Tiempos Headline", Georgia, "Times New Roman", serif'
@@ -117,7 +122,3 @@ Copernicus / Styrene B are licensed Anthropic faces, unavailable as public web f
 nearest open ones; the examples fall back to **Georgia** (claude.com's own fallback) so they render
 with no external display font. For body, **Inter** is a close open match and is loaded by
 [`/styles/tokens.css`](/styles/tokens.css).
-
-# Citations
-[1] [Claude design.md](/references/claude-design-md.md)
-[2] [Anthropic brand — live verification](/references/anthropic-brand.md)

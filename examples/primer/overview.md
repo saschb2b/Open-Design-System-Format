@@ -4,7 +4,7 @@ title: Primer
 description: GitHub's open-source design system — functional, theme-able, and accessibility-first.
 tags: [overview, design-system, github]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Primer is the design system behind GitHub.com. It is built for **scale and theming**: a neutral,

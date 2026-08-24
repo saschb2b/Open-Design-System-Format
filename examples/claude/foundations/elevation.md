@@ -4,7 +4,7 @@ title: Elevation
 description: Color-block first, shadow rare — depth comes from the cream-vs-dark surface contrast.
 tags: [foundations, elevation, depth, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   elevation:
     flat: "none"

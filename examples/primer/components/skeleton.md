@@ -5,9 +5,10 @@ description: Placeholder shapes that stand in for content while it loads.
 tags: [components, skeleton, loading, feedback]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/skeleton.example.html
+  - /components/skeleton.wireframe.html
 tokens:
   Skeleton:
     background: "{colors.bgColor-muted}"
@@ -23,6 +24,21 @@ See [skeleton.example.html](/components/skeleton.example.html).
 `.Skeleton` blocks (`.Skeleton--text` for lines) and `.SkeletonAvatar` circles, sized and arranged to
 match the real content they replace.
 
+# Structure
+A placeholder that reproduces the box of the content it stands in for, so nothing moves when the
+real content arrives.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.SkeletonAvatar` | 1 | fixed 32px square, matching `.avatar` | `{spacing.12}` | unchanged |
+| Text line stack | 2 | `flex: 1`; lines `{spacing.8}` apart | none | unchanged |
+| `.Skeleton--text` line | 2.1..n | fixed `12px` tall, percentage width | `{spacing.8}` | unchanged |
+
+The point of this component is structural fidelity, not decoration: the avatar box, the row
+padding, and the line heights are taken from the loaded state, so the swap causes no layout shift.
+Line widths are varied percentages to suggest ragged text. The pulse is animation only and changes
+no box.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -30,6 +46,7 @@ match the real content they replace.
 
 # Examples
 - [skeleton.example.html](/components/skeleton.example.html) — a loading list row.
+- [skeleton.wireframe.html](/components/skeleton.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Mark the region `aria-busy="true"` (or `role="status"` with a label) while loading; the pulse is

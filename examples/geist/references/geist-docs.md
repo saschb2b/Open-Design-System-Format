@@ -5,7 +5,10 @@ description: Vercel's open-source design system — the source this bundle docum
 resource: https://vercel.com/geist
 tags: [reference, external, design-system]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://vercel.com/geist
+    title: "vercel.com/geist"
 ---
 
 # Summary
@@ -25,6 +28,3 @@ interfaces that look and behave like Vercel.
   status and emphasis.
 - **React component library.** Geist is consumed as React components; this bundle captures the tokens
   and reference HTML/CSS structure, not the (hashed) class names.
-
-# Citations
-[1] [vercel.com/geist](https://vercel.com/geist)

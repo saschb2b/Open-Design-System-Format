@@ -4,7 +4,10 @@ title: Color is not the only signal
 description: Status color must always be paired with an icon or text; never convey meaning by color alone.
 tags: [guidelines, accessibility, color, do-and-dont]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+    title: "WCAG 2.2 — 1.4.1 Use of Color"
 examples:
   - /guidelines/color-not-alone.dont.html
 ---
@@ -26,6 +29,3 @@ Pair the color with a label: a green dot **and** "Ready"; a red border **and** a
 # Don't
 Communicate state with color only — see
 [color-not-alone.dont.html](/guidelines/color-not-alone.dont.html), bare colored dots with no labels.
-
-# Citations
-[1] [WCAG 2.2 — 1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)

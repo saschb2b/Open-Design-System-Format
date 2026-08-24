@@ -4,7 +4,7 @@ title: Shape
 description: A hierarchical corner-radius scale — buttons 8, cards 12, hero 16, pills round.
 tags: [foundations, shape, radius, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   radius:
     xs: "4px"

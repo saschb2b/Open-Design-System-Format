@@ -5,9 +5,10 @@ description: The dark editor mockup with line numbers and syntax highlighting �
 tags: [components, card, code, dark]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/code-window-card.example.html
+  - /components/code-window-card.wireframe.html
 tokens:
   code-window:
     background: "{colors.surface-dark}"
@@ -27,6 +28,22 @@ illustrations of code. Its dark surface is half of the cream-to-dark pacing rhyt
 with three dots and a filename in `{typography.code}` → a `.code-block` (`{colors.surface-dark-soft}`)
 holding line-numbered, syntax-highlighted `{typography.code}` (JetBrains Mono).
 
+# Structure
+A two-part column inside `{spacing.lg}` padding: a chrome bar, then the code pane. The bar is a
+centred flex row; the pane is a block that scrolls rather than reflows.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.code-window__bar` | 1 | full width, fixed height | `{spacing.md}` | unchanged |
+| `.code-window__dot` ×3 | 1.1 | fixed 11px circles, `{spacing.xs}` apart | `{spacing.sm}` before the title | unchanged |
+| `.code-window__title` | 1.2 | content width | none | unchanged |
+| `.code-block` | 2 | full width, height driven by line count | none | unchanged |
+
+The code pane sets `overflow: auto`, so long lines scroll horizontally inside the card instead of
+widening it or wrapping. That is deliberate: wrapped code breaks the line-number column, which is
+laid out as a fixed `1.6em` inline-block per line. The card has no breakpoint of its own and simply
+takes the width its container gives it.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -39,6 +56,7 @@ comments `{colors.muted-soft}`, numbers `{colors.accent-amber}`.
 
 # Examples
 - [code-window-card.example.html](/components/code-window-card.example.html) — a Claude API call.
+- [code-window-card.wireframe.html](/components/code-window-card.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 On mobile, code scrolls horizontally inside the card rather than wrapping, preserving legibility —

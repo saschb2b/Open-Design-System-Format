@@ -5,7 +5,12 @@ description: GitHub's open-source design system — the source this bundle docum
 resource: https://primer.style
 tags: [reference, external, design-system]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://primer.style
+    title: "primer.style"
+  - resource: https://github.com/primer/primitives
+    title: "@primer/primitives"
 ---
 
 # Summary
@@ -25,7 +30,3 @@ interfaces that look and behave like GitHub.
   the examples here use simple inline-SVG placeholders in their spirit.
 - **Accessibility-first.** Visible focus, color-plus-text status, and AA contrast in every mode are
   built into the components.
-
-# Citations
-[1] [primer.style](https://primer.style)
-[2] [@primer/primitives](https://github.com/primer/primitives)

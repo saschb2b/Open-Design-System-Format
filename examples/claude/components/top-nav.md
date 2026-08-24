@@ -5,9 +5,10 @@ description: The 64px cream nav bar with the brand wordmark, menu, and a coral "
 tags: [components, navigation, header]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/top-nav.example.html
+  - /components/top-nav.wireframe.html
 tokens:
   top-nav:
     height: "64px"
@@ -26,6 +27,23 @@ the primary menu center-left, and a right cluster with a "Sign in" text link and
 "Claude") → `.top-nav__menu` links in `{typography.nav-link}` (Styrene B 14/500) → `.top-nav__right`
 with `.btn--text` "Sign in" and `.btn--primary` "Try Claude".
 
+# Structure
+One flex row, vertically centred, at a fixed 64px height with `{spacing.lg}` inline padding. It
+never wraps. The menu is the only flexible child, so it absorbs all slack and pushes the right
+cluster to the far edge; DOM order and visual order agree left to right.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.wordmark` | 1 | fixed (20px mark + label, `{spacing.xs}` between them) | `{spacing.xl}` | unchanged |
+| `.top-nav__menu` | 2 | grows (`flex: 1`); links in a row, `{spacing.lg}` apart | `{spacing.xl}` | hidden below `{breakpoints.tablet}` |
+| `.top-nav__right` | 3 | fixed; row, `{spacing.md}` apart, centred | none | unchanged |
+
+Below `{breakpoints.tablet}` the menu is removed rather than collapsed, and because it is the only
+growing child, the wordmark and the right cluster close up against the left edge instead of holding
+opposite ends. The hamburger described under Variants & States is the intended replacement and is
+not in the markup yet, so the wireframe at narrow widths shows the bar with nothing between the
+wordmark and the buttons.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -40,6 +58,7 @@ Collapses to a hamburger that opens a full-screen cream sheet below 768px — se
 
 # Examples
 - [top-nav.example.html](/components/top-nav.example.html) — full desktop nav.
+- [top-nav.wireframe.html](/components/top-nav.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Use `<nav>` with a list of links; the wordmark links home with an `aria-label`. The spike-mark is a

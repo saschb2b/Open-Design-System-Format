@@ -5,9 +5,10 @@ description: The quiet global footer of muted links closing the page.
 tags: [components, footer, navigation, shell]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/footer.example.html
+  - /components/footer.wireframe.html
 tokens:
   Footer:
     border: "{colors.borderColor-muted}"
@@ -23,6 +24,19 @@ emphasis. See [footer.example.html](/components/footer.example.html).
 A `.Footer` with a `{colors.borderColor-muted}` top border, `{colors.fgColor-muted}` text at
 `{typography.body-small}`, and accent links.
 
+# Structure
+A single centred flex row that wraps, inside `{spacing.24}` vertical and `{spacing.16}` horizontal
+padding.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Copyright | 1 | content width | `{spacing.16}` | wraps to its own line when space runs out |
+| Link nav | 2 | content width; links `{spacing.16}` apart, also wrapping | none | wraps link by link |
+
+`flex-wrap: wrap` is the entire responsive story; there is no breakpoint. The row reflows
+continuously, dropping the nav below the copyright first and then wrapping the links among
+themselves, so the footer degrades at any width rather than at a fixed one.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -31,6 +45,7 @@ A `.Footer` with a `{colors.borderColor-muted}` top border, `{colors.fgColor-mut
 
 # Examples
 - [footer.example.html](/components/footer.example.html) — the global footer row.
+- [footer.wireframe.html](/components/footer.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Wrap in `<footer>` with a `<nav aria-label="Footer">` for the links.

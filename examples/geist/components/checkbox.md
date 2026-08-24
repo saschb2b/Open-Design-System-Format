@@ -5,7 +5,7 @@ description: A native checkbox tinted with the foreground, for independent on/of
 tags: [components, checkbox, form]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/checkbox.example.html
 ---

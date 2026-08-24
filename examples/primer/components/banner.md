@@ -5,9 +5,10 @@ description: The inline message bar (info / success / warning / error) GitHub sh
 tags: [components, banner, flash, message, feedback]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/banner.example.html
+  - /components/banner.wireframe.html
 tokens:
   flash:
     background: "{colors.bgColor-accent-muted}"
@@ -29,6 +30,19 @@ A `.flash` (variant `.flash-success` / `.flash-warn` / `.flash-error`): a leadin
 role color, then the message, inside `{spacing.16}` padding with a 1px role border and
 `{radius.medium}` corners.
 
+# Structure
+A flex row aligned to the top, not centred, inside `{spacing.16}` of padding.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Status icon | 1 | fixed (`flex: none`), nudged `1px` down to sit on the first line | `{spacing.8}` | unchanged |
+| Message | 2 | fills the remaining width, wraps | none | unchanged |
+
+`align-items: flex-start` is the rule that matters: a banner whose message wraps to three lines
+keeps its icon beside the first line instead of floating it to the vertical centre. `flex: none` on
+the icon stops it being squeezed by a long message. All four severities share this box exactly;
+they differ only in fill and border colour.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -38,6 +52,7 @@ role color, then the message, inside `{spacing.16}` padding with a 1px role bord
 
 # Examples
 - [banner.example.html](/components/banner.example.html) — info, success, warning, error.
+- [banner.wireframe.html](/components/banner.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Use `role="status"` (or `role="alert"` for errors) so the message is announced. The leading icon and

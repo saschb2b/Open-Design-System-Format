@@ -5,7 +5,10 @@ description: The design.md brief this bundle was authored from, plus its declare
 resource: https://github.com/google-labs-code/design.md
 tags: [reference, source, design-tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://github.com/google-labs-code/design.md
+    title: "design.md specification"
 ---
 
 # Summary
@@ -29,6 +32,3 @@ the live site (see [Anthropic brand](/references/anthropic-brand.md)).
 - **Form validation states** beyond focus are not extracted.
 - **The claude.ai product surface** (chat bubbles, message tools, history sidebar) shares some tokens
   but adds product-specific components outside this marketing scope.
-
-# Citations
-[1] [design.md specification](https://github.com/google-labs-code/design.md)

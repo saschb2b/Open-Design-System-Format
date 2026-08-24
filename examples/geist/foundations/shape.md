@@ -4,7 +4,7 @@ title: Shape
 description: A small, consistent corner-radius scale anchored on the 6px Geist radius.
 tags: [foundations, shape, radius, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   radius:
     small: "4px"

@@ -4,7 +4,7 @@ title: Elevation
 description: Layered, low-alpha shadows for resting and floating surfaces — subtle by design.
 tags: [foundations, elevation, shadow, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   elevation:
     resting-small: "0 1px 1px 0 #1f23280a, 0 1px 2px 0 #1f232808"

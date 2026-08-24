@@ -5,7 +5,10 @@ description: Vercel's brand colors and the Geist brand-asset palette for partner
 resource: https://vercel.com/geist/brands
 tags: [reference, external, brand, color]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://vercel.com/geist/brands
+    title: "Geist brand assets"
 tokens:
   brands:
     vercel-black: "#000000"
@@ -40,6 +43,3 @@ accents.
 # Do & Don't
 - **Do** use official brand values for logos and keep Vercel's own brand monochrome.
 - **Don't** repurpose partner brand colors as accents in your interface.
-
-# Citations
-[1] [Geist brand assets](https://vercel.com/geist/brands)

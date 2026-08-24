@@ -5,9 +5,10 @@ description: The large filled status pill for issues and pull requests — Open,
 tags: [components, state-label, status, issue, pull-request]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/state-label.example.html
+  - /components/state-label.wireframe.html
 tokens:
   State-open:
     background: "{colors.bgColor-success-emphasis}"
@@ -25,6 +26,20 @@ icon, encoding the item's lifecycle: **Open** is green, **Closed** red, **Merged
 gray. The color is doubled by the icon and word, never carried alone. See
 [state-label.example.html](/components/state-label.example.html).
 
+# Structure
+An inline flex pill, centred, at a fixed 24px height with `{spacing.12}` of side padding.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| State icon | 1 | fixed 16px | `{spacing.4}` | unchanged |
+| State text | 2 | content width, no wrap | none | unchanged |
+
+Height is fixed so a row of state labels sits on one line regardless of label length, and width
+follows the text. All four states share this box exactly and differ only in fill, so the wireframe
+shows four identical pills. The icon is required, not decorative: it is what keeps the state
+distinguishable without colour, per
+[color is not the only signal](/guidelines/color-not-alone.md).
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -38,6 +53,7 @@ gray. The color is doubled by the icon and word, never carried alone. See
 
 # Examples
 - [state-label.example.html](/components/state-label.example.html) — all four states.
+- [state-label.wireframe.html](/components/state-label.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Each state pairs its emphasis color with an icon and the state word, so it never depends on color —

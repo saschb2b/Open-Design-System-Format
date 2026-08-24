@@ -5,9 +5,10 @@ description: The inverted primary action and its secondary, tertiary, error, and
 tags: [components, button, action]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/button.example.html
+  - /components/button.wireframe.html
 tokens:
   button-primary:
     background: "{colors.gray-1000}"
@@ -25,6 +26,21 @@ labelled `{colors.background-100}` — black-on-white in light, white-on-black i
 bordered surface; tertiary/ghost are quiet; error fills red. Weight stays 400 (Geist is restrained),
 radius `{radius.medium}`. The whole set re-themes via the tokens — the example shows light and dark.
 See [button.example.html](/components/button.example.html).
+
+# Structure
+An inline flex row, centred on both axes, `{spacing.2}` between an optional icon and the label.
+Height is fixed at 40px and width follows the content.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Icon (optional) | 1 | fixed | `{spacing.2}` | unchanged |
+| Label | 2 | content width, `white-space: nowrap` | none | unchanged |
+
+The label never wraps, so a long label widens the button rather than growing it taller. Three
+variants change the box: `.btn-sm` is 40 down to 32px tall with `10px` side padding, `.btn-lg` goes
+to 48px with `18px`, and `.btn-icon` pins the width to the height for a square. The border is a
+`box-shadow` rather than a real border, so the primary variant can drop it without the button
+changing size, which a real border would cause.
 
 # Variants & sizes
 `.btn-primary` (inverted) · `.btn` (secondary, bordered) · `.btn-ghost` · `.btn-error` · sizes

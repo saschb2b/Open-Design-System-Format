@@ -4,7 +4,12 @@ title: Color
 description: Primer's functional, theme-able color system — foreground, background, and border roles that re-skin light↔dark.
 tags: [foundations, color, tokens, theming]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/live-verification.md
+    title: "Primer — live token verification"
+  - resource: /references/primer-style.md
+    title: "primer.style"
 tokens:
   colors:
     fgColor-default: "#1f2328"
@@ -87,7 +92,3 @@ carries the dark values under `[data-color-mode="dark"]`.
 - **Do** reference roles so the component themes for free. See
   [use functional tokens](/guidelines/use-functional-tokens.md).
 - **Don't** hard-code a hex — it will look right in light mode and break in dark.
-
-# Citations
-[1] [Primer — live token verification](/references/live-verification.md)
-[2] [primer.style](/references/primer-style.md)

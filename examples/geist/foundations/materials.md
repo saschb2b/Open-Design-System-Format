@@ -4,7 +4,7 @@ title: Materials
 description: Geist's layered surface materials — the background steps and translucent grays that build depth.
 tags: [foundations, materials, surface, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   materials:
     base: "var(--ds-background-200)"

@@ -4,7 +4,7 @@ title: Spacing
 description: Primer's base-size scale — a 4px-based set used for padding, gaps, and margins.
 tags: [foundations, spacing, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   spacing:
     4: "4px"

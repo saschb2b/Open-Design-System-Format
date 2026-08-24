@@ -5,9 +5,10 @@ description: A small dark label that names an icon-only control on hover or focu
 tags: [components, tooltip, overlay, accessibility]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/tooltip.example.html
+  - /components/tooltip.wireframe.html
 tokens:
   Tooltip:
     background: "{colors.bgColor-emphasis}"
@@ -23,6 +24,18 @@ one. See [tooltip.example.html](/components/tooltip.example.html).
 A `.Tooltip-text` bubble positioned near its trigger, shown on `:hover` and `:focus-visible` of the
 trigger. The example renders the bubble statically so it is visible.
 
+# Structure
+A single inline-block bubble sized by its text, with `{spacing.4} {spacing.8}` of padding.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.Tooltip-text` | 1 | content width, no wrap by default | none | unchanged |
+
+The bubble has no width and no positioning of its own; it is placed by whatever anchors it, and in
+the example it is stacked above its trigger so it is visible in a static page. Because it carries
+no max-width, a long string produces one very wide bubble: cap it at the call site when the text is
+not a short label.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -31,6 +44,7 @@ trigger. The example renders the bubble statically so it is visible.
 
 # Examples
 - [tooltip.example.html](/components/tooltip.example.html) — a tooltip over an icon button.
+- [tooltip.wireframe.html](/components/tooltip.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 The control still needs its own `aria-label` (or visible text) — a tooltip is supplementary, and is

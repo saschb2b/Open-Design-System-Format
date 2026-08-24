@@ -4,7 +4,12 @@ title: Color
 description: Geist's high-contrast, theme-able color system — a monochrome gray backbone plus seven accent scales, each 100→1000.
 tags: [foundations, color, tokens, theming]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/geist-docs.md
+    title: "Geist colors"
+  - resource: /references/live-verification.md
+    title: "Live verification"
 tokens:
   colors:
     gray-100: "hsla(0,0%,95%,1)"
@@ -78,7 +83,3 @@ with `gray-1000` and labelled in `background-100` — black-on-white in light, w
 # Do & Don't
 - **Do** keep the UI monochrome by default; spend accent color only on status and emphasis.
 - **Don't** hard-code a hex — it breaks the moment the theme switches.
-
-# Citations
-[1] [Geist colors](/references/geist-docs.md)
-[2] [Live verification](/references/live-verification.md)

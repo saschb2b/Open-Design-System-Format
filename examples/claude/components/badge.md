@@ -5,7 +5,7 @@ description: Pill labels — a neutral cream pill and a coral uppercase NEW/BETA
 tags: [components, badge, pill]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/badge.example.html
 tokens:

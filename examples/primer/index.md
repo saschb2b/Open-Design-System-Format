@@ -1,6 +1,6 @@
 ---
-odsf_version: "0.1"
-okf_version: "0.1"
+odsf_version: "0.2"
+okf_version: "0.2"
 ---
 
 # Primer design system
@@ -72,4 +72,4 @@ Layout & content — [Page layout](components/page-layout.md) · [Page header](c
 * [behaviors/](behaviors/) - Theming and interaction rules.
 * [guidelines/](guidelines/) - Do/don't principles with counter-examples.
 * [references/](references/) - Source and live verification.
-* [styles/](styles/) - Runnable token and component CSS.
+* [styles/](styles/) - Runnable token and component CSS, plus the wireframe skin stripper.

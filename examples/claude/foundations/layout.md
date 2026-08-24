@@ -4,7 +4,7 @@ title: Layout & responsive
 description: 1200px editorial container, 12-column grid, and the four-breakpoint responsive system.
 tags: [foundations, layout, grid, responsive, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   layout:
     container: "1200px"

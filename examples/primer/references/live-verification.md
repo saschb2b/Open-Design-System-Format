@@ -5,7 +5,12 @@ description: The token values in this bundle, read directly from the live primer
 resource: https://primer.style
 tags: [reference, external, verification]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://primer.style
+    title: "primer.style"
+  - resource: /references/primer-style.md
+    title: "Primer (primer.style)"
 ---
 
 # Summary
@@ -33,7 +38,3 @@ the values are exact, not approximated.
 # Caveat
 A live system evolves; this is a dated snapshot. The `timestamp` and the cited source are how to
 re-check it. Names and values follow `@primer/primitives` at the time of capture.
-
-# Citations
-[1] [primer.style](https://primer.style)
-[2] [Primer (primer.style)](/references/primer-style.md)

@@ -4,7 +4,12 @@ title: Use the scale
 description: Reference a token from the color scale, never a literal hex — it's the only way a component themes.
 tags: [guidelines, color, theming, do-and-dont]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /foundations/color.md
+    title: "Color"
+  - resource: /behaviors/theming.md
+    title: "Theming"
 examples:
   - /guidelines/use-the-scale.dont.html
 ---
@@ -28,7 +33,3 @@ var(--ds-shadow-border);`. Every component in this bundle does, which is why the
 Hard-code values — see [use-the-scale.dont.html](/guidelines/use-the-scale.dont.html), where one card
 uses tokens and one uses literal hex, both on a dark stage. The token card adapts; the hard-coded one
 breaks.
-
-# Citations
-[1] [Color](/foundations/color.md)
-[2] [Theming](/behaviors/theming.md)

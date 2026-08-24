@@ -5,9 +5,10 @@ description: The coral primary CTA and its cream/dark/text/icon companions.
 tags: [components, button, cta]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/button.example.html
+  - /components/button.wireframe.html
 tokens:
   button-primary:
     background: "{colors.primary}"
@@ -37,6 +38,23 @@ element outside the logo; it is used **scarcely** on individual buttons and gene
 A real `<button>` (or `<a>` for navigation) with base `.btn` plus one variant modifier. Label in
 `{typography.button}` (Styrene B 14/500), height 40px, padding `0 20px`, radius `{radius.md}`.
 
+# Structure
+An inline flex row, centred on both axes, with `{spacing.xs}` between an optional icon and the
+label. Height is fixed at 40px and does not grow with the label; width is content-driven, so the
+button is as wide as its text plus the 20px side padding. The label does not wrap or truncate, so a
+long label widens the button rather than clipping it.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Icon (optional) | 1 | fixed, 1em square | `{spacing.xs}` | unchanged |
+| Label | 2 | content width, no wrap | none | unchanged |
+
+Two variants change the box rather than the skin, so they are structural, not cosmetic:
+`.btn--text` drops to `height: auto` with zero padding so it sits on the text baseline like a link,
+and `.btn--icon` becomes a fixed 36px square with no padding. Both are visible as different box
+sizes in the wireframe, which is the point: a text button that still reserves 40px of height is the
+common mistake.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -60,6 +78,7 @@ States are default and `:active` (press) only. Disabled uses `{colors.primary-di
 
 # Examples
 - [button.example.html](/components/button.example.html) — every variant and the press/disabled states.
+- [button.wireframe.html](/components/button.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Behavior
 - Press darkens only; nothing animates on hover — [press states only](/behaviors/press-states-only.md).

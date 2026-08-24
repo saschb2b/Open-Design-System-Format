@@ -4,7 +4,7 @@ title: Motion
 description: Quick, functional transitions that always yield to prefers-reduced-motion.
 tags: [foundations, motion, accessibility, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   motion:
     duration-fast: "80ms"

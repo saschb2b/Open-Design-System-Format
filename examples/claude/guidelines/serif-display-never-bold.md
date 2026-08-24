@@ -4,7 +4,12 @@ title: Serif display, never bold
 description: Headlines are the serif display at regular weight; a bold sans headline breaks the brand voice.
 tags: [guidelines, typography, brand, do-and-dont]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /foundations/typography.md
+    title: "Typography"
+  - resource: /references/claude-design-md.md
+    title: "Claude design.md"
 examples:
   - /guidelines/serif-display-never-bold.dont.html
 ---
@@ -26,7 +31,3 @@ letter-spacing. The [landing page](/patterns/landing-page.example.html) hero sho
 Set the headline in a bold sans — see
 [serif-display-never-bold.dont.html](/guidelines/serif-display-never-bold.dont.html). Same words, but
 it now looks generic and loud.
-
-# Citations
-[1] [Typography](/foundations/typography.md)
-[2] [Claude design.md](/references/claude-design-md.md)

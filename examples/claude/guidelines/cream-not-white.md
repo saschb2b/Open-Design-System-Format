@@ -4,7 +4,12 @@ title: Cream, not white
 description: Anchor every page on the warm cream canvas; pure white reads as generic AI tooling.
 tags: [guidelines, color, brand, do-and-dont]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /foundations/color.md
+    title: "Color"
+  - resource: /references/claude-design-md.md
+    title: "Claude design.md"
 examples:
   - /guidelines/cream-not-white.dont.html
 ---
@@ -27,7 +32,3 @@ Use `{colors.canvas}` for the body and `{colors.surface-card}` for cards — bot
 Ship on pure white with cool-gray text — see
 [cream-not-white.dont.html](/guidelines/cream-not-white.dont.html). It is the same layout on
 `#ffffff`, and it reads like a generic SaaS template.
-
-# Citations
-[1] [Color](/foundations/color.md)
-[2] [Claude design.md](/references/claude-design-md.md)

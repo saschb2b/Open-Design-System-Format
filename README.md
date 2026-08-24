@@ -6,7 +6,10 @@ ODSF packages a design system as a small directory of markdown, HTML, and CSS th
 read, navigate, and *apply*, so "build this screen, and make it look and behave like our design
 system" produces work that actually does. No SDK, no platform, no lock-in. Just files.
 
-> Status: **v0.1**, early and intentionally minimal, designed to grow backward-compatibly.
+> Status: **v0.2**, early and intentionally minimal, designed to grow backward-compatibly.
+> It profiles OKF v0.2, so it inherits that container's provenance and trust layer, and adds the
+> structure layer (`# Structure` sections and wireframe assets). Migrating from v0.1 is two
+> mechanical edits: **[SPEC.md §16](./SPEC.md#16-changes-from-v01)**.
 > Read the spec: **[SPEC.md](./SPEC.md)**.
 
 ---
@@ -52,18 +55,18 @@ claude/
   foundations/                  the design language as tokens + meaning
     color.md  typography.md  spacing.md  elevation.md  shape.md  motion.md  layout.md
   components/                   reusable UI elements, each with a runnable example
-    button.md             button.example.html
-    code-window-card.md   code-window-card.example.html
-    pricing-tier-card.md  pricing-tier-card.example.html
+    button.md             button.example.html      button.wireframe.html
+    code-window-card.md   code-window-card.example.html   code-window-card.wireframe.html
+    pricing-tier-card.md  pricing-tier-card.example.html  pricing-tier-card.wireframe.html
     …                     (top-nav, feature-card, callout-card-coral, badge, text-input, footer)
   patterns/                     compositions that solve a recurring need
-    landing-page.md       landing-page.example.html
+    landing-page.md       landing-page.example.html   landing-page.wireframe.html
   behaviors/                    interaction & state rules
     surface-rhythm.md   press-states-only.md
   guidelines/                   do/don't principles, with counter-examples
     cream-not-white.md   cream-not-white.dont.html
   styles/                       the tokens as runnable CSS
-    tokens.css   components.css
+    tokens.css   components.css   wireframe.css
   references/                   external sources mirrored in (design.md, claude.com)
 ```
 
@@ -74,6 +77,11 @@ Three file kinds, nothing else:
 - **`.html` / `.css` assets** are the concrete, self-rendering examples a concept points at. A
   `*.example.html` opens in a browser and renders with the real tokens, because it links
   `styles/tokens.css`. Change a token, every example re-renders.
+  A `*.wireframe.html` is that same body with the skin stripped by `styles/wireframe.css`: the
+  structural view. It is derived from the example's own markup and CSS rather than drawn
+  separately, so it cannot drift, and resizing it shows the component's real reflow. Correct color
+  and radius are exactly what hide a wrong reading order or a missing breakpoint, so structure gets
+  a view of its own.
 
 Three live, browsable example bundles ship in [`examples/`](./examples/), each a faithful clone of a
 real, recognizable design system, with tokens cross-checked against the live site in both themes:
@@ -135,17 +143,22 @@ Describing the system and using it never diverge.
 **Author a bundle.** ODSF is a profile of OKF, so the [`/okf` skill](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) and its `init` / `add` /
 `index` / `log` / `validate` workflow apply directly. Start from the shells in
 **[TEMPLATES.md](./TEMPLATES.md)**, organize by design domain (`foundations/`, `components/`, …),
-and for each component ship a `*.example.html` beside its `.md`.
+and for each component ship a `*.example.html` beside its `.md`, plus a `*.wireframe.html` when the
+layout is non-trivial.
 
 **Validate it.** The checker confirms OKF conformance *and* the ODSF additions (the
 `odsf_version` declaration, that referenced assets exist, that token references resolve):
 
 ```sh
-node tools/odsf-validate.mjs examples/claude
+node tools/odsf-validate.mjs examples/claude            # tolerant: errors only on the hard rules
+node tools/odsf-validate.mjs examples/claude --strict   # producer gate, on a v0.2 container
 ```
 
 It errors only on the hard requirements and warns (never fails) on the soft guidance, mirroring
-the permissive consumer contract.
+the permissive consumer contract. `--strict` adds the OKF v0.2 producer findings (a leftover
+`timestamp` or `# Citations`, a `sources` entry with no `resource`, a `generated` with no `by`, an
+out-of-range `status`), but only once the root declares `okf_version: "0.2"`, so a bundle still on
+the v0.1 container validates clean.
 
 **Browse it.** Open [`tools/viewer.html`](./tools/viewer.html), a single-file, zero-dependency
 viewer (light/dark, calm, Primer-inspired). It opens on an **Explore** landing (the system's
@@ -161,8 +174,9 @@ npx serve         # or: python -m http.server
 ```
 
 **Hand it to an agent.** Point the agent at the bundle and the task. It orients from `index.md`,
-pulls the foundation tokens, descends to the components, patterns, and behaviors it needs, copies
-structure from the `*.example.html` files, and honors the guidelines. See
+pulls the foundation tokens, descends to the components, patterns, and behaviors it needs, stands
+the skeleton up from the `# Structure` sections and `*.wireframe.html` files before letting tokens
+paint it, copies structure from the `*.example.html` files, and honors the guidelines. See
 [SPEC.md §11](./SPEC.md#11-consuming-an-odsf-bundle).
 
 ---
@@ -181,7 +195,7 @@ recommended structure a consumer exploits but tolerates the absence of. The full
 
 | Path | What |
 | --- | --- |
-| [`SPEC.md`](./SPEC.md) | The ODSF v0.1 normative specification. |
+| [`SPEC.md`](./SPEC.md) | The ODSF v0.2 normative specification. |
 | [`PHILOSOPHY.md`](./PHILOSOPHY.md) | The convictions behind the format: the "why". |
 | [`TEMPLATES.md`](./TEMPLATES.md) | Copy-paste shells for every concept type and asset. |
 | [`examples/claude/`](./examples/claude/) | A faithful clone of Anthropic's Claude design system (fixed warm brand). |

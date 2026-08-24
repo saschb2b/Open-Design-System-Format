@@ -4,7 +4,7 @@ title: Grid
 description: The geometric grid that underpins the Vercel aesthetic — 4px spacing and 1px hairlines.
 tags: [foundations, grid, layout, spacing, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   spacing:
     1: "4px"

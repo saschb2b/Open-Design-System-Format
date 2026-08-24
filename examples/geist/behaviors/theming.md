@@ -4,7 +4,7 @@ title: Theming (color modes)
 description: Light, dark, and auto from one component set — the payoff of the numbered token scales.
 tags: [behaviors, theming, color, dark-mode]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Geist's defining behavior: one set of components renders in **light, dark, or auto** with no markup

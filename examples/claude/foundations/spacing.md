@@ -4,7 +4,7 @@ title: Spacing
 description: A 4px-based scale with a 96px section rhythm that gives Claude its editorial pacing.
 tags: [foundations, spacing, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   spacing:
     xxs: "4px"

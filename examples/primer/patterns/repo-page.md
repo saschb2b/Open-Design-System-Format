@@ -5,9 +5,10 @@ description: A GitHub-style page — header, underline nav, banner, and bordered
 tags: [patterns, page, layout, composition]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /patterns/repo-page.example.html
+  - /patterns/repo-page.wireframe.html
 ---
 
 The canonical GitHub application page: the global [header](/components/header.md), a repository
@@ -34,6 +35,31 @@ drop the nav and keep a single [Box](/components/box.md).
 | Shell | [Page layout](/components/page-layout.md) (content + About pane) |
 | Content | [Banner](/components/banner.md), [Box](/components/box.md) file list + README, [branch name](/components/branch-name.md), [buttons](/components/button.md) |
 | Pane | [Labels](/components/label.md), a release [State label](/components/state-label.md), [Avatar stack](/components/avatar-stack.md), [Progress bar](/components/progress-bar.md) (languages) |
+
+# Structure
+A single centred column with one two-column region inside it. The page is a vertical stack of
+full-width bands; only the content area splits horizontally.
+
+| Region | Order | Layout | Space after | Reflow |
+|--------|-------|--------|-------------|--------|
+| `.Header` | 1 | full-bleed centred row, `{spacing.16}` between children | none | unchanged |
+| `.repo-head` | 2 | centred row inside `.container`; a `flex: 1` spacer pins the actions right | `{spacing.16}` | unchanged |
+| `.UnderlineNav` | 3 | tab row on a full-width rule | `{spacing.24}` | unchanged |
+| `.PageLayout` | 4 | grid, `1fr 256px`, `{spacing.24}` gap | `{spacing.32}` | one column at `{breakpoints.medium}` |
+| `.PageLayout-content` | 4.1 | toolbar, banner, file list, README stacked | none | full width |
+| `.PageLayout-pane` | 4.2 | About sections divided by top borders | none | full width, below the content |
+| `.Footer` | 5 | wrapping centred row | none | wraps continuously, no breakpoint |
+
+Everything except the header and footer is bounded by `.container`, which caps the page at
+`{layout.container-xlarge}` and adds `{spacing.16}` of inline padding; the header and footer paint
+edge to edge but their contents are not centred to that measure. The one breakpoint in the page is
+`.PageLayout` at `{breakpoints.medium}`, where the About pane moves below the content in DOM order,
+so reading order is preserved and nothing needs reordering.
+
+Two horizontal alignments are done with a `flex: 1` spacer rather than `justify-content`: the repo
+title row and the global header. That keeps the left cluster on its own even rhythm while the right
+cluster is pushed to the edge. Neither row wraps, so at narrow widths they compress before the
+`.PageLayout` breakpoint takes effect; the wireframe at around 800px is where that shows.
 
 # Example
 - [repo-page.example.html](/patterns/repo-page.example.html) — the full page.

@@ -5,9 +5,10 @@ description: A square, icon-only button for compact actions and toolbars.
 tags: [components, button, icon, action]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/icon-button.example.html
+  - /components/icon-button.wireframe.html
 tokens:
   btn-icon:
     background: "{colors.bgColor-muted}"
@@ -20,6 +21,19 @@ layout. It is a [button](/components/button.md) with the `.btn-icon` modifier an
 `aria-label`**, since there is no visible text. See
 [icon-button.example.html](/components/icon-button.example.html).
 
+# Structure
+A fixed square with its icon centred on both axes. Padding is removed so the icon centres on the
+box rather than on its text box.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.btn.btn-icon` | 1 | fixed 32px square (28px with `.btn-sm`) | none | unchanged |
+| Icon | 1.1 | fixed 16px, centred | none | unchanged |
+
+The square matches the 32px height of a standard [button](/components/button.md), which is what
+lets an icon button sit in a [button group](/components/button-group.md) or a toolbar row without
+changing the row height. It is the same `.btn` box with its width pinned and its padding zeroed.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -31,6 +45,7 @@ layout. It is a [button](/components/button.md) with the `.btn-icon` modifier an
 
 # Examples
 - [icon-button.example.html](/components/icon-button.example.html) — default and invisible.
+- [icon-button.wireframe.html](/components/icon-button.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Always set `aria-label`; pair with a [tooltip](/components/tooltip.md) for sighted users. Focus

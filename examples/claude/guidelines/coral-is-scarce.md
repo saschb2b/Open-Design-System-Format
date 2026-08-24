@@ -4,7 +4,12 @@ title: Coral is scarce
 description: Use coral on one CTA per view and the single full-bleed callout; never paint it everywhere.
 tags: [guidelines, color, brand, do-and-dont]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /foundations/color.md
+    title: "Color"
+  - resource: /components/callout-card-coral.md
+    title: "Coral callout card"
 examples:
   - /guidelines/coral-is-scarce.dont.html
 ---
@@ -26,7 +31,3 @@ itself with the dark surface, not a coral border.
 # Don't
 Spray coral across buttons, borders, icons, and headings — see
 [coral-is-scarce.dont.html](/guidelines/coral-is-scarce.dont.html).
-
-# Citations
-[1] [Color](/foundations/color.md)
-[2] [Coral callout card](/components/callout-card-coral.md)

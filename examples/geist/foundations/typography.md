@@ -4,7 +4,10 @@ title: Typography
 description: Geist Sans and Geist Mono, Vercel's typefaces, on a precise functional type scale.
 tags: [foundations, typography, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/geist-docs.md
+    title: "Geist typography"
 tokens:
   typography:
     fontFamily-sans: 'Geist, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
@@ -63,6 +66,3 @@ exact fidelity.
 # Do & Don't
 - **Do** keep headings at weight 600 with tight tracking; let size carry hierarchy.
 - **Don't** mix in other families; Geist's voice is the two-typeface system.
-
-# Citations
-[1] [Geist typography](/references/geist-docs.md)

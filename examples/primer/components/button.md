@@ -5,9 +5,10 @@ description: Default, the signature green primary, danger, and invisible variant
 tags: [components, button, action]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/button.example.html
+  - /components/button.wireframe.html
 tokens:
   button-default:
     background: "{colors.bgColor-muted}"
@@ -32,6 +33,20 @@ markup change (the example shows both). Class contract in
 A `<button>` with base `.btn` plus an optional variant modifier. Height 32px (medium), padding
 `0 {spacing.12}`, `{typography.body-medium}` at weight 500, radius `{radius.medium}`, 1px border.
 
+# Structure
+An inline flex row, centred on both axes, `{spacing.8}` between an optional icon and the label.
+Height is fixed at 32px and width follows the content.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Icon (optional) | 1 | fixed 16px | `{spacing.8}` | unchanged |
+| Label | 2 | content width, `white-space: nowrap` | none | unchanged |
+
+The label never wraps, so a long label widens the button and can overflow a narrow container rather
+than growing taller. Two variants change the box: `.btn-sm` drops to 28px tall with `{spacing.8}`
+side padding, and `.btn-icon` becomes a 32px square with no padding. Everything else, including all
+four colour variants and the disabled state, is skin over an identical box.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -51,6 +66,7 @@ A `<button>` with base `.btn` plus an optional variant modifier. Height 32px (me
 
 # Examples
 - [button.example.html](/components/button.example.html) — every variant, rendered in **light and dark**.
+- [button.wireframe.html](/components/button.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Behavior
 - Keyboard focus follows [focus](/behaviors/focus.md).

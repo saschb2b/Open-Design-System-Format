@@ -15,8 +15,8 @@ The one `index.md` that carries frontmatter, solely to declare the versions.
 
 ```markdown
 ---
-odsf_version: "0.1"
-okf_version: "0.1"
+odsf_version: "0.2"
+okf_version: "0.2"
 ---
 
 # <System name>
@@ -72,7 +72,11 @@ title: Color
 description: <one sentence>
 tags: [foundations, color, tokens]
 status: stable
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 tokens:
   colors:
     primary: "#3b5bdb"
@@ -93,13 +97,14 @@ tokens:
 - **Do** <the intended use>.
 - **Don't** <the failure to avoid>.
 
-# Citations
-[1] [<source>](<url>)
+
+[^src]: <source title>
 ```
 
 ## Component concept
 
-`components/<name>.md`, with a `components/<name>.example.html` beside it. Reference foundation
+`components/<name>.md`, with a `components/<name>.example.html` beside it, and, when the layout is
+non-trivial, a `components/<name>.wireframe.html`. Reference foundation
 tokens with `{group.name}` rather than restating values; express states as separate entries. Every
 `{group.name}` here must resolve to a token defined in some foundation in the same bundle
 (`radius.md` below assumes a `Shape` foundation that defines it), or the validator warns. A
@@ -115,9 +120,14 @@ description: <one sentence>
 tags: [components, button]
 status: stable
 applies_to: [web]
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 examples:
   - /components/button.example.html
+  - /components/button.wireframe.html
 tokens:
   button-primary:
     backgroundColor: "{colors.primary}"
@@ -130,6 +140,15 @@ tokens:
 # Anatomy
 <the parts and the class contract>
 
+# Structure
+<the skeleton, written before the tokens: direction and wrap, order (flag anywhere visual
+order differs from DOM order), spacing steps as tokens, sizing behavior, reflow per breakpoint>
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| Icon | 1 | fixed (1em square) | `{spacing.xs}` | hidden below `{breakpoints.sm}` |
+| Label | 2 | grows, truncates | none | none |
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -140,6 +159,7 @@ tokens:
 
 # Examples
 - [button.example.html](/components/button.example.html) - <what it shows>.
+- [button.wireframe.html](/components/button.wireframe.html) - the same markup, skin stripped; structure only.
 
 # Behavior
 - Focus follows [focus-visible](/behaviors/focus-visible.md).
@@ -154,7 +174,8 @@ tokens:
 
 ## Pattern concept
 
-`patterns/<name>.md`, optionally with `patterns/<name>.example.html`.
+`patterns/<name>.md`, with `patterns/<name>.example.html` and its `patterns/<name>.wireframe.html`.
+A composition *is* structure, so a pattern always ships a wireframe.
 
 ```markdown
 ---
@@ -163,9 +184,14 @@ title: Form
 description: <one sentence>
 tags: [patterns, form]
 status: stable
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 examples:
   - /patterns/form.example.html
+  - /patterns/form.wireframe.html
 ---
 
 # When to use
@@ -176,8 +202,18 @@ examples:
 |------|-----------|-------|
 | Fields | [Text input](/components/input.md) | <notes> |
 
+# Structure
+<the page or region skeleton: the bands or tracks in order, what caps and centres the content,
+the spacing between regions as tokens, and the reflow story per breakpoint>
+
+| Region | Order | Layout | Space after | Reflow |
+|--------|-------|--------|-------------|--------|
+| Header | 1 | full-bleed row | none | unchanged |
+| Content | 2 | grid, `1fr 256px` | `{spacing.lg}` | one column at `{breakpoints.md}` |
+
 # Example
 - [form.example.html](/patterns/form.example.html)
+- [form.wireframe.html](/patterns/form.wireframe.html) - the same page, skin stripped; structure only.
 
 # Do & Don't
 - **Do** <…>.
@@ -195,7 +231,11 @@ title: Focus visible
 description: <one sentence>
 tags: [behaviors, focus, accessibility]
 status: stable
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 ---
 
 # Rule
@@ -219,7 +259,11 @@ title: <principle>
 description: <one sentence>
 tags: [guidelines, do-and-dont]
 status: stable
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 examples:
   - /guidelines/<name>.dont.html
 ---
@@ -236,14 +280,14 @@ examples:
 # Don't
 <the mistake, linking the dont asset>
 
-# Citations
-[1] [<source>](<url>)
+
+[^src]: <source title>
 ```
 
 ## External reference concept
 
 `references/<slug>.md`. Mirror an external source (design.md, a brand site) as a concept (OKF
-carryover). `resource` is the live URL, `timestamp` is when you fetched it; summarize, don't paste.
+carryover). `resource` is the live URL, `generated.at` is when you fetched it; summarize, don't paste.
 
 ```markdown
 ---
@@ -253,7 +297,11 @@ description: <one sentence>
 resource: <url>
 tags: [reference, external]
 status: stable
-timestamp: <YYYY-MM-DDThh:mm:ssZ>
+generated: { by: <producer/version | human:id>, at: <YYYY-MM-DDThh:mm:ssZ> }
+sources:
+  - id: src
+    resource: <url>
+    title: <source title>
 ---
 
 # Summary
@@ -262,8 +310,8 @@ timestamp: <YYYY-MM-DDThh:mm:ssZ>
 # Key points
 * <point>
 
-# Citations
-[1] [<source>](<url>)
+
+[^src]: <source title>
 ```
 
 ---
@@ -290,6 +338,61 @@ teaches.
   <button type="button" class="btn btn--primary">Save changes</button>
 </body>
 </html>
+```
+
+## Asset: a wireframe (structure without skin)
+
+`components/<name>.wireframe.html`. The same `<body>` as the example, **verbatim**; only the
+`<head>` differs, linking `wireframe.css` **last**. Because that sheet strips only skin, every
+structural rule and media query in `components.css` still applies: open the file and resize it to
+watch the component's real reflow, with nothing else to look at.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><System> · <Concept> · wireframe</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/wireframe.css">
+</head>
+<body>
+  <!-- The minimal, correct markup an agent should reproduce. -->
+  <button type="button" class="btn btn--primary">Save changes</button>
+</body>
+</html>
+```
+
+## Asset: wireframe.css (the skin stripper)
+
+`styles/wireframe.css`. One sheet per bundle, authored once, linked **last** and only by the
+`*.wireframe.html` assets. It overrides skin properties (color, type family, radius, shadow,
+imagery, motion) and touches nothing structural, so layout, spacing, sizing, order, the type scale,
+and breakpoints all come through from `components.css` untouched. This is the one sanctioned use of
+`!important` in a bundle: a last-loaded diagnostic sheet must outrank every component rule without
+editing the rules it inspects. `outline` (not `border`) reveals each box because it occupies no
+space, keeping layout fidelity exact.
+
+```css
+/* Skin stripper: overrides skin, never structure. Linked last, wireframes only. */
+* {
+  background-color: #f1f3f5 !important;
+  background-image: none !important;
+  color: #495057 !important;
+  border-color: #adb5bd !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  font-family: system-ui, sans-serif !important; /* family is skin; size is structure, so it stays */
+  transition: none !important;
+  animation: none !important;
+  outline: 1px dashed #868e96;   /* outline takes no space, so the layout is untouched */
+  outline-offset: -1px;
+}
+body { background-color: #ffffff !important; }
+img, svg, video, canvas { filter: grayscale(1) contrast(0) !important; } /* keep the box, drop the pixels */
 ```
 
 ## Asset: tokens.css (the token projection)

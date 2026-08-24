@@ -4,7 +4,7 @@ title: Color modes
 description: Light, dark, and auto from one set of components — the payoff of functional color tokens.
 tags: [behaviors, theming, color, dark-mode, accessibility]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 The defining behavior of Primer: a single set of components renders in **light, dark, or auto** with

@@ -4,7 +4,7 @@ title: Motion
 description: Intentionally minimal — a single press transition; marketing animation is out of scope.
 tags: [foundations, motion, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   motion:
     fast: "120ms"

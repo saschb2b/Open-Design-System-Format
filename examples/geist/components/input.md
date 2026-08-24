@@ -5,9 +5,10 @@ description: The base single-line text field with optional prefix/suffix affixes
 tags: [components, input, form, field]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/input.example.html
+  - /components/input.wireframe.html
 tokens:
   input:
     background: "{colors.background-100}"
@@ -20,6 +21,21 @@ and `{radius.medium}` corners; on focus the border goes to `{colors.gray-1000}`.
 affixes for icons, units, or buttons. The atom behind [search](/components/search-input.md),
 [clearable](/components/clearable-input.md), and [combobox](/components/combobox.md). See
 [input.example.html](/components/input.example.html).
+
+# Structure
+A label above a full-width field. The affix form moves the border to a shell so icons can sit
+inside the control.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.label` | 1 | full width | set by the form | unchanged |
+| `.input` | 2 | `width: 100%`, fixed 40px tall | none | unchanged |
+| `.input-affix` shell | alt | fixed 40px tall; prefix and suffix fixed, field `flex: 1` | none | unchanged |
+
+The plain input is `width: 100%`, so it fills whatever column lays it out and never sets its own
+width. In the affix form the shell owns the border, height and padding while the inner field
+strips its own, so the two read as one control; `min-width: 0` on that field is what lets a long
+value scroll inside the shell instead of pushing the suffix out.
 
 # Variants & states
 default · with affix (`.input-affix`) · focus (ink border) · disabled · error (red border + message).

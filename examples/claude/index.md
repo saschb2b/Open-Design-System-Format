@@ -1,6 +1,6 @@
 ---
-odsf_version: "0.1"
-okf_version: "0.1"
+odsf_version: "0.2"
+okf_version: "0.2"
 ---
 
 # Claude design system
@@ -57,4 +57,4 @@ every token has a runnable projection in [`styles/tokens.css`](styles/tokens.css
 * [behaviors/](behaviors/) - Interaction and pacing rules.
 * [guidelines/](guidelines/) - Do/don't principles with counter-examples.
 * [references/](references/) - Source brief and live-verification notes.
-* [styles/](styles/) - Runnable token and component CSS.
+* [styles/](styles/) - Runnable token and component CSS, plus the wireframe skin stripper.

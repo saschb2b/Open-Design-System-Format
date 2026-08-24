@@ -4,7 +4,7 @@ title: Press states only
 description: Interactive elements change on press, not on hover — the system encodes no hover styling.
 tags: [behaviors, state, interaction]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Claude's interface is calm: controls react to a deliberate press, not to the cursor passing over

@@ -5,7 +5,7 @@ description: The outlined status pills GitHub uses for issues, PRs, and metadata
 tags: [components, label, badge, status]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/label.example.html
 tokens:

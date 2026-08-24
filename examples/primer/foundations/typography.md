@@ -4,7 +4,10 @@ title: Typography
 description: Mona Sans over a system fallback, on a compact 14px-base product scale.
 tags: [foundations, typography, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/primer-style.md
+    title: "primer.style"
 tokens:
   typography:
     fontStack-sansSerif: '"Mona Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif'
@@ -67,6 +70,3 @@ Weights are `normal` 400, `medium` 500 ([buttons](/components/button.md), nav), 
 **Mona Sans** is open-source (SIL OFL) but not bundled here; the stack falls back to the system sans
 (`-apple-system`, `Segoe UI`, …), which is what GitHub's product UI actually renders for most users.
 Load Mona Sans via `@font-face` if you want the brand display face exactly.
-
-# Citations
-[1] [primer.style](/references/primer-style.md)

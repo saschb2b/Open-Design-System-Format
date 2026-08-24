@@ -1,0 +1,30 @@
+/* Geist wireframe sheet: the skin stripper.
+ *
+ * Linked LAST, and only by the *.wireframe.html assets. It overrides skin properties
+ * (color, type family, radius, shadow, imagery, motion) and touches nothing structural,
+ * so layout, spacing, sizing, order, the type scale, and every breakpoint come through
+ * from components.css untouched. Resize a wireframe to watch the real reflow.
+ *
+ * This is the one sanctioned use of !important in the bundle: a last-loaded diagnostic
+ * sheet must outrank every component rule without editing the rules it inspects.
+ */
+
+* {
+  background-color: #f1f3f5 !important;
+  background-image: none !important;
+  color: #495057 !important;
+  border-color: #adb5bd !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  font-family: system-ui, sans-serif !important; /* family is skin; size is structure, so it stays */
+  transition: none !important;
+  animation: none !important;
+  outline: 1px dashed #868e96;   /* outline takes no space, so the layout is untouched */
+  outline-offset: -1px;
+}
+
+body { background-color: #ffffff !important; }
+
+/* Keep the box, drop the pixels. */
+img, svg, video, canvas { filter: grayscale(1) contrast(0) !important; }

@@ -5,7 +5,12 @@ description: What was confirmed against the live claude.com DOM, and where it di
 resource: https://claude.com
 tags: [reference, external, verification]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://claude.com
+    title: "claude.com"
+  - resource: /references/claude-design-md.md
+    title: "Claude design.md (source brief)"
 ---
 
 # Summary
@@ -31,7 +36,3 @@ a browser. The brand DNA matched; a few values were refined from the source brie
 # Caveat
 A live site is a moving target; this is a dated snapshot. The `timestamp` and the cited URL are how
 to re-check it.
-
-# Citations
-[1] [claude.com](https://claude.com)
-[2] [Claude design.md (source brief)](/references/claude-design-md.md)

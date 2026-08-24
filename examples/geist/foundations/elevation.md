@@ -4,7 +4,7 @@ title: Elevation
 description: Crisp 1px alpha borders first; soft shadows only for floating layers.
 tags: [foundations, elevation, shadow, border, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   elevation:
     border: "0 0 0 1px var(--ds-gray-alpha-400)"

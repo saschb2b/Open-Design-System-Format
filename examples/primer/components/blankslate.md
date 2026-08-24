@@ -5,9 +5,10 @@ description: The centered empty state — icon, heading, description, and a prim
 tags: [components, blankslate, empty-state, content]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/blankslate.example.html
+  - /components/blankslate.wireframe.html
 tokens:
   Blankslate:
     icon: "{colors.fgColor-muted}"
@@ -23,6 +24,22 @@ single [primary action](/components/button.md) to move forward. Usually placed i
 A `.Blankslate`: `.Blankslate-icon` → `.Blankslate-heading` → `.Blankslate-description` → an action
 ([button](/components/button.md)).
 
+# Structure
+A centred column inside `{spacing.32}` of padding. Spacing comes from element margins rather than
+a flex gap, so the steps between parts are deliberately uneven.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.Blankslate-icon` | 1 | fixed 40px square | `{spacing.16}` | unchanged |
+| `.Blankslate-heading` | 2 | full width, centred | `{spacing.4}` | unchanged |
+| `.Blankslate-description` | 3 | full width, centred | `{spacing.16}` | unchanged |
+| Action button | 4 | content width | none | unchanged |
+
+The tight `{spacing.4}` between heading and description binds them as one unit, while the
+`{spacing.16}` above the heading and below the description separates icon, message, and action into
+three beats. `text-align: center` is inherited by every child, which is why the button centres
+without any flex alignment on the container.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -31,6 +48,7 @@ A `.Blankslate`: `.Blankslate-icon` → `.Blankslate-heading` → `.Blankslate-d
 
 # Examples
 - [blankslate.example.html](/components/blankslate.example.html) — an empty issues list.
+- [blankslate.wireframe.html](/components/blankslate.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Use a real heading; the action is the primary next step. If the icon is decorative, hide it from

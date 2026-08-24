@@ -4,7 +4,7 @@ title: Layout & responsive
 description: A 12-column grid, four breakpoints, and container widths capped at 1280px.
 tags: [foundations, layout, grid, responsive, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   breakpoints:
     small: "544px"

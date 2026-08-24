@@ -4,7 +4,7 @@ title: Geist
 description: Vercel's open-source design system — high-contrast, monochrome-first, and fully theme-able.
 tags: [overview, design-system, vercel]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 ---
 
 Geist is the design system behind Vercel and Next.js: stark, geometric, and high-contrast, built for

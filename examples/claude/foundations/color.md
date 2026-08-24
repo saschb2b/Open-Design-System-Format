@@ -4,7 +4,12 @@ title: Color
 description: Claude's warm cream-and-coral palette with dark navy product surfaces, and the role each color plays.
 tags: [foundations, color, tokens, brand]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: /references/claude-design-md.md
+    title: "Claude design.md"
+  - resource: /references/anthropic-brand.md
+    title: "Anthropic brand — live verification"
 tokens:
   colors:
     primary: "#cc785c"
@@ -86,7 +91,3 @@ The runnable projection of every token is in [`/styles/tokens.css`](/styles/toke
   callouts. See [coral is scarce](/guidelines/coral-is-scarce.md).
 - **Don't** use cool gray or pure white for the canvas — the warm tint *is* the brand. See
   [cream, not white](/guidelines/cream-not-white.md).
-
-# Citations
-[1] [Claude design.md](/references/claude-design-md.md)
-[2] [Anthropic brand — live verification](/references/anthropic-brand.md)

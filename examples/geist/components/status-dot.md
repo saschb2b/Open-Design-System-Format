@@ -5,7 +5,7 @@ description: A small colored dot plus label that signals a state at a glance.
 tags: [components, status-dot, status]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/status-dot.example.html
 ---

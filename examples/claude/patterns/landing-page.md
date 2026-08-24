@@ -5,9 +5,10 @@ description: A full marketing page composed in the cream → dark → coral surf
 tags: [patterns, landing, page, composition]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /patterns/landing-page.example.html
+  - /patterns/landing-page.wireframe.html
 ---
 
 The canonical Claude marketing page: a [top nav](/components/top-nav.md), a cream hero with a 6/6
@@ -32,8 +33,37 @@ alternating bands and keep the cream canvas.
 | Callout | coral | [coral callout card](/components/callout-card-coral.md) |
 | Footer | dark | [Footer](/components/footer.md) |
 
+# Structure
+A single vertical stack of full-bleed bands in DOM order, with no horizontal composition at the page
+level. Every band is a `<section>` that paints edge to edge and holds one `.container`, which caps
+the content at `{layout.container}` (1200px), centres it, and adds `{spacing.lg}` of inline padding.
+Bands set `padding-block: {spacing.section}` (96px), which drops to `{spacing.xxl}` at
+`{breakpoints.tablet}`. That container plus that band padding is the page's whole grid.
+
+| Band | Order | Inner layout | Space after | Reflow |
+|------|-------|--------------|-------------|--------|
+| Nav | 1 | `.top-nav` row, fixed 64px | none (bar is flush) | menu hidden below `{breakpoints.tablet}` |
+| Hero | 2 | `.hero`, two equal columns, 48px gap, centred | `{spacing.section}` | one column at `{breakpoints.tablet}` |
+| Features | 3 | centred `.section-head` + `.grid-3` | `{spacing.section}` | 2 columns at `{breakpoints.desktop}`, 1 at `{breakpoints.tablet}` |
+| Product | 4 | `.hero` again: copy beside a code-window card | `{spacing.section}` | one column at `{breakpoints.tablet}` |
+| Pricing | 5 | centred `.section-head` + `.grid-3` | `{spacing.section}` | 2 columns at `{breakpoints.desktop}`, 1 at `{breakpoints.tablet}` |
+| Callout | 6 | one `.callout-coral` card at container width | `{spacing.section}` | unchanged |
+| Footer | 7 | `.footer__cols`, `1.5fr repeat(4, 1fr)` | none | 2 columns at `{breakpoints.desktop}`, 1 at `{breakpoints.tablet}` |
+
+Two structural details are easy to miss and both show up in the wireframe. The features and callout
+bands carry `padding-top: 0`, which welds them to the cream band above so a run of cream reads as
+one region rather than three stacked ones; the 96px rhythm therefore separates *surface changes*,
+not every section. And the callout is a coral card inside a cream band, not a coral band: the page
+has six bands of structure and the coral is an inset box, which is why it keeps the container
+margin instead of bleeding to the viewport edge.
+
+The hero and the product band share the same `.hero` two-column grid, and both collapse to one
+column at `{breakpoints.tablet}` with the text column first in DOM order. Reading order down the
+page is the band order above, and it never diverges from visual order.
+
 # Example
 - [landing-page.example.html](/patterns/landing-page.example.html) — the full page.
+- [landing-page.wireframe.html](/patterns/landing-page.wireframe.html) — the same page, skin stripped: band rhythm, container measure, and reflow only.
 
 # Accessibility
 One `<h1>` (the hero). Each band is a `<section>`; the nav, footer, and column lists use landmark

@@ -5,7 +5,10 @@ description: The token values in this bundle, read directly from the live vercel
 resource: https://vercel.com/geist
 tags: [reference, external, verification]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
+sources:
+  - resource: https://vercel.com/geist
+    title: "vercel.com/geist"
 ---
 
 # Summary
@@ -32,6 +35,3 @@ Every token here was read from the live vercel.com/geist DOM on 2026-06-23 by in
 
 # Caveat
 A live system evolves; this is a dated snapshot. The `timestamp` and source URL are how to re-check it.
-
-# Citations
-[1] [vercel.com/geist](https://vercel.com/geist)

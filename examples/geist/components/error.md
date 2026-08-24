@@ -5,7 +5,7 @@ description: Inline validation text that pairs a field with its error message.
 tags: [components, error, form, validation, feedback]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 examples:
   - /components/error.example.html
 ---

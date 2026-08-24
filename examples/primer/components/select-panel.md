@@ -5,9 +5,10 @@ description: A searchable overlay for picking one or many options from a long li
 tags: [components, select-panel, overlay, form, menu]
 status: stable
 applies_to: [web]
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-5, at: 2026-08-24T00:00:00Z }
 examples:
   - /components/select-panel.example.html
+  - /components/select-panel.wireframe.html
 tokens:
   SelectPanel:
     shadow: "{elevation.floating-small}"
@@ -23,6 +24,20 @@ A `.SelectPanel` ([Box](/components/box.md) + `{elevation.floating-small}`): a `
 with a `.form-control` filter, then an `.ActionList` whose items carry an `.ActionList-check` (visible
 when selected).
 
+# Structure
+A fixed `280px` panel: a filter header pinned above a scrollable option list.
+
+| Part | Order | Sizing | Space after | Reflow |
+|------|-------|--------|-------------|--------|
+| `.SelectPanel-header` | 1 | full width, `{spacing.8}` padding; the field fills it | none | unchanged |
+| `.ActionList` options | 2 | full width rows | none | unchanged |
+| `.ActionList-check` | 2.1 | fixed 16px, `flex: none` | `{spacing.8}` | unchanged |
+
+The check column is always present and reserves its 16px even when unselected: the unselected state
+uses `visibility: hidden`, which keeps the box, rather than `display: none`, which would remove it.
+That is what stops labels from jogging left and right as selection changes. The header is divided
+from the list by a border and no gap.
+
 # Tokens
 | Token | Resolves to |
 |-------|-------------|
@@ -30,6 +45,7 @@ when selected).
 
 # Examples
 - [select-panel.example.html](/components/select-panel.example.html) — a multi-select label picker.
+- [select-panel.wireframe.html](/components/select-panel.wireframe.html) — the same markup, skin stripped; structure only.
 
 # Accessibility
 Open from a trigger button with `aria-haspopup`; the list is `role="listbox"` with

@@ -4,7 +4,7 @@ title: Shape
 description: A restrained corner-radius scale — 6px on most controls, 12px on large surfaces, pills for labels.
 tags: [foundations, shape, radius, tokens]
 status: stable
-timestamp: 2026-06-23T10:00:00Z
+generated: { by: claude/opus-4, at: 2026-06-23T10:00:00Z }
 tokens:
   radius:
     small: "3px"
