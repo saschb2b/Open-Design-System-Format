@@ -8,39 +8,16 @@
   ODSF Viewer — a single-file reference consumer for Open Design System Format bundles.
   Zero dependencies, no build. Browse any ODSF bundle visually in the browser.
 
-  Load a bundle three ways:
+  Load a bundle two ways:
     1. Served over HTTP:  tools/viewer.html?bundle=../examples/claude
        (serve the repo root first, e.g.  npx serve  or  python -m http.server)
     2. From local disk:   "Open folder…" and pick a bundle directory (works over file://).
-    3. Embedded:          set window.__ODSF_BUNDLE__ = { label, files: { "index.md": "…" } }
-       before this script runs, and the viewer reads from there — how a build step can
-       inline a whole bundle into one shareable, offline HTML file.
 
   It crawls the bundle's own index.md files (OKF progressive disclosure), then opens on an
   Explore landing: the system's identity, a click-to-copy swatch teaser, and one card per domain.
-
-  Navigation
-    · Sidebar grouped by domain, each with its own accent color, icon, and concept count.
-    · Gallery — every component previewed live from its own example asset, grouped by the
-      category headings the bundle's own components/index.md declares.
-    · All tokens — foundation tokens with their projected CSS custom properties, component
-      tokens with what they resolve to; click any row to copy.
-    · Changelog — the bundle's log.md.
-    · Hash routes (#/components/button.md, #/gallery, #/tokens, #/changelog) so any view is
-      a shareable URL, with working back/forward.
-    · "/" focuses the concept filter; prev/next pager at the foot of every concept.
-
-  Concept pages
-    · Overview / Tokens tabs split the demo and prose from the token tables.
-    · Example cards carry a title, the live preview, and a Description / Code footer; the
-      description comes from the concept's own "# Examples" list.
-    · Do & Don't lists render as best-practice rows with Do/Don't pills (presentation only —
-      the markdown stays canonical).
-    · "On this page" tracks the visible tab and scroll position.
-
-  Theme follows the system by default; an explicit toggle persists and is propagated into
-  every preview iframe (prefers-color-scheme blocks are rewritten to match, plus color-scheme
-  and a data-theme attribute), so previews of dark-capable bundles follow the viewer.
+  Each concept renders by type (color swatches, type specimens, spacing / shape / elevation /
+  motion scales) with an "On this page" table of contents and the live *.example.html in a
+  Preview / Code preview frame. Light and dark themes; the choice is remembered.
 -->
 <style>
   :root {
@@ -267,6 +244,9 @@
   .preview__tabs { display: flex; gap: 4px; }
   .preview__tab { font: inherit; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: var(--radius); border: 1px solid transparent; background: none; color: var(--fg-muted); cursor: pointer; }
   .preview__tab.is-active { background: var(--bg); border-color: var(--border); color: var(--fg); }
+  .preview__views { display: flex; gap: 4px; margin-left: 12px; }
+  .preview__view { font: inherit; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: var(--radius); border: 1px solid transparent; background: none; color: var(--fg-muted); cursor: pointer; }
+  .preview__view.is-active { background: var(--bg); border-color: var(--border); color: var(--fg); }
   .preview__path { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--fg-subtle); }
   .preview iframe { width: 100%; border: 0; display: block; background: #fff; }
   .preview iframe[hidden] { display: none; }
@@ -1017,9 +997,19 @@ async function inlineCss(html, baseDir) {
 }
 async function renderExamples(paths, meta = {}) {
   const host = $("#examples"); host.innerHTML = "";
+  // A wireframe is the same markup with the skin stripped (spec section 6), so it belongs to
+  // its example as a second view, not as a second card. Pair them, drop it from the queue.
+  const wfOf = {};
+  for (const w of paths.filter(x => x.endsWith(".wireframe.html"))) {
+    const ex = w.replace(/\.wireframe\.html$/, ".example.html");
+    if (paths.includes(ex)) wfOf[ex] = w;
+  }
+  const paired = new Set(Object.values(wfOf));
+  paths = paths.filter(x => !paired.has(x));
   for (const p of paths) {
     const raw = await source.read(p);
     if (raw == null) continue;
+    const wfPath = wfOf[p];
     const kind = /\.dont\./.test(p) ? "dont" : /\.do\./.test(p) ? "do" : "example";
     const kindLabel = kind === "dont" ? "Don\u2019t" : kind === "do" ? "Do" : "";
     const m = meta[p] || {};
@@ -1029,6 +1019,9 @@ async function renderExamples(paths, meta = {}) {
     wrap.innerHTML =
       '<div class="preview__head"><span class="preview__title">' + esc(title) + "</span>" +
         (kindLabel ? '<span class="preview__kind ' + kind + '">' + kindLabel + "</span>" : "") +
+        (wfPath ? '<div class="preview__views" role="group" aria-label="View">' +
+          '<button class="preview__view is-active" data-view="example">Preview</button>' +
+          '<button class="preview__view" data-view="wireframe">Wireframe</button></div>' : "") +
         '<span class="preview__path">' + esc(p) + "</span>" +
       "</div>" +
       '<div class="preview__body"><iframe sandbox="allow-same-origin allow-scripts" title="' + esc(p) + '"></iframe></div>' +
@@ -1044,6 +1037,18 @@ async function renderExamples(paths, meta = {}) {
       const showCode = btn.dataset.tab === "code";
       code.hidden = !showCode; if (descEl) descEl.hidden = showCode;
     });
+    if (wfPath) {
+      const wfRaw = await source.read(wfPath);
+      const wfDoc = wfRaw == null ? null : await inlineCss(wfRaw, dirOf(wfPath));
+      const exDoc = await inlineCss(raw, dirOf(p));
+      wrap.querySelectorAll(".preview__view").forEach(btn => btn.onclick = () => {
+        wrap.querySelectorAll(".preview__view").forEach(b => b.classList.toggle("is-active", b === btn));
+        const wf = btn.dataset.view === "wireframe";
+        wrap.querySelector(".preview__path").textContent = wf ? wfPath : p;
+        code.querySelector("code").textContent = wf ? (wfRaw || "") : raw;
+        iframe.srcdoc = wf ? (wfDoc || "") : exDoc;
+      });
+    }
     const doc = await inlineCss(raw, dirOf(p));
     iframe.addEventListener("load", () => {
       try { iframe.style.height = (iframe.contentDocument.documentElement.scrollHeight + 2) + "px"; } catch { iframe.style.height = "260px"; }

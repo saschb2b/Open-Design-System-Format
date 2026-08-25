@@ -167,7 +167,9 @@ and a card per domain), and gives a bundle four ways in:
 - **Concept pages** render by type — color swatches, type specimens, spacing / shape / elevation /
   motion scales — with **Overview / Tokens** tabs separating the demo and prose from the token
   tables, example cards carrying a title, live preview, and **Description / Code** footer, Do &
-  Don't lists as best-practice rows, an **On this page** rail, and a prev/next pager.
+  Don't lists as best-practice rows, an **On this page** rail, and a prev/next pager. Where a
+  concept ships a wireframe, its card gains a **Preview / Wireframe** switch: two views of one
+  markup, not two cards.
 - **Gallery** previews every component live from its own example asset, grouped by the category
   headings the bundle's own `components/index.md` declares (a flat index degrades to one group).
 - **All tokens** lists foundation tokens with their projected CSS custom properties and component
